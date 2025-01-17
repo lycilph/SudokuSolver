@@ -48,6 +48,7 @@ public class Grid
 
     public bool IsSolved => Cells.All(c => c.HasValue);
     public int EmptyCellsCount => Cells.Count(c => c.IsEmpty);
+    public int TotalCandidatesCount => Cells.Sum(c => c.CandidatesCount);
 
     private static int[] GetRowIndices(int row)
     {

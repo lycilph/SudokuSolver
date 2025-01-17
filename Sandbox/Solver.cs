@@ -1,4 +1,5 @@
 ﻿using Sandbox.Model;
+using Sandbox.Strategies;
 using System.Diagnostics;
 
 namespace Sandbox;
@@ -13,7 +14,49 @@ namespace Sandbox;
 
 public static class Solver
 {
+    private static readonly IStrategy[] strategies =
+    [
+        new BasicEliminationStrategy(),
+        new NakedSinglesStrategy(),
+    ];
+
     public static void Solve(Grid grid)
+    {
+        var iterations = 0;
+        bool changed = true;
+
+        Stopwatch stopwatch = Stopwatch.StartNew(); // Start the stopwatch
+
+        Console.WriteLine($"Puzzle has {grid.EmptyCellsCount} empty cells");
+        while (!grid.IsSolved && changed)
+        {
+            iterations++;
+
+            changed = Step(grid);
+            
+            Console.WriteLine($"Iteration {iterations}: {grid.EmptyCellsCount} empty cells left and {grid.TotalCandidatesCount} candidates (changed {changed})");
+        }
+
+        stopwatch.Stop(); // Stop the stopwatch
+        Console.WriteLine($"Execution Time: {stopwatch.ElapsedMilliseconds} ms");
+    }
+
+    private static bool Step(Grid grid)
+    {
+        foreach (var strategy in strategies)
+        {
+            if (strategy.Step(grid))
+            {
+                Console.WriteLine($" * {strategy.Name}");
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
+
+/*    public static void Solve(Grid grid)
     {
         var iterations = 0;
         var last_empty_cells_count = 0;
@@ -78,7 +121,7 @@ public static class Solver
         return cells.Length;
     }
 
-    // Find cells were 2 cells share the same 2 candidates, and remove these candidates from the other cells in the unit
+    // Find pairs where 2 cells share the same 2 candidates, and remove these candidates from the other cells in the unit
     public static int NakedPairs(Grid grid)
     {
         int count = 0;
@@ -250,3 +293,4 @@ public static class Solver
         return false;
     }
 }
+*/
