@@ -6,6 +6,7 @@ public class NakedSinglesStrategy : IStrategy
 {
     public string Name => "Naked Singles";
 
+    // Find cells with only one candidate, and set the value for that cell
     public bool Step(Grid grid)
     {
         var cells = grid.Cells.Where(c => c.IsEmpty && c.Candidates.Count == 1).ToArray();
