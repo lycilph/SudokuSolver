@@ -7,7 +7,8 @@ namespace Sandbox;
  * 1. First start by basic elimination of candidates
  * 2. Then find naked singles
  * 3. Then find hidden singles
- * 4. Bruteforce the rest
+ * 4. Then find naked pairs
+ * 5. Bruteforce the rest
  */
 
 public static class Solver
@@ -16,20 +17,20 @@ public static class Solver
     {
         var iterations = 0;
         var last_empty_cells_count = 0;
-        var empty_cells_count = grid.EmptyCellsCount();
+        var empty_cells_count = grid.EmptyCellsCount;
 
         Stopwatch stopwatch = Stopwatch.StartNew(); // Start the stopwatch
 
-        while (!grid.IsSolved() && empty_cells_count != last_empty_cells_count)
+        while (!grid.IsSolved && empty_cells_count != last_empty_cells_count)
         {
             iterations++;
             Step(grid);
             last_empty_cells_count = empty_cells_count;
-            empty_cells_count = grid.EmptyCellsCount();
-            Console.WriteLine($"Iteration {iterations}: {grid.EmptyCellsCount()} empty cells left");
+            empty_cells_count = grid.EmptyCellsCount;
+            Console.WriteLine($"Iteration {iterations}: {grid.EmptyCellsCount} empty cells left");
         }
 
-        if (grid.IsSolved())
+        if (grid.IsSolved)
         {
             Console.WriteLine("Sudoku solved!");
         }
@@ -216,7 +217,7 @@ public static class Solver
 
     private static bool SolveBacktrack(Grid grid)
     {
-        if (grid.IsSolved())
+        if (grid.IsSolved)
             return true;
 
         var empty_cells = grid.Cells.Where(c => c.IsEmpty).OrderBy(c => c.CandidatesCount).ToArray();

@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35707.178 d17.12
+VisualStudioVersion = 17.12.35707.178
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sandbox", "Sandbox\Sandbox.csproj", "{55E33D87-BEAA-43CD-81B0-87E3371247EC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolverTests", "SolverTests\SolverTests.csproj", "{CA7C897F-58D6-45EB-AA51-DD4CD3846C0F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{55E33D87-BEAA-43CD-81B0-87E3371247EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{55E33D87-BEAA-43CD-81B0-87E3371247EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{55E33D87-BEAA-43CD-81B0-87E3371247EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA7C897F-58D6-45EB-AA51-DD4CD3846C0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA7C897F-58D6-45EB-AA51-DD4CD3846C0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA7C897F-58D6-45EB-AA51-DD4CD3846C0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA7C897F-58D6-45EB-AA51-DD4CD3846C0F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

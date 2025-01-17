@@ -8,19 +8,22 @@ public class Grid
     public Unit[] Rows { get; set; }
     public Unit[] Columns { get; set; }
     public Unit[] Boxes { get; set; }
+    public Unit[] AllUnits { get; set; }
 
     public Grid()
     {
         Cells = Enumerable.Range(0, 81).Select(i => new Cell(i)).ToArray();
 
         Rows = Enumerable.Range(0, 9)
-            .Select(r => new Unit { Index = r, Cells = GetRowIndices(r).Select(i => Cells[i]).ToArray() }).ToArray();
+            .Select(r => new Unit { Name = "Row", Index = r, Cells = GetRowIndices(r).Select(i => Cells[i]).ToArray() }).ToArray();
 
         Columns = Enumerable.Range(0, 9)
-            .Select(c => new Unit { Index = c, Cells = GetColumnIndices(c).Select(i => Cells[i]).ToArray() }).ToArray();
+            .Select(c => new Unit { Name = "Column", Index = c, Cells = GetColumnIndices(c).Select(i => Cells[i]).ToArray() }).ToArray();
 
         Boxes = Enumerable.Range(0, 9)
-            .Select(c => new Unit { Index = c, Cells = GetBoxIndices(c).Select(i => Cells[i]).ToArray() }).ToArray();
+            .Select(c => new Unit { Name = "Box", Index = c, Cells = GetBoxIndices(c).Select(i => Cells[i]).ToArray() }).ToArray();
+
+        AllUnits = Rows.Concat(Columns).Concat(Boxes).ToArray();
 
         foreach (var cell in Cells)
             cell.Peers = GetPeerIndices(cell.Index).Select(i => Cells[i]).ToArray();
@@ -43,8 +46,8 @@ public class Grid
         }
     }
 
-    public bool IsSolved() => Cells.All(c => c.HasValue);
-    public int EmptyCellsCount() => Cells.Count(c => c.IsEmpty);
+    public bool IsSolved => Cells.All(c => c.HasValue);
+    public int EmptyCellsCount => Cells.Count(c => c.IsEmpty);
 
     private static int[] GetRowIndices(int row)
     {
@@ -124,14 +127,8 @@ public class Grid
     {
         var sb = new StringBuilder();
 
-        for (int i = 0; i < 9; i++)
-            sb.AppendLine($"Row {i}: {string.Join(' ', Rows[i].Cells.Select(c => c.Index))}");
-
-        for (int i = 0; i < 9; i++)
-            sb.AppendLine($"Col {i}: {string.Join(' ', Columns[i].Cells.Select(c => c.Index))}");
-
-        for (int i = 0; i < 9; i++)
-            sb.AppendLine($"Box {i}: {string.Join(' ', Boxes[i].Cells.Select(c => c.Index))}");
+        foreach (var unit in AllUnits)
+            sb.AppendLine($"{unit.Name} {unit.Index}: {string.Join(' ', unit.Cells.Select(c => c.Index))}");
 
         return sb.ToString();
     }
