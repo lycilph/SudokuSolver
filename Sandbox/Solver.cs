@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+﻿using Sandbox.Model;
 
 namespace Sandbox;
 
@@ -11,38 +11,14 @@ namespace Sandbox;
 
 public static class Solver
 {
-    public static void Solve(Grid grid)
-    {
-        Stopwatch stopwatch = Stopwatch.StartNew(); // Start the stopwatch
-
-        int count = 0;
-        int iterations = 0;
-        while (!grid.IsSolved())
-        {
-            BasicElimination(grid);
-            count = NakedSingles(grid);
-            Console.WriteLine($"Found {count} naked singles");
-            iterations++;
-
-            if (count == 0)
-                break;
-        }
-
-        stopwatch.Stop(); // Stop the stopwatch
-        Console.WriteLine($"Execution Time: {stopwatch.ElapsedMilliseconds} ms");
-        Console.WriteLine($"{iterations} iterations run");
-    }
-
     // Eliminate the cell value from the candidates of its peers
     public static void BasicElimination(Grid grid)
     {
-        for (int cell = 0; cell < 81; cell++)
+        foreach (var cell in grid.Cells.Where(c => c.HasValue))
         {
-            var p = grid.Peers[cell];
-            var v = grid.Values[cell];
-            for (int i = 0; i < p.Length; i++)
+            foreach (var peer in cell.Peers.Where(p => p.IsEmpty))
             {
-                grid.Candidates[p[i]] &= ~(1 << (v - 1));
+                peer.Candidates.Remove(cell.Value);
             }
         }
     }
@@ -50,19 +26,65 @@ public static class Solver
     // Find cells with only one candidate, and set the value for that cell
     public static int NakedSingles(Grid grid)
     {
-        int count = 0;
-        for (int cell = 0; cell < 81; cell++)
+        var cells = grid.Cells.Where(c => c.IsEmpty && c.Candidates.Count == 1).ToArray();
+        foreach (var cell in cells)
         {
-            if (grid.Values[cell] == 0)
+            cell.Value = cell.Candidates.First();
+        }
+        return cells.Length;
+    }
+
+    // Find cells where a value is only present as a candidate in one cell in a unit
+    public static int HiddenSingles(Grid grid)
+    {
+        int count = 0;
+        int unit_count = 0;
+
+        foreach (var row in grid.Rows)
+        {
+            unit_count = HiddenSinglesInUnit(row.Cells);
+            if (unit_count > 0)
+                Console.WriteLine($"Hidden single found in row {row.Index}");
+            count += unit_count;
+        }
+
+        foreach (var col in grid.Columns)
+        {
+            unit_count = HiddenSinglesInUnit(col.Cells);
+            if (unit_count > 0)
+                Console.WriteLine($"Hidden single found in column {col.Index}");
+            count += unit_count;
+        }
+
+        foreach (var box in grid.Boxes)
+        {
+            unit_count = HiddenSinglesInUnit(box.Cells);
+            if (unit_count > 0)
+                Console.WriteLine($"Hidden single found in box {box.Index}");
+            count += unit_count;
+        }
+
+        return count;
+    }
+
+    private static int HiddenSinglesInUnit(Cell[] cells)
+    {
+        int count = 0;
+
+        var emptyCells = cells.Where(c => c.IsEmpty).ToArray();
+        var possibleValues = Enumerable.Range(1, 9).Except(cells.Where(c => c.HasValue).Select(c => c.Value)).ToArray();
+
+        foreach (var value in possibleValues)
+        {
+            var candidates = emptyCells.Where(c => c.Candidates.Contains(value)).ToArray();
+            if (candidates.Length == 1)
             {
-                var c = grid.Candidates[cell];
-                if (grid.CandidateCount(cell) == 1)
-                {   
-                    grid.SetValue(cell, Grid.CandidateToValue(c));
-                    count++;
-                }
+                candidates[0].Value = value;
+                Console.WriteLine($"Found hidden single for cell {candidates[0].Index} with the value {value}");
+                count++;
             }
         }
+
         return count;
     }
 }
