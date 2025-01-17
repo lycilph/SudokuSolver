@@ -35,6 +35,17 @@ public class Grid
         }
     }
 
+    public Grid(Grid grid) : this()
+    {
+        foreach (var cell in grid.Cells.Where(c => c.HasValue))
+        {
+            Cells[cell.Index].Value = cell.Value;
+        }
+    }
+
+    public bool IsSolved() => Cells.All(c => c.HasValue);
+    public int EmptyCellsCount() => Cells.Count(c => c.IsEmpty);
+
     private static int[] GetRowIndices(int row)
     {
         var indices = new int[9];
@@ -87,11 +98,13 @@ public class Grid
         return peers.Order().ToArray();
     }
 
-    public string CandidatesToString()
+    public string CandidatesToString(bool skip_cells_with_values = false)
     {
         var sb = new StringBuilder();
         for (int i = 0; i < 81; i++)
         {
+            if (skip_cells_with_values && Cells[i].HasValue)
+                continue;
             sb.AppendLine($"Cell {i}: {string.Join(' ', Cells[i].Candidates)}");
         }
         return sb.ToString();
@@ -120,6 +133,17 @@ public class Grid
         for (int i = 0; i < 9; i++)
             sb.AppendLine($"Box {i}: {string.Join(' ', Boxes[i].Cells.Select(c => c.Index))}");
 
+        return sb.ToString();
+    }
+
+    public string ToSimpleString()
+    {
+        var sb = new StringBuilder();
+        foreach (var cell in Cells)
+            if (cell.HasValue)
+                sb.Append(cell.Value);
+            else
+                sb.Append('.');
         return sb.ToString();
     }
 

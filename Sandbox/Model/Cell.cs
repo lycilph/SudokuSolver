@@ -2,7 +2,7 @@
 
 namespace Sandbox.Model;
 
-[DebuggerDisplay("I = {Index}, V = {Value}")]
+[DebuggerDisplay("I = {Index}, V = {Value}, Candidates = {CandidatesCount}")]
 public class Cell(int index)
 {
     public int Index { get; set; } = index;
