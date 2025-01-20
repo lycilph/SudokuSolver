@@ -29,33 +29,33 @@ public class LockedCandidatesPointing : IStrategy
         bool found_locked_candidates = false;
 
         // Make a dictionary mapping value to rows/columns which contain that value
-        var value_to_columns = new Dictionary<int, HashSet<int>>();
+        var value_to_rows_or_columns = new Dictionary<int, HashSet<int>>();
 
-        foreach (var column in grid.Columns)
+        foreach (var unit in rows_or_columns)
         {
-            // If this column intersects the box under consideration, map values to columns where they occur
-            var cells = box.Cells.Intersect(column.Cells, CellIndexComparer.Instance).ToArray();
+            // If this column/row intersects the box under consideration, map values to columns/rows where they occur
+            var cells = box.Cells.Intersect(unit.Cells, CellIndexComparer.Instance).ToArray();
             if (cells.Length > 0)
             {
                 var possible_values = cells.SelectMany(c => c.Candidates).ToHashSet();
                 foreach (var value in  possible_values)
-                    if (!value_to_columns.ContainsKey(value))
-                        value_to_columns[value] = [column.Index];
+                    if (!value_to_rows_or_columns.ContainsKey(value))
+                        value_to_rows_or_columns[value] = [unit.Index];
                     else
-                        value_to_columns[value].Add(column.Index);
+                        value_to_rows_or_columns[value].Add(unit.Index);
             }
         }
 
-        // Check if any value is locked to a single column
-        foreach (var value in value_to_columns.Keys)
+        // Check if any value is locked to a single column/row
+        foreach (var value in value_to_rows_or_columns.Keys)
         {
-            if (value_to_columns[value].Count == 1)
+            if (value_to_rows_or_columns[value].Count == 1)
             {
-                var column = grid.Columns[value_to_columns[value].First()];
-                Console.WriteLine($" * Found a pointing candidate {value} in {box.FullName} and column {column.FullName}");
+                var unit = rows_or_columns[value_to_rows_or_columns[value].First()];
+                Console.WriteLine($" * Found a pointing candidate {value} in {box.FullName} and {unit.FullName}");
 
                 // Remove the value from all other cells in the column
-                foreach (var cell in column.Cells.Except(box.Cells))
+                foreach (var cell in unit.Cells.Except(box.Cells))
                 {
                     if (cell.Candidates.Contains(value))
                     {

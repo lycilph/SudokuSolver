@@ -5,12 +5,13 @@ using System.Diagnostics;
 namespace Sandbox;
 
 /*
- * 1. First start by basic elimination of candidates
- * 2. Then find naked singles
- * 3. Then find hidden singles
- * 4. Then find naked pairs
- * 5. Then find hidden pairs
- * 5. Bruteforce the rest
+ * First start by basic elimination of candidates
+ * Then find naked singles
+ * Then find hidden singles
+ * Locked candidates (pointing)
+ * Then find naked pairs
+ * Then find hidden pairs
+ * Bruteforce the rest
  */
 
 public static class Solver
@@ -20,6 +21,7 @@ public static class Solver
         new BasicEliminationStrategy(),
         new NakedSinglesStrategy(),
         new HiddenSinglesStrategy(),
+        new LockedCandidatesPointing(),
         new NakedPairsStrategy(),
         new HiddenPairsStrategy(),
     ];
