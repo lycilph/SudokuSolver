@@ -9,6 +9,7 @@ namespace Sandbox;
  * 2. Then find naked singles
  * 3. Then find hidden singles
  * 4. Then find naked pairs
+ * 5. Then find hidden pairs
  * 5. Bruteforce the rest
  */
 
@@ -23,7 +24,7 @@ public static class Solver
         new HiddenPairsStrategy(),
     ];
 
-    public static void Solve(Grid grid)
+    public static Grid Solve(Grid grid)
     {
         var iterations = 0;
         bool changed = true;
@@ -44,6 +45,14 @@ public static class Solver
 
         stopwatch.Stop(); // Stop the stopwatch
         Console.WriteLine($"Execution Time: {stopwatch.ElapsedMilliseconds} ms");
+
+        if (!grid.IsSolved)
+        {
+            Console.WriteLine("Trying brute force solution");
+            grid = BacktrackingSolver.Solve(grid);
+        }
+
+        return grid;
     }
 
     private static bool Step(Grid grid)

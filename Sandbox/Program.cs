@@ -47,7 +47,7 @@ internal class Program
         //var g = new Grid("..............3.85..1.2.......5.7.....4...1...9.......5......73..2.1........4...9"); // Backtracking test (https://en.wikipedia.org/wiki/Sudoku_solving_algorithms#Backtracking)        
 
         Console.WriteLine(g);
-        Solver.Solve(g);
+        g = Solver.Solve(g);
         Console.WriteLine(g);
 
         Console.WriteLine("Press any key to exit...");

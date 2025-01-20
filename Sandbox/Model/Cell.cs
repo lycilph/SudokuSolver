@@ -5,6 +5,7 @@ namespace Sandbox.Model;
 [DebuggerDisplay("I = {Index}, V = {Value}, Candidates = {CandidatesCount}")]
 public class Cell(int index)
 {
+    private static readonly IEnumerable<int> PossibleValues = Enumerable.Range(1, 9);
     public int Index { get; set; } = index;
 
     private int _value = 0;
@@ -18,7 +19,7 @@ public class Cell(int index)
         }
     }
 
-    public HashSet<int> Candidates { get; set; } = new HashSet<int>(Enumerable.Range(1, 9));
+    public HashSet<int> Candidates { get; set; } = new HashSet<int>(PossibleValues);
 
     public Cell[] Peers { get; set; } = [];
 
