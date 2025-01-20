@@ -1,5 +1,8 @@
-﻿namespace Sandbox.Model;
+﻿using System.Diagnostics;
 
+namespace Sandbox.Model;
+
+[DebuggerDisplay("{FullName}")]
 public class Unit
 {
     public string Name { get; set; } = string.Empty;
