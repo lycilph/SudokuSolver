@@ -30,7 +30,7 @@ namespace Sandbox;
  * Make a ui in blazor (and hosted on github pages)
  * 
  * Todo:
- * Make a log of what the solver does 
+ * Make a log of what the solver does (fix outputting from strategies that makes no changes to the grid state)
  */
 
 internal class Program
@@ -44,6 +44,7 @@ internal class Program
         //var g = new Grid(".6.8...4.....4...22.46....9..1..93...96...45...83.....1.7..32.59.2.5.....35..1.7."); // Hidden singles test
         //var g = new Grid("9..4..1...56.......78..62......23.......5..73....7...........8..................."); // Naked pairs test
         //var g = new Grid(".........9.46.7....768.41..3.97.1.8...8...3...5.3.87.2..75.261....4.32.8........."); // Hidden pairs test
+        //var g = new Grid(".16..78.3.9.8.....87...126..48...3..65...9.82.39...65..6.9...2..8...29369246..51."); // Locked candidates (claiming) test
         //var g = new Grid("..............3.85..1.2.......5.7.....4...1...9.......5......73..2.1........4...9"); // Backtracking test (https://en.wikipedia.org/wiki/Sudoku_solving_algorithms#Backtracking)        
 
         Console.WriteLine(g);

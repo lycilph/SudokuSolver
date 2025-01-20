@@ -2,11 +2,11 @@
 
 namespace Sandbox.Strategies;
 
-public class LockedCandidatesPointing : IStrategy
+public class LockedCandidatesClaiming : IStrategy
 {
-    public string Name => "Locked Candidates (Pointing)";
+    public string Name => "Locked Candidates (Claiming)";
 
-    public static readonly LockedCandidatesPointing Instance = new();
+    public static readonly LockedCandidatesClaiming Instance = new();
 
     public bool Step(Grid grid)
     {
@@ -38,7 +38,7 @@ public class LockedCandidatesPointing : IStrategy
             if (cells.Length > 0)
             {
                 var possible_values = cells.SelectMany(c => c.Candidates).ToHashSet();
-                foreach (var value in  possible_values)
+                foreach (var value in possible_values)
                     if (!value_to_rows_or_columns.ContainsKey(value))
                         value_to_rows_or_columns[value] = [unit.Index];
                     else
@@ -52,10 +52,10 @@ public class LockedCandidatesPointing : IStrategy
             if (value_to_rows_or_columns[value].Count == 1)
             {
                 var unit = rows_or_columns[value_to_rows_or_columns[value].First()];
-                Console.WriteLine($" * Found a pointing candidate {value} in {box.FullName} and {unit.FullName}");
+                Console.WriteLine($" * Found a claiming candidate {value} in {box.FullName} and {unit.FullName}");
 
-                // Remove the value from all other cells in the column/row
-                foreach (var cell in unit.Cells.Except(box.Cells))
+                // Remove the value from all other cells in the box
+                foreach (var cell in box.Cells.Except(unit.Cells))
                 {
                     if (cell.Candidates.Contains(value))
                     {
@@ -66,7 +66,7 @@ public class LockedCandidatesPointing : IStrategy
                 }
             }
         }
-        
+
         return found_locked_candidates;
     }
 

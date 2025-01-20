@@ -9,6 +9,7 @@ namespace Sandbox;
  * Then find naked singles
  * Then find hidden singles
  * Locked candidates (pointing)
+ * Locked candidates (claiming)
  * Then find naked pairs
  * Then find hidden pairs
  * Bruteforce the rest
@@ -22,6 +23,7 @@ public static class Solver
         new NakedSinglesStrategy(),
         new HiddenSinglesStrategy(),
         new LockedCandidatesPointing(),
+        new LockedCandidatesClaiming(),
         new NakedPairsStrategy(),
         new HiddenPairsStrategy(),
     ];
