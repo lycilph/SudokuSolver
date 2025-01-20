@@ -13,7 +13,7 @@ public class LockedCandidatesPointingTests
 
         BasicEliminationStrategy.Execute(g);
         LockedCandidatesPointing.Execute(g);
-
+        //..4...2132.13....9.3...247..2..6.7.......8..1.5.....3.6..2...9...25...6...5691...
         //Assert.True(result);
     }
 }

@@ -2,6 +2,8 @@
 
 namespace Sandbox.Strategies;
 
+// https://www.sudokusnake.com/claiming.php
+
 public class LockedCandidatesClaiming : IStrategy
 {
     public string Name => "Locked Candidates (Claiming)";
@@ -12,57 +14,48 @@ public class LockedCandidatesClaiming : IStrategy
     {
         bool found_locked_candidates = false;
 
+        var units = grid.Rows.Concat(grid.Columns).ToArray();
         foreach (var box in grid.Boxes)
         {
-            if (FindLockedCandidates(grid, box, grid.Columns))
-                found_locked_candidates = true;
-
-            if (FindLockedCandidates(grid, box, grid.Rows))
-                found_locked_candidates = true;
+            foreach (var unit in units)
+            {
+                if (FindLockedCandidates(grid, box, unit))
+                    found_locked_candidates = true;
+            }
         }
 
         return found_locked_candidates;
     }
 
-    private bool FindLockedCandidates(Grid grid, Unit box, Unit[] rows_or_columns)
+    private bool FindLockedCandidates(Grid grid, Unit box, Unit unit)
     {
         bool found_locked_candidates = false;
 
-        // Make a dictionary mapping value to rows/columns which contain that value
-        var value_to_rows_or_columns = new Dictionary<int, HashSet<int>>();
+        // Split cells into two groups: those in the box and those outside the box
+        var cells_in_box = box.Cells.Intersect(unit.Cells).ToArray();
+        var cells_outside_box = unit.Cells.Except(cells_in_box).ToArray();
 
-        foreach (var unit in rows_or_columns)
+        // Find the candidates for each of these groups
+        var values_in_box = cells_in_box.SelectMany(cell => cell.Candidates).Distinct().ToArray();
+        var values_outside_box = cells_outside_box.SelectMany(cell => cell.Candidates).Distinct().ToArray();
+
+        // These values can be excluded from the cells in the box that are not in the row or column
+        var values_only_in_box = values_in_box.Except(values_outside_box).ToArray();
+        if (values_only_in_box.Length > 0)
         {
-            // If this column/row intersects the box under consideration, map values to columns/rows where they occur
-            var cells = box.Cells.Intersect(unit.Cells, CellIndexComparer.Instance).ToArray();
-            if (cells.Length > 0)
-            {
-                var possible_values = cells.SelectMany(c => c.Candidates).ToHashSet();
-                foreach (var value in possible_values)
-                    if (!value_to_rows_or_columns.ContainsKey(value))
-                        value_to_rows_or_columns[value] = [unit.Index];
-                    else
-                        value_to_rows_or_columns[value].Add(unit.Index);
-            }
+            Console.WriteLine($" * Found claming candidates ({string.Join(',', values_only_in_box)}) in {box.FullName} and {unit.FullName}");
         }
 
-        // Check if any value is locked to a single column/row
-        foreach (var value in value_to_rows_or_columns.Keys)
+        var cells_to_update = box.Cells.Except(unit.Cells).Where(c => c.IsEmpty).ToArray();
+        foreach (var value in values_only_in_box)
         {
-            if (value_to_rows_or_columns[value].Count == 1)
+            foreach (var cell in cells_to_update)
             {
-                var unit = rows_or_columns[value_to_rows_or_columns[value].First()];
-                Console.WriteLine($" * Found a claiming candidate {value} in {box.FullName} and {unit.FullName}");
-
-                // Remove the value from all other cells in the box
-                foreach (var cell in box.Cells.Except(unit.Cells))
+                if (cell.Candidates.Contains(value))
                 {
-                    if (cell.Candidates.Contains(value))
-                    {
-                        cell.Candidates.Remove(value);
-                        found_locked_candidates = true;
-                        Console.WriteLine($"   - Removed candidate {value} from {cell.Index}");
-                    }
+                    cell.Candidates.Remove(value);
+                    Console.WriteLine($"   - Removed candidate {value} from {cell.Index}");
+                    found_locked_candidates = true;
                 }
             }
         }
