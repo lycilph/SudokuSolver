@@ -11,6 +11,7 @@ namespace Sandbox;
  * Locked candidates (pointing)
  * Locked candidates (claiming)
  * Then find naked pairs
+ * Then find naked triples
  * Then find hidden pairs
  * Bruteforce the rest
  */
@@ -25,6 +26,7 @@ public static class Solver
         new LockedCandidatesPointing(),
         new LockedCandidatesClaiming(),
         new NakedPairsStrategy(),
+        new NakedTriplesStrategy(),
         new HiddenPairsStrategy(),
     ];
 
@@ -73,57 +75,3 @@ public static class Solver
         return false;
     }
 }
-
-/*
-    // Solved grid by brute force through backtracking
-    public static void Backtrack(Grid grid)
-    {
-        Stopwatch stopwatch = Stopwatch.StartNew(); // Start the stopwatch
-
-        BasicElimination(grid);
-
-        if (SolveBacktrack(grid))
-            Console.WriteLine("Sudoku solved by backtracking!");
-        else
-            Console.WriteLine("Sudoku not solved by backtracking!");
-
-        stopwatch.Stop(); // Stop the stopwatch
-        Console.WriteLine($"Execution Time: {stopwatch.ElapsedMilliseconds} ms");
-    }
-
-    private static bool SolveBacktrack(Grid grid)
-    {
-        if (grid.IsSolved)
-            return true;
-
-        var empty_cells = grid.Cells.Where(c => c.IsEmpty).OrderBy(c => c.CandidatesCount).ToArray();
-
-        foreach (var cell in empty_cells)
-        {
-            var possible_values = cell.Candidates.ToArray();
-
-            foreach (var value in possible_values)
-            {
-                // Check if value is used in any of the cells peers
-                var is_valid = cell.Peers.All(p => p.Value != value);
-                if (!is_valid)
-                    continue;
-
-                cell.Value = value;
-                if (SolveBacktrack(grid))
-                {
-                    return true;
-                }
-                else
-                {
-                    cell.Value = 0;
-                    cell.Candidates.UnionWith(possible_values);
-                }
-            }
-            return false;
-        }
-
-        return false;
-    }
-}
-*/
