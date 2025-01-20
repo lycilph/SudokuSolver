@@ -4,18 +4,6 @@ using System.Diagnostics;
 
 namespace Sandbox;
 
-/*
- * First start by basic elimination of candidates
- * Then find naked singles
- * Then find hidden singles
- * Locked candidates (pointing)
- * Locked candidates (claiming)
- * Then find naked pairs
- * Then find naked triples
- * Then find hidden pairs
- * Bruteforce the rest
- */
-
 public static class Solver
 {
     private static readonly IStrategy[] strategies =
@@ -27,6 +15,7 @@ public static class Solver
         new LockedCandidatesClaiming(),
         new NakedPairsStrategy(),
         new NakedTriplesStrategy(),
+        new NakedQuadsStrategy(),
         new HiddenPairsStrategy(),
     ];
 
