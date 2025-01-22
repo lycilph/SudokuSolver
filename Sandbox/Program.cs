@@ -12,12 +12,14 @@ namespace Sandbox;
  * Techniques:
  * https://rakhman.info/blog/solving-sudoku-with-graph-theory/
  * https://opensourc.es/blog/sudoku/
+ * https://www.sudokuwiki.org/
  * Exact cover problem
  * Bipartite graph matching
  * Constraint satisfaction problem
  * 
  * Example of implementation:
  * https://github.com/kurtanr/SimpleSudokuSolver
+ * https://github.com/MAGREMENT/Numeristiq
  * 
  * Test data:
  * https://stackoverflow.com/questions/59973969/high-quality-test-cases-for-sudoku-solver
@@ -32,6 +34,14 @@ namespace Sandbox;
  * Todo:
  * Make a log of what the solver does (fix outputting from strategies that makes no changes to the grid state)
  * Fix/make proper tests for strategies
+ * 
+ * Investigate these strategies:
+ * X-Wing
+ * XY-Wing
+ * XYZ-Wing
+ * Swordfish
+ * Jellyfish
+ * Simple Coloring
  */
 
 internal class Program
@@ -47,11 +57,13 @@ internal class Program
         //var g = new Grid(".7.4.8.29..2.....4854.2...7..83742...2.........32617......936122.....4.313.642.7."); // Naked triples test
         //var g = new Grid("....3..86....2..4..9..7852.3718562949..1423754..3976182..7.3859.392.54677..9.4132"); // Naked quads test
         //var g = new Grid(".........9.46.7....768.41..3.97.1.8...8...3...5.3.87.2..75.261....4.32.8........."); // Hidden pairs test
+        //var g = new Grid(".....1.3.231.9.....65..31..6789243..1.3.5...6...1367....936.57...6.198433........"); // Hidden triples test
         //var g = new Grid(".16..78.3.9.8.....87...126..48...3..65...9.82.39...65..6.9...2..8...29369246..51."); // Locked candidates (claiming) test
         //var g = new Grid("..............3.85..1.2.......5.7.....4...1...9.......5......73..2.1........4...9"); // Backtracking test (https://en.wikipedia.org/wiki/Sudoku_solving_algorithms#Backtracking)        
 
         Console.WriteLine(g);
         g = Solver.Solve(g);
+        HiddenTriplesStrategy.Execute(g);
         Console.WriteLine(g);
 
         Console.WriteLine("Press any key to exit...");

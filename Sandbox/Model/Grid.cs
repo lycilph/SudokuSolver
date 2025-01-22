@@ -4,6 +4,10 @@ namespace Sandbox.Model;
 
 public class Grid
 {
+    public static readonly IEnumerable<int> PossibleValues = Enumerable.Range(1, 9);
+    public static readonly IEnumerable<int> AllCellIndices = Enumerable.Range(0, 81);
+    public static readonly IEnumerable<int> AllUnitIndices = Enumerable.Range(0, 9);
+
     public Cell[] Cells { get; set; }
     public Unit[] Rows { get; set; }
     public Unit[] Columns { get; set; }
@@ -12,15 +16,15 @@ public class Grid
 
     public Grid()
     {
-        Cells = Enumerable.Range(0, 81).Select(i => new Cell(i)).ToArray();
+        Cells = AllCellIndices.Select(i => new Cell(i)).ToArray();
 
-        Rows = Enumerable.Range(0, 9)
+        Rows = AllUnitIndices
             .Select(r => new Unit { Name = "Row", Index = r, Cells = GetRowIndices(r).Select(i => Cells[i]).ToArray() }).ToArray();
 
-        Columns = Enumerable.Range(0, 9)
+        Columns = AllUnitIndices
             .Select(c => new Unit { Name = "Column", Index = c, Cells = GetColumnIndices(c).Select(i => Cells[i]).ToArray() }).ToArray();
 
-        Boxes = Enumerable.Range(0, 9)
+        Boxes = AllUnitIndices
             .Select(c => new Unit { Name = "Box", Index = c, Cells = GetBoxIndices(c).Select(i => Cells[i]).ToArray() }).ToArray();
 
         AllUnits = Rows.Concat(Columns).Concat(Boxes).ToArray();
@@ -31,7 +35,7 @@ public class Grid
 
     public Grid(string puzzle) : this()
     {
-        for (int i = 0; i < 81; i++)
+        foreach (var i in AllCellIndices)
         {
             if (puzzle[i] != '.')
                 Cells[i].Value = puzzle[i] - '0';

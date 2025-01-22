@@ -17,6 +17,7 @@ public static class Solver
         new NakedTriplesStrategy(),
         new NakedQuadsStrategy(),
         new HiddenPairsStrategy(),
+        new HiddenTriplesStrategy(),
     ];
 
     public static Grid Solve(Grid grid)
