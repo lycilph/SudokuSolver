@@ -25,7 +25,7 @@ public class HiddenTriplesStrategy : IStrategy
         var values_to_candidates = new Dictionary<int, Cell[]>();
         var empty_cells = unit.Cells.Where(c => c.IsEmpty).ToArray();
 
-        // Make a dictionary of values to cells that contain that value (but only if there are exactly 3 cells with that value)
+        // Make a dictionary of values to cells that contain that value (but only if there are exactly 2 or 3 cells with that value)
         foreach (var value in Enumerable.Range(1, 9))
         {
             var cells_with_value = empty_cells.Where(c => c.Candidates.Contains(value)).ToArray();

@@ -58,12 +58,13 @@ internal class Program
         //var g = new Grid("....3..86....2..4..9..7852.3718562949..1423754..3976182..7.3859.392.54677..9.4132"); // Naked quads test
         //var g = new Grid(".........9.46.7....768.41..3.97.1.8...8...3...5.3.87.2..75.261....4.32.8........."); // Hidden pairs test
         //var g = new Grid(".....1.3.231.9.....65..31..6789243..1.3.5...6...1367....936.57...6.198433........"); // Hidden triples test
+        //var g = new Grid("65..87.24...649.5..4..25...57.438.61...5.1...31.9.2.85...89..1....213...13.75..98"); // Hidden quads test1
+        //var g = new Grid("9.15...46425.9..8186..1..2.5.2.......19...46.6.......2196.4.2532...6.817.....1694"); // Hidden quads test2
         //var g = new Grid(".16..78.3.9.8.....87...126..48...3..65...9.82.39...65..6.9...2..8...29369246..51."); // Locked candidates (claiming) test
         //var g = new Grid("..............3.85..1.2.......5.7.....4...1...9.......5......73..2.1........4...9"); // Backtracking test (https://en.wikipedia.org/wiki/Sudoku_solving_algorithms#Backtracking)        
 
         Console.WriteLine(g);
         g = Solver.Solve(g);
-        HiddenTriplesStrategy.Execute(g);
         Console.WriteLine(g);
 
         Console.WriteLine("Press any key to exit...");
