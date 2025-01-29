@@ -10,7 +10,7 @@ public class LockedCandidatesClaiming : IStrategy
 
     public static readonly LockedCandidatesClaiming Instance = new();
 
-    public bool Step(Grid grid)
+    public bool Step(Grid grid, bool verbose = true)
     {
         bool found_locked_candidates = false;
 
@@ -19,7 +19,7 @@ public class LockedCandidatesClaiming : IStrategy
         {
             foreach (var unit in units)
             {
-                if (FindLockedCandidates(grid, box, unit))
+                if (FindLockedCandidates(grid, box, unit, verbose))
                     found_locked_candidates = true;
             }
         }
@@ -27,7 +27,7 @@ public class LockedCandidatesClaiming : IStrategy
         return found_locked_candidates;
     }
 
-    private bool FindLockedCandidates(Grid grid, Unit box, Unit unit)
+    private bool FindLockedCandidates(Grid grid, Unit box, Unit unit, bool verbose)
     {
         bool found_locked_candidates = false;
 
@@ -41,7 +41,7 @@ public class LockedCandidatesClaiming : IStrategy
 
         // These values can be excluded from the cells in the box that are not in the row or column
         var values_only_in_box = values_in_box.Except(values_outside_box).ToArray();
-        if (values_only_in_box.Length > 0)
+        if (values_only_in_box.Length > 0 && verbose)
         {
             Console.WriteLine($" * Found claming candidates ({string.Join(',', values_only_in_box)}) in {box.FullName} and {unit.FullName}");
         }
@@ -54,8 +54,9 @@ public class LockedCandidatesClaiming : IStrategy
                 if (cell.Candidates.Contains(value))
                 {
                     cell.Candidates.Remove(value);
-                    Console.WriteLine($"   - Removed candidate {value} from {cell.Index}");
                     found_locked_candidates = true;
+                    if (verbose)
+                        Console.WriteLine($"   - Removed candidate {value} from {cell.Index}");
                 }
             }
         }

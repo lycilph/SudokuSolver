@@ -7,18 +7,18 @@ public class NakedPairsStrategy : IStrategy
     public string Name => "Naked Pairs";
 
     // Find pairs where 2 cells share the same 2 candidates, and remove these candidates from the other cells in the unit
-    public bool Step(Grid grid)
+    public bool Step(Grid grid, bool verbose = true)
     {
         var found_pairs = false;
         foreach (var unit in grid.AllUnits)
         {
-            if (FindNakedPairs(unit))
+            if (FindNakedPairs(unit, verbose))
                 found_pairs = true;
         }
         return found_pairs;
     }
 
-    private bool FindNakedPairs(Unit unit)
+    private bool FindNakedPairs(Unit unit, bool verbose)
     {
         var found_pairs = false;
 
@@ -42,7 +42,8 @@ public class NakedPairsStrategy : IStrategy
                         {
                             cell.Candidates.ExceptWith(candidate1.Candidates);
                             found_pairs = true;
-                            Console.WriteLine($" * Naked pair ({string.Join(',', candidate1.Candidates)}) overlaps with cell {cell.Index} (in {unit.FullName})");
+                            if (verbose)
+                                Console.WriteLine($" * Naked pair ({string.Join(',', candidate1.Candidates)}) overlaps with cell {cell.Index} (in {unit.FullName})");
                         }
                     }
                 }

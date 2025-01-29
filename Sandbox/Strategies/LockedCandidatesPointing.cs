@@ -8,23 +8,23 @@ public class LockedCandidatesPointing : IStrategy
 
     public static readonly LockedCandidatesPointing Instance = new();
 
-    public bool Step(Grid grid)
+    public bool Step(Grid grid, bool verbose = true)
     {
         bool found_locked_candidates = false;
 
         foreach (var box in grid.Boxes)
         {
-            if (FindLockedCandidates(grid, box, grid.Columns))
+            if (FindLockedCandidates(grid, box, grid.Columns, verbose))
                 found_locked_candidates = true;
 
-            if (FindLockedCandidates(grid, box, grid.Rows))
+            if (FindLockedCandidates(grid, box, grid.Rows, verbose))
                 found_locked_candidates = true;
         }
 
         return found_locked_candidates;
     }
 
-    private bool FindLockedCandidates(Grid grid, Unit box, Unit[] rows_or_columns)
+    private bool FindLockedCandidates(Grid grid, Unit box, Unit[] rows_or_columns, bool verbose)
     {
         bool found_locked_candidates = false;
 
@@ -52,7 +52,8 @@ public class LockedCandidatesPointing : IStrategy
             if (value_to_rows_or_columns[value].Count == 1)
             {
                 var unit = rows_or_columns[value_to_rows_or_columns[value].First()];
-                Console.WriteLine($" * Found a pointing candidate {value} in {box.FullName} and {unit.FullName}");
+                if (verbose)
+                    Console.WriteLine($" * Found a pointing candidate {value} in {box.FullName} and {unit.FullName}");
 
                 // Remove the value from all other cells in the column/row
                 foreach (var cell in unit.Cells.Except(box.Cells))
@@ -61,7 +62,8 @@ public class LockedCandidatesPointing : IStrategy
                     {
                         cell.Candidates.Remove(value);
                         found_locked_candidates = true;
-                        Console.WriteLine($"   - Removed candidate {value} from {cell.Index}");
+                        if (verbose)
+                            Console.WriteLine($"   - Removed candidate {value} from {cell.Index}");
                     }
                 }
             }

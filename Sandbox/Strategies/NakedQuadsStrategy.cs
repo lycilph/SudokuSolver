@@ -8,18 +8,18 @@ public class NakedQuadsStrategy : IStrategy
 
     public static readonly NakedQuadsStrategy Instance = new();
 
-    public bool Step(Grid grid)
+    public bool Step(Grid grid, bool verbose = true)
     {
         var found_quads = false;
         foreach (var unit in grid.AllUnits)
         {
-            if (FindNakedQuads(unit))
+            if (FindNakedQuads(unit, verbose))
                 found_quads = true;
         }
         return found_quads;
     }
 
-    private bool FindNakedQuads(Unit unit)
+    private bool FindNakedQuads(Unit unit, bool verbose)
     {
         var found_quads = false;
         
@@ -52,8 +52,9 @@ public class NakedQuadsStrategy : IStrategy
                                 if (cell.Candidates.Overlaps(quad_candidates))
                                 {
                                     cell.Candidates.ExceptWith(quad_candidates);
-                                    Console.WriteLine($" * Found naked quad ({string.Join(',', quad_candidates)}) in {unit.FullName} removes candidates from {cell.Index}");
                                     found_quads = true;
+                                    if (verbose)
+                                        Console.WriteLine($" * Found naked quad ({string.Join(',', quad_candidates)}) in {unit.FullName} removes candidates from {cell.Index}");
                                 }
                             }
                         }

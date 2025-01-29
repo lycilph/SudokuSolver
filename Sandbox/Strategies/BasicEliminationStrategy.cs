@@ -9,7 +9,7 @@ public class BasicEliminationStrategy : IStrategy
     public static readonly BasicEliminationStrategy Instance = new();
 
     // Eliminate the cell value from the candidates of its peers
-    public bool Step(Grid grid)
+    public bool Step(Grid grid, bool verbose = true)
     {
         var candidate_count = grid.Cells.Sum(c => c.Candidates.Count);
 

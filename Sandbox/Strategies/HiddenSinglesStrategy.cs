@@ -7,18 +7,18 @@ public class HiddenSinglesStrategy : IStrategy
     public string Name => "Hidden Singles";
 
     // Find cells where a value is only present as a candidate in one cell in a unit
-    public bool Step(Grid grid)
+    public bool Step(Grid grid, bool verbose = true)
     {
         var found_singles = false;
         foreach (var unit in grid.AllUnits)
         {
-            if (FindHiddenSingles(unit))
+            if (FindHiddenSingles(unit, verbose))
                 found_singles = true;
         }
         return found_singles;
     }
 
-    private bool FindHiddenSingles(Unit unit)
+    private bool FindHiddenSingles(Unit unit, bool verbose)
     {
         var found_singles = false;
 
@@ -33,8 +33,9 @@ public class HiddenSinglesStrategy : IStrategy
             {
                 candidates[0].Value = value;
                 found_singles = true;
-                Console.WriteLine($" * Hidden single found in cell {candidates[0].Index} = {value} (in {unit.FullName})");
 
+                if (verbose)
+                    Console.WriteLine($" * Hidden single found in cell {candidates[0].Index} = {value} (in {unit.FullName})");
             }
         }
 

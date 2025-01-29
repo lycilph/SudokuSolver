@@ -6,18 +6,18 @@ public class HiddenPairsStrategy : IStrategy
 {
     public string Name => "Hidden Pairs";
 
-    public bool Step(Grid grid)
+    public bool Step(Grid grid, bool verbose = true)
     {
         var found_pairs = false;
         foreach (var unit in grid.AllUnits)
         {
-            if (FindHiddenPairs(unit))
+            if (FindHiddenPairs(unit, verbose))
                 found_pairs = true;
         }
         return found_pairs;
     }
 
-    private bool FindHiddenPairs(Unit unit)
+    private bool FindHiddenPairs(Unit unit, bool verbose)
     {
         var found_pairs = false;
         var values_to_candidates = new Dictionary<int, Cell[]>();
@@ -47,7 +47,7 @@ public class HiddenPairsStrategy : IStrategy
                             found_pairs = true;
                         }
                     }
-                    if (found_pairs)
+                    if (found_pairs && verbose)
                         Console.WriteLine($" * Hidden pairs ({i},{j}): {string.Join(' ', values_to_candidates[i].Select(c => c.Index))} (in {unit.FullName})");
                 }
             }

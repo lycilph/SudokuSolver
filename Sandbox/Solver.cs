@@ -21,7 +21,7 @@ public static class Solver
         new HiddenQuadsStrategy(),
     ];
 
-    public static Grid Solve(Grid grid)
+    public static Grid Solve(Grid grid, bool verbose = true)
     {
         var iterations = 0;
         bool changed = true;
@@ -33,9 +33,9 @@ public static class Solver
         {
             iterations++;
 
-            changed = Step(grid);
-
-            Console.WriteLine($"Iteration {iterations}: {grid.EmptyCellsCount} empty cells left and {grid.TotalCandidatesCount} candidates (changed {changed})");
+            changed = Step(grid, verbose);
+            if (verbose)
+                Console.WriteLine($"Iteration {iterations}: {grid.EmptyCellsCount} empty cells left and {grid.TotalCandidatesCount} candidates (changed {changed})");
         }
 
         Console.WriteLine(grid.IsSolved ? "Sudoku solved" : "Sudoku NOT solved!");
@@ -52,13 +52,14 @@ public static class Solver
         return grid;
     }
 
-    private static bool Step(Grid grid)
+    private static bool Step(Grid grid, bool verbose)
     {
         foreach (var strategy in strategies)
         {
-            if (strategy.Step(grid))
+            if (strategy.Step(grid, verbose))
             {
-                Console.WriteLine($" * {strategy.Name}");
+                if (verbose)
+                    Console.WriteLine($" * {strategy.Name}");
                 return true;
             }
         }

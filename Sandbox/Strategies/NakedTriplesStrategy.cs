@@ -8,18 +8,18 @@ public class NakedTriplesStrategy : IStrategy
     
     public static readonly NakedTriplesStrategy Instance = new ();
 
-    public bool Step(Grid grid)
+    public bool Step(Grid grid, bool verbose = true)
     {
         var found_triples = false;
         foreach (var unit in grid.AllUnits)
         {
-            if (FindNakedTriples(unit))
+            if (FindNakedTriples(unit, verbose))
                 found_triples = true;
         }
         return found_triples;
     }
 
-    private bool FindNakedTriples(Unit unit)
+    private bool FindNakedTriples(Unit unit, bool verbose)
     {
         var found_triples = false;
 
@@ -50,8 +50,9 @@ public class NakedTriplesStrategy : IStrategy
                             if (cell.Candidates.Overlaps(triple_candidates))
                             {
                                 cell.Candidates.ExceptWith(triple_candidates);
-                                Console.WriteLine($" * Found naked triple ({string.Join(',', triple_candidates)}) in {unit.FullName} removes candidates from {cell.Index}");
                                 found_triples = true;
+                                if (verbose)
+                                    Console.WriteLine($" * Found naked triple ({string.Join(',', triple_candidates)}) in {unit.FullName} removes candidates from {cell.Index}");
                             }
                         }
                     }

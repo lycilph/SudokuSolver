@@ -8,18 +8,18 @@ public class HiddenQuadsStrategy : IStrategy
 
     public static readonly HiddenQuadsStrategy Instance = new();
 
-    public bool Step(Grid grid)
+    public bool Step(Grid grid, bool verbose = true)
     {
         var found_quads = false;
         foreach (var unit in grid.AllUnits)
         {
-            if (FindHiddenQuads(unit))
+            if (FindHiddenQuads(unit, verbose))
                 found_quads = true;
         }
         return found_quads;
     }
 
-    private bool FindHiddenQuads(Unit unit)
+    private bool FindHiddenQuads(Unit unit, bool verbose)
     {
         var found_quads = false;
         var values_to_candidates = new Dictionary<int, Cell[]>();
@@ -63,7 +63,7 @@ public class HiddenQuadsStrategy : IStrategy
                                         found_quads = true;
                                     }
                                 }
-                                if (found_quads)
+                                if (found_quads && verbose)
                                     Console.WriteLine($" * Hidden quad ({i},{j},{k},{l}): {string.Join(' ', union.Select(c => c.Index))} (in {unit.FullName})");
                             }
                         }

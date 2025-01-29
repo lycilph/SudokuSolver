@@ -8,18 +8,18 @@ public class HiddenTriplesStrategy : IStrategy
 
     public static readonly HiddenTriplesStrategy Instance = new();
 
-    public bool Step(Grid grid)
+    public bool Step(Grid grid, bool verbose = true)
     {
         var found_triples = false;
         foreach (var unit in grid.AllUnits)
         {
-            if (FindHiddenTriples(unit))
+            if (FindHiddenTriples(unit, verbose))
                 found_triples = true;
         }
         return found_triples;
     }
 
-    private bool FindHiddenTriples(Unit unit)
+    private bool FindHiddenTriples(Unit unit, bool verbose)
     {
         var found_triples = false;
         var values_to_candidates = new Dictionary<int, Cell[]>();
@@ -56,11 +56,12 @@ public class HiddenTriplesStrategy : IStrategy
                                 if (cell.Candidates.Except([i, j, k]).Any())
                                 {
                                     cell.Candidates.IntersectWith([i, j, k]);
-                                    Console.WriteLine($"   - Removing triple ({i},{j},{k}) from cell {cell.Index}");
                                     found_triples = true;
+                                    if (verbose)
+                                        Console.WriteLine($"   - Removing triple ({i},{j},{k}) from cell {cell.Index}");
                                 }
                             }
-                            if (found_triples)
+                            if (found_triples && verbose)
                                 Console.WriteLine($" * Hidden triples ({i},{j},{k}): {string.Join(' ', union.Select(c => c.Index))} (in {unit.FullName})");
                         }
                     }

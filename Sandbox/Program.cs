@@ -38,10 +38,8 @@ namespace Sandbox;
  * Investigate these strategies:
  * X-Wing
  * XY-Wing
- * XYZ-Wing
- * Swordfish
- * Jellyfish
  * Simple Coloring
+ * X-chains
  */
 
 internal class Program
@@ -63,9 +61,22 @@ internal class Program
         //var g = new Grid(".16..78.3.9.8.....87...126..48...3..65...9.82.39...65..6.9...2..8...29369246..51."); // Locked candidates (claiming) test
         //var g = new Grid("..............3.85..1.2.......5.7.....4...1...9.......5......73..2.1........4...9"); // Backtracking test (https://en.wikipedia.org/wiki/Sudoku_solving_algorithms#Backtracking)        
 
-        Console.WriteLine(g);
-        g = Solver.Solve(g);
-        Console.WriteLine(g);
+        //Console.WriteLine(g);
+        //g = Solver.Solve(g);
+        //Console.WriteLine(g);
+
+        var filename = @"..\..\..\..\data\puzzles1_unbiased";
+        var puzzle_reader = new PuzzleFileReader(filename);
+        var count = PuzzleFileReader.CountPuzzles(filename);
+        var solved = 0;
+        Console.WriteLine($"Found {count} in {filename}");
+
+        foreach (var grid in puzzle_reader.ReadPuzzle())
+        {
+            Solver.Solve(grid, false);
+            solved++;
+            Console.WriteLine($"Solved {solved} of {count}");
+        }
 
         Console.WriteLine("Press any key to exit...");
         Console.ReadKey();
