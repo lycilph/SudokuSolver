@@ -1,6 +1,6 @@
-﻿using Sandbox.Model;
+﻿using Core.Model;
 
-namespace Sandbox.Strategies;
+namespace Core.Strategies;
 
 public class NakedQuadsStrategy : IStrategy
 {
@@ -22,7 +22,7 @@ public class NakedQuadsStrategy : IStrategy
     private bool FindNakedQuads(Unit unit, bool verbose)
     {
         var found_quads = false;
-        
+
         var empty_cells = unit.Cells.Where(c => c.IsEmpty).ToArray();
         if (empty_cells.Length <= 4)
             return false;
@@ -62,7 +62,7 @@ public class NakedQuadsStrategy : IStrategy
                 }
             }
         }
-        
+
         return found_quads;
     }
 

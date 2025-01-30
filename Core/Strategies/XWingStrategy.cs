@@ -1,6 +1,6 @@
-﻿using Sandbox.Model;
+﻿using Core.Model;
 
-namespace Sandbox.Strategies;
+namespace Core.Strategies;
 
 /// <summary>
 /// Take two rows (the base sets). If you can find two columns, 
@@ -67,7 +67,7 @@ public class XWingStrategy : IStrategy
                         Console.WriteLine($"Found a pair-candidate on {candidates[i].Item1} in {base_str} {candidates[i].Item2.GetUnitIndex(base_set_type)} ({cover_str}s: {candidates[i].Item2.GetUnitIndex(cover_set_type)} and {candidates[i].Item3.GetUnitIndex(cover_set_type)})");
                         Console.WriteLine($"Found a pair-candidate on {candidates[j].Item1} in {base_str} {candidates[j].Item2.GetUnitIndex(base_set_type)} ({cover_str}s: {candidates[j].Item2.GetUnitIndex(cover_set_type)} and {candidates[j].Item3.GetUnitIndex(cover_set_type)})");
                     }
-                    
+
                     found_xwing |= EliminateCandidates(value, units_to_process, indices_to_ignore, base_set_type, verbose);
                 }
             }
@@ -86,12 +86,12 @@ public class XWingStrategy : IStrategy
             {
                 cell.Candidates.Remove(value);
                 removed_candidates = true;
-                
+
                 if (verbose)
                     Console.WriteLine($"Removing {value} from cell {cell.Index} ({cell.Row}, {cell.Column})");
             }
         }
-        
+
         return removed_candidates;
     }
 
@@ -101,13 +101,13 @@ public class XWingStrategy : IStrategy
     private bool IsXWing(Tuple<int, Cell, Cell> candidate1, Tuple<int, Cell, Cell> candidate2)
     {
         return candidate1.Item1 == candidate2.Item1 &&
-            ((candidate1.Item2.Row != candidate2.Item2.Row &&
+            (candidate1.Item2.Row != candidate2.Item2.Row &&
              candidate1.Item2.Column == candidate2.Item2.Column &&
-             candidate1.Item3.Column == candidate2.Item3.Column)
+             candidate1.Item3.Column == candidate2.Item3.Column
              ||
-             (candidate1.Item2.Column != candidate2.Item2.Column &&
+             candidate1.Item2.Column != candidate2.Item2.Column &&
              candidate1.Item2.Row == candidate2.Item2.Row &&
-             candidate1.Item3.Row == candidate2.Item3.Row));
+             candidate1.Item3.Row == candidate2.Item3.Row);
     }
 
     public static bool Execute(Grid grid)

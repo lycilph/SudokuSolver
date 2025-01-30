@@ -1,4 +1,4 @@
-﻿using Sandbox.Model;
+﻿using Core.Model;
 
 namespace Sandbox;
 public class PuzzleFileReader(string filename)

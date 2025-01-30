@@ -1,8 +1,8 @@
-﻿using Sandbox.Model;
-using Sandbox.Strategies;
+﻿using Core.Model;
+using Core.Strategies;
 using System.Diagnostics;
 
-namespace Sandbox;
+namespace Core;
 
 public static class Solver
 {
@@ -19,6 +19,7 @@ public static class Solver
         new HiddenPairsStrategy(),
         new HiddenTriplesStrategy(),
         new HiddenQuadsStrategy(),
+        new XWingStrategy(),
     ];
 
     public static Grid Solve(Grid grid, bool verbose = true)

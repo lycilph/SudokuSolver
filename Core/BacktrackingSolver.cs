@@ -1,7 +1,7 @@
-﻿using Sandbox.Model;
+﻿using Core.Model;
 using System.Diagnostics;
 
-namespace Sandbox;
+namespace Core;
 
 public class BacktrackingSolver
 {

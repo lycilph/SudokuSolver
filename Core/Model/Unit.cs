@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Sandbox.Model;
+namespace Core.Model;
 
 [DebuggerDisplay("{FullName}")]
 public class Unit

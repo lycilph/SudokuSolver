@@ -1,6 +1,6 @@
-﻿using Sandbox.Model;
+﻿using Core.Model;
 
-namespace Sandbox.Strategies;
+namespace Core.Strategies;
 
 public class BasicEliminationStrategy : IStrategy
 {

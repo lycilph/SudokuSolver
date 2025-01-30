@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Sandbox.Model;
+namespace Core.Model;
 
 public enum UnitType { Row, Column };
 
@@ -10,11 +10,11 @@ public class Cell(int index)
     public int Index { get; set; } = index;
 
     private int _value = 0;
-    public int Value 
-    { 
-        get => _value; 
-        set  
-        { 
+    public int Value
+    {
+        get => _value;
+        set
+        {
             _value = value;
             Candidates.Clear();
         }

@@ -1,6 +1,6 @@
-﻿using Sandbox.Model;
+﻿using Core.Model;
 
-namespace Sandbox.Strategies;
+namespace Core.Strategies;
 
 public class HiddenSinglesStrategy : IStrategy
 {
@@ -25,7 +25,7 @@ public class HiddenSinglesStrategy : IStrategy
         var empty_cells = unit.Cells.Where(c => c.IsEmpty).ToArray();
         var possible_values = Enumerable.Range(1, 9).Except(unit.Cells.Where(c => c.HasValue).Select(c => c.Value)).ToArray();
 
-        foreach (var value in possible_values) 
+        foreach (var value in possible_values)
         {
             var candidates = empty_cells.Where(c => c.Candidates.Contains(value)).ToArray();
 

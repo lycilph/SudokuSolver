@@ -1,5 +1,5 @@
-﻿using Sandbox.Model;
-using Sandbox.Strategies;
+﻿using Core.Model;
+using Core.Strategies;
 
 namespace SolverTests;
 

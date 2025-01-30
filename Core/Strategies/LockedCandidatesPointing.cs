@@ -1,6 +1,6 @@
-﻿using Sandbox.Model;
+﻿using Core.Model;
 
-namespace Sandbox.Strategies;
+namespace Core.Strategies;
 
 public class LockedCandidatesPointing : IStrategy
 {
@@ -38,7 +38,7 @@ public class LockedCandidatesPointing : IStrategy
             if (cells.Length > 0)
             {
                 var possible_values = cells.SelectMany(c => c.Candidates).ToHashSet();
-                foreach (var value in  possible_values)
+                foreach (var value in possible_values)
                     if (!value_to_rows_or_columns.ContainsKey(value))
                         value_to_rows_or_columns[value] = [unit.Index];
                     else
@@ -68,7 +68,7 @@ public class LockedCandidatesPointing : IStrategy
                 }
             }
         }
-        
+
         return found_locked_candidates;
     }
 

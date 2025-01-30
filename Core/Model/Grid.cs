@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace Sandbox.Model;
+namespace Core.Model;
 
 public class Grid
 {
@@ -77,11 +77,11 @@ public class Grid
     private static int[] GetBoxIndices(int box)
     {
         var indices = new int[9];
-        int startRow = (box / 3) * 3;
-        int startCol = (box % 3) * 3;
+        int startRow = box / 3 * 3;
+        int startCol = box % 3 * 3;
         for (int i = 0; i < 9; i++)
         {
-            indices[i] = (startRow + i / 3) * 9 + (startCol + i % 3);
+            indices[i] = (startRow + i / 3) * 9 + startCol + i % 3;
         }
         return indices;
     }
