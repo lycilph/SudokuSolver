@@ -2,6 +2,16 @@
 
 namespace Sandbox.Strategies;
 
+/// <summary>
+/// Take two rows (the base sets). If you can find two columns, 
+/// such that all candidates of a specific digit (the fish digit) in both rows are containd in the columns (the cover sets), 
+/// all fish candidates in the columns that are not part of the rows can be eliminated. 
+/// The result is called an X-Wing in the rows. The base and cover sets are reversed for X-Wings in the columns
+/// </summary>
+/// <remarks>
+/// See also:
+/// - http://www.sudokuwiki.org/X_Wing_Strategy
+/// </remarks>
 public class XWingStrategy : IStrategy
 {
     public string Name => "X-Wing";
@@ -12,19 +22,19 @@ public class XWingStrategy : IStrategy
     {
         var found_xwing = false;
 
-        if (FindXWingsRowMajor(grid))
-            found_xwing = true;
-
-        if (FindXWingsColumnMajor(grid))
-            found_xwing = true;
+        found_xwing |= FindXWings(grid.Rows, grid.Columns, UnitType.Row, UnitType.Column, verbose);
+        found_xwing |= FindXWings(grid.Columns, grid.Rows, UnitType.Column, UnitType.Row, verbose);
 
         return found_xwing;
     }
 
-    private bool FindXWingsRowMajor(Grid grid)
+    private bool FindXWings(Unit[] base_sets, Unit[] cover_sets, UnitType base_set_type, UnitType cover_set_type, bool verbose)
     {
         var found_xwing = false;
+        var base_str = base_sets.First().Name;
+        var cover_str = cover_sets.First().Name;
 
+        // Find candidates
         /// Tuple where:
         /// - Item1 is possible value
         /// - Item2 is first cell containing possible value (ie. item1)
@@ -33,9 +43,9 @@ public class XWingStrategy : IStrategy
 
         foreach (var value in Grid.PossibleValues)
         {
-            foreach (var row in grid.Rows)
+            foreach (var unit in base_sets)
             {
-                var pair_candidates = row.Cells.Where(c => c.Candidates.Contains(value)).ToArray();
+                var pair_candidates = unit.Cells.Where(c => c.Candidates.Contains(value)).ToArray();
                 if (pair_candidates.Length == 2)
                     candidates.Add(Tuple.Create(value, pair_candidates[0], pair_candidates[1]));
             }
@@ -47,14 +57,18 @@ public class XWingStrategy : IStrategy
             {
                 if (IsXWing(candidates[i], candidates[j]))
                 {
-                    Console.WriteLine("Found x-wing (row-major)");
-                    Console.WriteLine($"Found a pair-candidate on {candidates[i].Item1} in row {candidates[i].Item2.Row} (columns: {candidates[i].Item2.Column} and {candidates[i].Item3.Column})");
-                    Console.WriteLine($"Found a pair-candidate on {candidates[j].Item1} in row {candidates[j].Item2.Row} (columns: {candidates[j].Item2.Column} and {candidates[j].Item3.Column})");
+                    int value = candidates[i].Item1;
+                    Unit[] units_to_process = [cover_sets[candidates[i].Item2.GetUnitIndex(cover_set_type)], cover_sets[candidates[i].Item3.GetUnitIndex(cover_set_type)]];
+                    int[] indices_to_ignore = [candidates[i].Item2.GetUnitIndex(base_set_type), candidates[j].Item2.GetUnitIndex(base_set_type)];
 
-                    if (EliminateCandidatesFromColumns(candidates[i].Item1,
-                        [grid.Columns[candidates[i].Item2.Column], grid.Columns[candidates[i].Item3.Column]],
-                        [candidates[i].Item2.Row, candidates[j].Item2.Row]))
-                        found_xwing = true;
+                    if (verbose)
+                    {
+                        Console.WriteLine($"Found x-wing (base set is {base_str}s)");
+                        Console.WriteLine($"Found a pair-candidate on {candidates[i].Item1} in {base_str} {candidates[i].Item2.GetUnitIndex(base_set_type)} ({cover_str}s: {candidates[i].Item2.GetUnitIndex(cover_set_type)} and {candidates[i].Item3.GetUnitIndex(cover_set_type)})");
+                        Console.WriteLine($"Found a pair-candidate on {candidates[j].Item1} in {base_str} {candidates[j].Item2.GetUnitIndex(base_set_type)} ({cover_str}s: {candidates[j].Item2.GetUnitIndex(cover_set_type)} and {candidates[j].Item3.GetUnitIndex(cover_set_type)})");
+                    }
+                    
+                    found_xwing |= EliminateCandidates(value, units_to_process, indices_to_ignore, base_set_type, verbose);
                 }
             }
         }
@@ -62,78 +76,22 @@ public class XWingStrategy : IStrategy
         return found_xwing;
     }
 
-    private bool FindXWingsColumnMajor(Grid grid)
-    {
-        var found_xwing = false;
-
-        /// Tuple where:
-        /// - Item1 is possible value
-        /// - Item2 is first cell containing possible value (ie. item1)
-        /// - Item3 is second cell containing possible value (ie. item1)
-        var candidates = new List<Tuple<int, Cell, Cell>>();
-
-        foreach (var value in Grid.PossibleValues)
-        {
-            foreach (var col in grid.Columns)
-            {
-                var pair_candidates = col.Cells.Where(c => c.Candidates.Contains(value)).ToArray();
-                if (pair_candidates.Length == 2)
-                    candidates.Add(Tuple.Create(value, pair_candidates[0], pair_candidates[1]));
-            }
-        }
-
-        for (int i = 0; i < candidates.Count - 1; i++)
-        {
-            for (int j = i + 1; j < candidates.Count; j++)
-            {
-                if (IsXWing(candidates[i], candidates[j]))
-                {
-                    Console.WriteLine("Found x-wing (column-major)");
-                    Console.WriteLine($"Found a pair-candidate on {candidates[i].Item1} in column {candidates[i].Item2.Column} (rows: {candidates[i].Item2.Row} and {candidates[i].Item3.Row})");
-                    Console.WriteLine($"Found a pair-candidate on {candidates[j].Item1} in column {candidates[j].Item2.Column} (rows: {candidates[j].Item2.Row} and {candidates[j].Item3.Row})");
-
-                    if (EliminateCandidatesFromRows(candidates[i].Item1,
-                        [grid.Columns[candidates[i].Item2.Row], grid.Columns[candidates[i].Item3.Row]],
-                        [candidates[i].Item2.Column, candidates[j].Item2.Column]))
-                        found_xwing = true;
-                }
-            }
-        }
-
-        return found_xwing;
-    }
-
-    private bool EliminateCandidatesFromColumns(int value, Unit[] columns, int[] rows_to_exclude)
+    private bool EliminateCandidates(int value, Unit[] cover_sets, int[] indices_to_ignore, UnitType base_set_type, bool verbose)
     {
         var removed_candidates = false;
 
-        foreach (var cell in columns.SelectMany(c => c.Cells))
+        foreach (var cell in cover_sets.SelectMany(c => c.Cells))
         {
-            if (!rows_to_exclude.Contains(cell.Row) && cell.Candidates.Contains(value))
+            if (!indices_to_ignore.Contains(cell.GetUnitIndex(base_set_type)) && cell.Candidates.Contains(value))
             {
                 cell.Candidates.Remove(value);
                 removed_candidates = true;
-                Console.WriteLine($"Removing {value} from cell {cell.Index} ({cell.Row}, {cell.Column})");
+                
+                if (verbose)
+                    Console.WriteLine($"Removing {value} from cell {cell.Index} ({cell.Row}, {cell.Column})");
             }
         }
-
-        return removed_candidates;
-    }
-
-    private bool EliminateCandidatesFromRows(int value, Unit[] rows, int[] columns_to_exclude)
-    {
-        var removed_candidates = false;
-
-        foreach (var cell in rows.SelectMany(c => c.Cells))
-        {
-            if (!columns_to_exclude.Contains(cell.Column) && cell.Candidates.Contains(value))
-            {
-                cell.Candidates.Remove(value);
-                removed_candidates = true;
-                Console.WriteLine($"Removing {value} from cell {cell.Index} ({cell.Row}, {cell.Column})");
-            }
-        }
-
+        
         return removed_candidates;
     }
 

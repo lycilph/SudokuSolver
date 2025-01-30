@@ -58,20 +58,16 @@ internal class Program
         //var g = new Grid(".....1.3.231.9.....65..31..6789243..1.3.5...6...1367....936.57...6.198433........"); // Hidden triples test
         //var g = new Grid("65..87.24...649.5..4..25...57.438.61...5.1...31.9.2.85...89..1....213...13.75..98"); // Hidden quads test1
         //var g = new Grid("9.15...46425.9..8186..1..2.5.2.......19...46.6.......2196.4.2532...6.817.....1694"); // Hidden quads test2
-        var g = new Grid("1.....569492.561.8.561.924...964.8.1.64.1....218.356.4.4.5...169.5.614.2621.....5"); // X-Wing (rows) test
+        //var g = new Grid("1.....569492.561.8.561.924...964.8.1.64.1....218.356.4.4.5...169.5.614.2621.....5"); // X-Wing (rows) test
         //var g = new Grid(".......9476.91..5..9...2.81.7..5..1....7.9....8..31.6724.1...7..1..9..459.....1.."); // X-Wing (columns) test
+        //var g = new Grid(".41729.3.769..34.2.3264.7194.39..17.6.7..49.319537..24214567398376.9.541958431267"); // X-Wing (rows) test 2
+        var g = new Grid("98..62753.65..3...327.5...679..3.5...5...9...832.45..9673591428249.87..5518.2...7"); // X-Wing (columns) test 2
         //var g = new Grid(".16..78.3.9.8.....87...126..48...3..65...9.82.39...65..6.9...2..8...29369246..51."); // Locked candidates (claiming) test
         //var g = new Grid("..............3.85..1.2.......5.7.....4...1...9.......5......73..2.1........4...9"); // Backtracking test (https://en.wikipedia.org/wiki/Sudoku_solving_algorithms#Backtracking)        
 
-        //Console.WriteLine(g);
-        //g = Solver.Solve(g);
-        //Console.WriteLine(g);
-
         Console.WriteLine(g);
-        BasicEliminationStrategy.Execute(g);
-        XWingStrategy.Execute(g);
+        g = Solver.Solve(g);
         Console.WriteLine(g);
-
 
         Console.WriteLine("Press any key to exit...");
         Console.ReadKey();

@@ -2,6 +2,8 @@
 
 namespace Sandbox.Model;
 
+public enum UnitType { Row, Column };
+
 [DebuggerDisplay("I = {Index}, V = {Value}, Candidates = {CandidatesCount}")]
 public class Cell(int index)
 {
@@ -28,4 +30,6 @@ public class Cell(int index)
 
     public int Row => Index / 9;
     public int Column => Index % 9;
+
+    public int GetUnitIndex(UnitType type) => type == UnitType.Row ? Row : Column;
 }
