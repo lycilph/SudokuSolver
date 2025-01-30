@@ -49,7 +49,7 @@ internal class Program
         //var puzzle = PuzzleFileReader.ReadPuzzle(@"..\..\..\..\data\puzzles0_kaggle");
         //var g = new Grid(".5..83.17...1..4..3.4..56.8....3...9.9.8245....6....7...9....5...729..861.36.72.4"); // Easy
         //var g = new Grid("4...3.......6..8..........1....5..9..8....6...7.2........1.27..5.3....4.9........"); // Moderate?
-        var g = new Grid("98.7..6..75..4......3..8.7.8....9.5..3.2..1.....4....6.7...4.3....8..4......1...2"); // Hard
+        //var g = new Grid("98.7..6..75..4......3..8.7.8....9.5..3.2..1.....4....6.7...4.3....8..4......1...2"); // Hard
         //var g = new Grid(".6.8...4.....4...22.46....9..1..93...96...45...83.....1.7..32.59.2.5.....35..1.7."); // Hidden singles test
         //var g = new Grid("9..4..1...56.......78..62......23.......5..73....7...........8..................."); // Naked pairs test
         //var g = new Grid(".7.4.8.29..2.....4854.2...7..83742...2.........32617......936122.....4.313.642.7."); // Naked triples test
@@ -58,6 +58,8 @@ internal class Program
         //var g = new Grid(".....1.3.231.9.....65..31..6789243..1.3.5...6...1367....936.57...6.198433........"); // Hidden triples test
         //var g = new Grid("65..87.24...649.5..4..25...57.438.61...5.1...31.9.2.85...89..1....213...13.75..98"); // Hidden quads test1
         //var g = new Grid("9.15...46425.9..8186..1..2.5.2.......19...46.6.......2196.4.2532...6.817.....1694"); // Hidden quads test2
+        var g = new Grid("1.....569492.561.8.561.924...964.8.1.64.1....218.356.4.4.5...169.5.614.2621.....5"); // X-Wing (rows) test
+        //var g = new Grid(".......9476.91..5..9...2.81.7..5..1....7.9....8..31.6724.1...7..1..9..459.....1.."); // X-Wing (columns) test
         //var g = new Grid(".16..78.3.9.8.....87...126..48...3..65...9.82.39...65..6.9...2..8...29369246..51."); // Locked candidates (claiming) test
         //var g = new Grid("..............3.85..1.2.......5.7.....4...1...9.......5......73..2.1........4...9"); // Backtracking test (https://en.wikipedia.org/wiki/Sudoku_solving_algorithms#Backtracking)        
 
@@ -65,6 +67,18 @@ internal class Program
         //g = Solver.Solve(g);
         //Console.WriteLine(g);
 
+        Console.WriteLine(g);
+        BasicEliminationStrategy.Execute(g);
+        XWingStrategy.Execute(g);
+        Console.WriteLine(g);
+
+
+        Console.WriteLine("Press any key to exit...");
+        Console.ReadKey();
+    }
+
+    private static void SolvedAllPuzzlesInFile()
+    {
         var filename = @"..\..\..\..\data\puzzles1_unbiased";
         var puzzle_reader = new PuzzleFileReader(filename);
         var count = PuzzleFileReader.CountPuzzles(filename);
@@ -77,8 +91,5 @@ internal class Program
             solved++;
             Console.WriteLine($"Solved {solved} of {count}");
         }
-
-        Console.WriteLine("Press any key to exit...");
-        Console.ReadKey();
     }
 }

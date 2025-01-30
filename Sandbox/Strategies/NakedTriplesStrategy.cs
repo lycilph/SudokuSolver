@@ -6,7 +6,7 @@ public class NakedTriplesStrategy : IStrategy
 {
     public string Name => "Naked Triples";
     
-    public static readonly NakedTriplesStrategy Instance = new ();
+    public static readonly NakedTriplesStrategy Instance = new();
 
     public bool Step(Grid grid, bool verbose = true)
     {

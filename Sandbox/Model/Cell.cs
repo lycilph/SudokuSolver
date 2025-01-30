@@ -25,4 +25,7 @@ public class Cell(int index)
     public bool HasValue => Value != 0;
     public bool IsEmpty => Value == 0;
     public int CandidatesCount => Candidates.Count;
+
+    public int Row => Index / 9;
+    public int Column => Index % 9;
 }
