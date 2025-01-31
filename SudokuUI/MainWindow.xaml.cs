@@ -24,7 +24,9 @@ public partial class MainWindow : Window
     private void Button_Click(object sender, RoutedEventArgs e)
     {
         Cells[0].Value = 2;
-        Cells[1].Selected = true;
+        Cells[4].Value = 7;
+
+        Cells[1].Selected = !Cells[1].Selected;
     }
 
     private void Button_Checked(object sender, RoutedEventArgs e)
@@ -34,5 +36,18 @@ public partial class MainWindow : Window
             if (toggle != sender)
                 toggle.IsChecked = false;
         }
+
+        if (sender is ToggleButton button && button.Content is string str)
+        {
+            var value = int.Parse(str);
+            foreach (var cell in Cells)
+                cell.UpdateSelection(value);
+        }
+    }
+
+    private void Button_Unchecked(object sender, RoutedEventArgs e)
+    {
+        foreach (var cell in Cells)
+            cell.UpdateSelection(0);
     }
 }

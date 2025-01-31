@@ -35,6 +35,6 @@ public partial class CellViewModel : ObservableObject
 
     public void UpdateSelection(int value)
     {
-        Selected = Value == value || cell.Candidates.Contains(value);
+        Selected = HasValue && Value == value || !HasValue && cell.Candidates.Contains(value);
     }
 }
