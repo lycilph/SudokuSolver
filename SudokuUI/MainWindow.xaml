@@ -5,8 +5,96 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SudokuUI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="MainWindow"
+        SizeToContent="WidthAndHeight">
+    <Window.Resources>
+        <Style x:Key="cell_border_style" TargetType="Border">
+            <Setter Property="BorderBrush" Value="LightGray"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="4"/>
+            <Setter Property="Width" Value="50"/>
+            <Setter Property="Height" Value="50"/>
+        </Style>
 
-    </Grid>
+        <DataTemplate x:Key="value_template">
+            <Border Style="{StaticResource cell_border_style}">
+                <TextBlock Text="{Binding Value}"
+                           FontSize="24"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"/>
+            </Border>
+        </DataTemplate>
+
+        <DataTemplate x:Key="hints_template">
+            <Border Style="{StaticResource cell_border_style}">
+                <ItemsControl ItemsSource="{Binding Candidates}"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Stretch">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="3"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </Border>
+        </DataTemplate>
+    </Window.Resources>
+
+    <StackPanel>
+        <ItemsControl x:Name="cells_control"
+                      ItemsSource="{Binding Cells}"
+                      Margin="10">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <ContentControl x:Name="cell_content_control" 
+                                    Content="{Binding}"
+                                    ContentTemplate="{StaticResource value_template}"/>
+
+                    <DataTemplate.Triggers>
+                        <DataTrigger Binding="{Binding HasValue}" Value="False">
+                            <Setter TargetName="cell_content_control" 
+                                    Property="ContentTemplate" 
+                                    Value="{StaticResource hints_template}"/>
+                        </DataTrigger>
+                    </DataTemplate.Triggers>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Columns="9"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+
+        <StackPanel Orientation="Horizontal">
+            <RadioButton Name="Button1" Content="1" GroupName="Group1" />
+            <RadioButton Name="Button2" Content="2" GroupName="Group1" />
+            <RadioButton Name="Button3" Content="3" GroupName="Group1" />
+            <RadioButton Name="Button4" Content="4" GroupName="Group1" />
+            <RadioButton Name="Button5" Content="5" GroupName="Group1" />
+            <RadioButton Name="Button6" Content="6" GroupName="Group1" />
+            <RadioButton Name="Button7" Content="7" GroupName="Group1" />
+            <RadioButton Name="Button8" Content="8" GroupName="Group1" />
+            <RadioButton Name="Button9" Content="9" GroupName="Group1" />
+        </StackPanel>
+
+        <StackPanel x:Name="button_panel"
+                    Orientation="Horizontal">
+            <ToggleButton Name="Button11" Content="1" Checked="Button_Checked" />
+            <ToggleButton Name="Button21" Content="2" Checked="Button_Checked" />
+            <ToggleButton Name="Button31" Content="3" Checked="Button_Checked" />
+            <ToggleButton Name="Button41" Content="4" Checked="Button_Checked" />
+            <ToggleButton Name="Button51" Content="5" Checked="Button_Checked" />
+            <ToggleButton Name="Button61" Content="6" Checked="Button_Checked" />
+            <ToggleButton Name="Button71" Content="7" Checked="Button_Checked" />
+            <ToggleButton Name="Button81" Content="8" Checked="Button_Checked" />
+            <ToggleButton Name="Button91" Content="9" Checked="Button_Checked" />
+        </StackPanel>
+
+        <Button Click="Button_Click"
+                Content="Test"
+                Margin="10"/>
+    </StackPanel>
 </Window>

@@ -29,6 +29,7 @@ namespace Sandbox;
  * Make a sudoku solver that can solve any sudoku puzzle
  * Make a sudoku generator that can generate any sudoku puzzle
  * Make a sudoku validator that can validate any sudoku puzzle
+ * Make a ui in WPF
  * Make a ui in blazor (and hosted on github pages)
  * 
  * Todo:
@@ -36,9 +37,9 @@ namespace Sandbox;
  * Fix/make proper tests for strategies
  * 
  * Investigate these strategies:
- * X-Wing
+ * Chute remote pairs (https://www.sudokuwiki.org/Chute_Remote_Pairs)
+ * Simple Coloring (https://hodoku.sourceforge.net/en/tech_col.php)
  * XY-Wing
- * Simple Coloring
  * X-chains
  */
 
