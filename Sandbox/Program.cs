@@ -1,5 +1,7 @@
 ﻿using Core;
+using Core.DancingLinks;
 using Core.Model;
+using System.Diagnostics;
 
 namespace Sandbox;
 
@@ -35,6 +37,7 @@ namespace Sandbox;
  * Todo:
  * Make a log of what the solver does (fix outputting from strategies that makes no changes to the grid state)
  * Fix/make proper tests for strategies
+ * private static readonly Lazy<Singleton> instance = new Lazy<Singleton>(() => new Singleton());
  * 
  * Investigate these strategies:
  * Chute remote pairs (https://www.sudokuwiki.org/Chute_Remote_Pairs)
@@ -66,9 +69,11 @@ internal class Program
         //var g = new Grid(".16..78.3.9.8.....87...126..48...3..65...9.82.39...65..6.9...2..8...29369246..51."); // Locked candidates (claiming) test
         //var g = new Grid("..............3.85..1.2.......5.7.....4...1...9.......5......73..2.1........4...9"); // Backtracking test (https://en.wikipedia.org/wiki/Sudoku_solving_algorithms#Backtracking)        
 
-        Console.WriteLine(g);
-        g = Solver.Solve(g);
-        Console.WriteLine(g);
+        //Console.WriteLine(g);
+        //g = Solver.Solve(g);
+        //Console.WriteLine(g);
+
+        SolvedAllPuzzlesInFile();
 
         Console.WriteLine("Press any key to exit...");
         Console.ReadKey();
@@ -76,17 +81,28 @@ internal class Program
 
     private static void SolvedAllPuzzlesInFile()
     {
-        var filename = @"..\..\..\..\data\puzzles1_unbiased";
+        var filename = @"..\..\..\..\data\puzzles0_kaggle";
         var puzzle_reader = new PuzzleFileReader(filename);
         var count = PuzzleFileReader.CountPuzzles(filename);
         var solved = 0;
+
+        Console.WriteLine($"Loading puzzles...");
+        var stop_watch = Stopwatch.StartNew();
+        var puzzles = puzzle_reader.ReadPuzzle().ToArray();
+        Console.WriteLine($"Loading puzzles done - time elapsed: {stop_watch.ElapsedMilliseconds} ms");
         Console.WriteLine($"Found {count} in {filename}");
 
-        foreach (var grid in puzzle_reader.ReadPuzzle())
-        {
-            Solver.Solve(grid, false);
-            solved++;
-            Console.WriteLine($"Solved {solved} of {count}");
-        }
+        stop_watch.Restart();
+        //foreach (var grid in puzzles)
+        //{
+        //    DancingLinksSolver.Solve(grid);
+        //    solved++;
+
+        //    Console.SetCursorPosition(0, 3);
+        //    Console.WriteLine($"Solved {solved} of {count} - {stop_watch.ElapsedMilliseconds} ms elapsed");
+        //}
+        Parallel.ForEach(puzzles, new ParallelOptions { MaxDegreeOfParallelism = 2 }, p => DancingLinksSolver.Solve(p));
+        stop_watch.Stop();
+        Console.WriteLine($"Total time elapsed: {stop_watch.ElapsedMilliseconds} ms");
     }
 }
