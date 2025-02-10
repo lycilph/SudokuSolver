@@ -1,4 +1,4 @@
-﻿namespace DancingLinksSolver;
+﻿namespace Core.DancingLinks;
 
 public class DLXNode
 {

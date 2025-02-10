@@ -54,6 +54,11 @@ public class Grid
     public int EmptyCellsCount => Cells.Count(c => c.IsEmpty);
     public int TotalCandidatesCount => Cells.Sum(c => c.CandidatesCount);
 
+    public Cell this[int row, int col]
+    {
+        get => Cells[row * 9 + col];  // Convert 2D indices to 1D
+    }
+
     private static int[] GetRowIndices(int row)
     {
         var indices = new int[9];
