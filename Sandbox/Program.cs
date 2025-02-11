@@ -1,6 +1,7 @@
 ﻿using Core;
 using Core.DancingLinks;
 using Core.Model;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 
 namespace Sandbox;
@@ -18,6 +19,8 @@ namespace Sandbox;
  * Exact cover problem
  * Bipartite graph matching
  * Constraint satisfaction problem
+ * 
+ * Icons: https://lucide.dev/
  * 
  * Example of implementation:
  * https://github.com/kurtanr/SimpleSudokuSolver
@@ -73,6 +76,7 @@ internal class Program
         //g = Solver.Solve(g);
         //Console.WriteLine(g);
 
+        //DancingLinksSolver.Solve(g);
         SolvedAllPuzzlesInFile();
 
         Console.WriteLine("Press any key to exit...");
@@ -83,26 +87,49 @@ internal class Program
     {
         var filename = @"..\..\..\..\data\puzzles0_kaggle";
         var puzzle_reader = new PuzzleFileReader(filename);
-        var count = PuzzleFileReader.CountPuzzles(filename);
-        var solved = 0;
+        var grids = new BlockingCollection<Grid>();
 
-        Console.WriteLine($"Loading puzzles...");
         var stop_watch = Stopwatch.StartNew();
-        var puzzles = puzzle_reader.ReadPuzzle().ToArray();
-        Console.WriteLine($"Loading puzzles done - time elapsed: {stop_watch.ElapsedMilliseconds} ms");
-        Console.WriteLine($"Found {count} in {filename}");
+        
+        Task readerTask = Task.Run(() =>
+        {
+            foreach (var grid in puzzle_reader.ReadPuzzle())
+            {
+                grids.Add(grid);
+            }
+            grids.CompleteAdding(); // Signal that reading is done
+        });
 
-        stop_watch.Restart();
-        //foreach (var grid in puzzles)
-        //{
-        //    DancingLinksSolver.Solve(grid);
-        //    solved++;
 
-        //    Console.SetCursorPosition(0, 3);
-        //    Console.WriteLine($"Solved {solved} of {count} - {stop_watch.ElapsedMilliseconds} ms elapsed");
-        //}
-        Parallel.ForEach(puzzles, new ParallelOptions { MaxDegreeOfParallelism = 2 }, p => DancingLinksSolver.Solve(p));
-        stop_watch.Stop();
+        Parallel.ForEach(grids.GetConsumingEnumerable(), grid =>
+        {
+            DancingLinksSolver.Solve(grid);
+        });
+
+        readerTask.Wait();
         Console.WriteLine($"Total time elapsed: {stop_watch.ElapsedMilliseconds} ms");
+
+        //var puzzle_reader = new PuzzleFileReader(filename);
+        //var count = PuzzleFileReader.CountPuzzles(filename);
+        //var solved = 0;
+
+        //Console.WriteLine($"Loading puzzles...");
+        //var stop_watch = Stopwatch.StartNew();
+        //var puzzles = puzzle_reader.ReadPuzzle().ToArray();
+        //Console.WriteLine($"Loading puzzles done - time elapsed: {stop_watch.ElapsedMilliseconds} ms");
+        //Console.WriteLine($"Found {count} in {filename}");
+
+        //stop_watch.Restart();
+        ////foreach (var grid in puzzles)
+        ////{
+        ////    DancingLinksSolver.Solve(grid);
+        ////    solved++;
+
+        ////    Console.SetCursorPosition(0, 3);
+        ////    Console.WriteLine($"Solved {solved} of {count} - {stop_watch.ElapsedMilliseconds} ms elapsed");
+        ////}
+        //Parallel.ForEach(puzzles, new ParallelOptions { MaxDegreeOfParallelism = 8 }, p => DancingLinksSolver.Solve(p));
+        //stop_watch.Stop();
+        //Console.WriteLine($"Total time elapsed: {stop_watch.ElapsedMilliseconds} ms");
     }
 }
