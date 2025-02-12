@@ -1,6 +1,7 @@
-﻿using Core.Model;
+﻿using Core.Archive.Model;
 
-namespace Sandbox;
+namespace Core.Archive.Misc;
+
 public class PuzzleFileReader(string filename)
 {
     public IEnumerable<Grid> ReadPuzzle()

@@ -1,4 +1,4 @@
-﻿using Core.Model;
+﻿using Core.Archive.Model;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -16,7 +16,7 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
-        var grid = new Core.Model.Grid(".5..83.17...1..4..3.4..56.8....3...9.9.8245....6....7...9....5...729..861.36.72.4");
+        var grid = new Core.Archive.Model.Grid(".5..83.17...1..4..3.4..56.8....3...9.9.8245....6....7...9....5...729..861.36.72.4");
         Cells = new ObservableCollection<Cell>(grid.Cells);
         Boxes = new ObservableCollection<Unit>(grid.Boxes);
 
