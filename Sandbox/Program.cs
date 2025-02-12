@@ -6,49 +6,6 @@ using System.Diagnostics;
 
 namespace Sandbox;
 
-/* Links to stuff:
- * https://github.com/farhiongit/sudoku-solver
- * https://github.com/HappyCerberus/sudoku
- * https://hodoku.sourceforge.net/en/techniques.php
- * https://norvig.com/sudoku.html
- * 
- * Techniques:
- * https://rakhman.info/blog/solving-sudoku-with-graph-theory/
- * https://opensourc.es/blog/sudoku/
- * https://www.sudokuwiki.org/
- * Exact cover problem
- * Bipartite graph matching
- * Constraint satisfaction problem
- * 
- * Icons: https://lucide.dev/
- * 
- * Example of implementation:
- * https://github.com/kurtanr/SimpleSudokuSolver
- * https://github.com/MAGREMENT/Numeristiq
- * 
- * Test data:
- * https://stackoverflow.com/questions/59973969/high-quality-test-cases-for-sudoku-solver
- * (info about datasets: https://github.com/t-dillon/tdoku/blob/master/benchmarks/README.md)
- * 
- * Goals:
- * Make a sudoku solver that can solve any sudoku puzzle
- * Make a sudoku generator that can generate any sudoku puzzle
- * Make a sudoku validator that can validate any sudoku puzzle
- * Make a ui in WPF
- * Make a ui in blazor (and hosted on github pages)
- * 
- * Todo:
- * Make a log of what the solver does (fix outputting from strategies that makes no changes to the grid state)
- * Fix/make proper tests for strategies
- * private static readonly Lazy<Singleton> instance = new Lazy<Singleton>(() => new Singleton());
- * 
- * Investigate these strategies:
- * Chute remote pairs (https://www.sudokuwiki.org/Chute_Remote_Pairs)
- * Simple Coloring (https://hodoku.sourceforge.net/en/tech_col.php)
- * XY-Wing
- * X-chains
- */
-
 internal class Program
 {
     static void Main()
@@ -101,7 +58,7 @@ internal class Program
         });
 
 
-        Parallel.ForEach(grids.GetConsumingEnumerable(), grid =>
+        Parallel.ForEach(grids.GetConsumingEnumerable(), new ParallelOptions() { MaxDegreeOfParallelism = 4 }, grid =>
         {
             DancingLinksSolver.Solve(grid);
         });
