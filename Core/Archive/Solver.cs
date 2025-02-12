@@ -1,8 +1,9 @@
-﻿using Core.Model;
+﻿using Core.Archive.Model;
+using Core.Archive.Strategies;
 using Core.Strategies;
 using System.Diagnostics;
 
-namespace Core;
+namespace Core.Archive;
 
 public static class Solver
 {

@@ -1,7 +1,7 @@
-﻿using Core.Model;
+﻿using Core.Archive.Model;
 using System.Diagnostics;
 
-namespace Core;
+namespace Core.Archive;
 
 public class BacktrackingSolver
 {

@@ -1,6 +1,6 @@
-﻿using Core.Model;
+﻿using Core.Archive.Model;
 
-namespace Core.Strategies;
+namespace Core.Archive.Strategies;
 
 /// <summary>
 /// Take two rows (the base sets). If you can find two columns, 

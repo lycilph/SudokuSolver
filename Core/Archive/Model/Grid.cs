@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace Core.Model;
+namespace Core.Archive.Model;
 
 public class Grid
 {

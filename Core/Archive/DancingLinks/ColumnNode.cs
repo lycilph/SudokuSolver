@@ -1,4 +1,4 @@
-﻿namespace Core.DancingLinks;
+﻿namespace Core.Archive.DancingLinks;
 
 public class ColumnNode : DLXNode
 {

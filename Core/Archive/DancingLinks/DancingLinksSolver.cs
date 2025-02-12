@@ -1,7 +1,7 @@
-﻿using Core.Model;
-using Core.Strategies;
+﻿using Core.Archive.Model;
+using Core.Archive.Strategies;
 
-namespace Core.DancingLinks;
+namespace Core.Archive.DancingLinks;
 
 /*
  * Info:
@@ -54,7 +54,7 @@ public static class DancingLinksSolver
                 {
                     for (int num = 0; num < Size; num++)
                     {
-                        if (cell.Candidates.Contains(num+1))
+                        if (cell.Candidates.Contains(num + 1))
                             matrix.Add(CreateConstraintRow(row, col, num));
                         else
                             matrix.Add(new int[TotalColumns]); // Add empty rows to keep the structure of the constraint matrix
@@ -72,10 +72,10 @@ public static class DancingLinksSolver
 
         // Compute column indices
         int cellConstraint = row * Size + col;
-        int rowConstraint = Size * Size + (row * Size + num);
-        int colConstraint = 2 * Size * Size + (col * Size + num);
-        int boxIndex = (row / BoxSize) * BoxSize + (col / BoxSize);
-        int boxConstraint = 3 * Size * Size + (boxIndex * Size + num);
+        int rowConstraint = Size * Size + row * Size + num;
+        int colConstraint = 2 * Size * Size + col * Size + num;
+        int boxIndex = row / BoxSize * BoxSize + col / BoxSize;
+        int boxConstraint = 3 * Size * Size + boxIndex * Size + num;
 
         // Set the constraints
         constraints[cellConstraint] = 1;

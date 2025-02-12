@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Core.Model;
+namespace Core.Archive.Model;
 
 public enum UnitType { Row, Column };
 

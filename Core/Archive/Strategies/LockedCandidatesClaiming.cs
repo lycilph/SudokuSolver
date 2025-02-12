@@ -1,6 +1,6 @@
-﻿using Core.Model;
+﻿using Core.Archive.Model;
 
-namespace Core.Strategies;
+namespace Core.Archive.Strategies;
 
 // https://www.sudokusnake.com/claiming.php
 

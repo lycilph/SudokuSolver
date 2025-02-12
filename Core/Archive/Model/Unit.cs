@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Core.Model;
+namespace Core.Archive.Model;
 
 [DebuggerDisplay("{FullName}")]
 public class Unit
