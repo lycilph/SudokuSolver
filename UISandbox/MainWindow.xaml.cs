@@ -1,4 +1,5 @@
 ﻿using Core.Archive.Model;
+using Core.Model;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;

@@ -1,4 +1,5 @@
 ﻿using Core.Archive.Model;
+using Core.Model;
 
 namespace Core.Archive.Strategies;
 

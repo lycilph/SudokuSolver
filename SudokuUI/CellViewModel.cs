@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Core.Archive.Model;
+using Core.Model;
 using System.Collections.ObjectModel;
 
 namespace SudokuUI;
