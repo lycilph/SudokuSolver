@@ -1,5 +1,8 @@
-﻿namespace Core.Model;
+﻿using System.Diagnostics;
 
+namespace Core.Model;
+
+[DebuggerDisplay("{Description}")]
 public class SolveActionElement
 {
     public string Description { get; set; } = string.Empty;

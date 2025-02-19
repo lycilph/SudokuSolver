@@ -2,15 +2,17 @@
 
 public class EliminationSolveAction : BaseSolveAction
 {
-    public override void Apply(Grid grid)
+    public override void Apply()
     {
         foreach (var element in Elements)
             foreach (var cell in element.Cells)
                 cell.Candidates.Remove(element.Number);
     }
 
-    public override void Undo(Grid grid)
+    public override void Undo()
     {
-        throw new NotImplementedException();
+        foreach (var element in Elements)
+            foreach (var cell in element.Cells)
+                cell.Candidates.Add(element.Number);
     }
 }

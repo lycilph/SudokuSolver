@@ -24,7 +24,7 @@ public static class Solver
             puzzle.Stats.Iterations++;
 
             puzzle.Actions.Add(action);
-            action.Apply(puzzle.Grid);
+            action.Apply();
         }
 
         stopwatch.Stop(); // Stop the stopwatch

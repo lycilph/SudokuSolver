@@ -126,7 +126,7 @@ public class Grid
         {
             if (skip_cells_with_values && Cells[i].HasValue)
                 continue;
-            sb.AppendLine($"Cell {i}: {string.Join(' ', Cells[i].Candidates)}");
+            sb.AppendLine($"Cell {i}: {string.Join(' ', Cells[i].Candidates.Order())}");
         }
         return sb.ToString();
     }

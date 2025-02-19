@@ -5,8 +5,8 @@ public interface ISolveAction
     string Description { get; set; }
     List<SolveActionElement> Elements { get; set; }
 
-    void Apply(Grid grid);
-    void Undo(Grid grid);
+    void Apply();
+    void Undo();
 
     string ToString();
 }

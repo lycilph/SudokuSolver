@@ -18,7 +18,10 @@ internal class Program
             Console.WriteLine(a);
 
         foreach (var a in p.Actions.AsEnumerable().Reverse())
-            a.Undo(p.Grid);
+            a.Undo();
+        
+        Console.WriteLine(p.Grid.ToString());
+        Console.WriteLine(p.Grid.CandidatesToString());
 
         Console.WriteLine("Press any key to exit...");
         Console.ReadKey();

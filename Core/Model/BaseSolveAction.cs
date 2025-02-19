@@ -1,15 +1,16 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 
 namespace Core.Model;
 
+[DebuggerDisplay("{Description}")]
 public class BaseSolveAction : ISolveAction
 {
     public string Description { get; set; } = string.Empty;
     public List<SolveActionElement> Elements { get; set; } = [];
 
-    public virtual void Apply(Grid grid) {}
-
-    public virtual void Undo(Grid grid) {}
+    public virtual void Apply() {}
+    public virtual void Undo() {}
 
     public override string ToString()
     {
