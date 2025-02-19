@@ -2,6 +2,11 @@
 
 public interface ISolveAction
 {
-    void Do();
-    void Undo();
+    string Description { get; set; }
+    List<SolveActionElement> Elements { get; set; }
+
+    void Apply(Grid grid);
+    void Undo(Grid grid);
+
+    string ToString();
 }

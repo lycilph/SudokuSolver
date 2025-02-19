@@ -13,6 +13,7 @@ public class Grid
     public Unit[] Columns { get; set; }
     public Unit[] Boxes { get; set; }
     public Unit[] AllUnits { get; set; }
+    public Chute[] Chutes { get; set; }
 
     public Grid()
     {
@@ -31,6 +32,13 @@ public class Grid
 
         foreach (var cell in Cells)
             cell.Peers = GetPeerIndices(cell.Index).Select(i => Cells[i]).ToArray();
+
+        Chutes = new Chute[6];
+        for (int i = 0; i < 3; i++)
+        {
+            Chutes[i] = new Chute { Name = "Chute Horizontal", Index = i, Boxes = Enumerable.Range(0, 3).Select(n => Boxes[n + i * 3]).ToArray() };
+            Chutes[i + 3] = new Chute { Name = "Chute Vertical", Index = i + 3, Boxes = Enumerable.Range(0, 3).Select(n => Boxes[n * 3 + i]).ToArray() };
+        }
     }
 
     public Grid(string puzzle) : this()
@@ -50,9 +58,9 @@ public class Grid
         }
     }
 
-    public bool IsSolved => Cells.All(c => c.HasValue);
-    public int EmptyCellsCount => Cells.Count(c => c.IsEmpty);
-    public int TotalCandidatesCount => Cells.Sum(c => c.CandidatesCount);
+    public bool IsSolved() => Cells.All(c => c.HasValue);
+    public int EmptyCellsCount() => Cells.Count(c => c.IsEmpty);
+    public int TotalCandidatesCount() => Cells.Sum(c => c.CandidatesCount);
 
     public Cell this[int row, int col]
     {
