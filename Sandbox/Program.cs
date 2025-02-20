@@ -12,6 +12,9 @@ internal class Program
         Console.WriteLine(p.Grid.ToString());
         Solver.Solve(p);
 
+        Console.WriteLine("Solved state");
+        Console.WriteLine(p.Grid.ToSimpleString());
+
         Console.WriteLine($"Execution Time: {p.Stats.ElapsedTime} ms");
         Console.WriteLine($"Iterations run: {p.Stats.Iterations}");
         foreach (var a in p.Actions)

@@ -1,11 +1,22 @@
-﻿using Core.Algorithms;
+﻿using Core.Model;
 
 namespace Core.Algorithms;
 
-//public abstract class BaseStrategy : IStrategy
-//{
-//    public string Name => "Base";
-//}
+public abstract class BaseStrategy<T> : IStrategy where T : BaseStrategy<T>, IStrategy, new()
+{
+    private static readonly Lazy<T> _instance = new Lazy<T>(() => new T());
+    
+    public static T Instance => _instance.Value;
+
+    public string Name => "Base";
+
+    public abstract ISolveAction? Execute(Grid grid);
+
+    public static ISolveAction? ExecuteStatic(Grid grid)
+    {
+        return Instance.Execute(grid);
+    }
+}
 
 /*
  This implementation comes from the AI "Claude"
