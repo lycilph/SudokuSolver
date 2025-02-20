@@ -20,7 +20,7 @@ public class NakedSinglesStrategy : BaseStrategy<NakedSinglesStrategy>
         {
             action.Elements.Add(new SolveActionElement() 
             {
-                Description = $"Naked single found in cell {cell.Index}",
+                Description = $"Naked single {cell.Candidates.First()} found in cell {cell.Index}",
                 Number = cell.Candidates.First(),
                 Cells = [cell]
             });
