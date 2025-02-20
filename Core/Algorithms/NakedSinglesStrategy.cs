@@ -7,11 +7,11 @@ namespace Core.Algorithms;
  * Find cells with only one candidate, and set the value for that cell
  */
 
-public class NakedSinglesStrategy : IStrategy
+public class NakedSinglesStrategy : BaseStrategy<NakedSinglesStrategy>
 {
-    public string Name => "Naked Singles";
+    public override string Name => "Naked Singles";
 
-    public ISolveAction? Execute(Grid grid)
+    public override ISolveAction? Execute(Grid grid)
     {
         var action = new ValueSolveAction() { Description = Name };
 

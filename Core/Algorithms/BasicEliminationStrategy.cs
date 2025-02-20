@@ -7,11 +7,11 @@ namespace Core.Algorithms;
  * This removes a cells value from the candidates of all its peer cells
  */
 
-public class BasicEliminationStrategy : IStrategy
+public class BasicEliminationStrategy : BaseStrategy<BasicEliminationStrategy>
 {
-    public string Name => "Basic Elimination";
+    public override string Name => "Basic Elimination";
 
-    public ISolveAction? Execute(Grid grid)
+    public override ISolveAction? Execute(Grid grid)
     {
         var action = new EliminationSolveAction() { Description = Name };
 

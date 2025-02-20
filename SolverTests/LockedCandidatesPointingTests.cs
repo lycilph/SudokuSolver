@@ -5,6 +5,12 @@ public class LockedCandidatesPointingTests
     [Fact]
     public void Test1()
     {
+        // Arrange
+        // Act
+        // Assert
+
+
+
         // https://www.sudoku9x9.com/techniques/lockedcandidates/
         //var g = new Grid(".12...........3....56............................................................");
 
