@@ -27,7 +27,7 @@ public class NakedPairsStrategy : BaseStrategy<NakedPairsStrategy>
                     // Find all cells that contain this candidate and mark them for elimination
                     var cells = empty_cells.Where(c => c != pair.Item1 && c != pair.Item2 && c.Candidates.Contains(candidate)).ToList();
                     if (cells.Count > 0)
-                        action.Elements.Add(new SolveActionElement()
+                        action.Add(new SolveActionElement()
                         {
                             Description = $"Naked pair of {string.Join(',', pair.Item1.Candidates)} in {unit.FullName} in cells {pair.Item1.Index} and {pair.Item2.Index} removes {candidate} from cells {string.Join(',', cells.Select(c => c.Index))}",
                             Number = candidate,
@@ -37,7 +37,7 @@ public class NakedPairsStrategy : BaseStrategy<NakedPairsStrategy>
             }
         }
 
-        if (action.Elements.Count != 0)
+        if (action.HasElements())
             return action;
         else
             return null;

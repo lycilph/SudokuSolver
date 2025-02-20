@@ -18,7 +18,7 @@ public class NakedSinglesStrategy : BaseStrategy<NakedSinglesStrategy>
         var cells = grid.Cells.Where(c => c.IsEmpty && c.Candidates.Count == 1).ToArray();
         foreach (var cell in cells)
         {
-            action.Elements.Add(new SolveActionElement() 
+            action.Add(new SolveActionElement() 
             {
                 Description = $"Naked single {cell.Candidates.First()} found in cell {cell.Index}",
                 Number = cell.Candidates.First(),
@@ -26,7 +26,7 @@ public class NakedSinglesStrategy : BaseStrategy<NakedSinglesStrategy>
             });
         }
 
-        if (action.Elements.Count != 0)
+        if (action.HasElements())
             return action;
         else
             return null;

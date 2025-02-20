@@ -20,5 +20,6 @@ public static class Extensions
         return result;
     }
 
+    public static IEnumerable<Cell> FilledCells(this Unit unit) => unit.Cells.Where(c => c.HasValue).ToArray();
     public static IEnumerable<Cell> EmptyCells(this Unit unit) => unit.Cells.Where(c => c.IsEmpty).ToArray();
 }

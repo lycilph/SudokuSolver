@@ -12,6 +12,9 @@ public class BaseSolveAction : ISolveAction
     public virtual void Apply() {}
     public virtual void Undo() {}
 
+    public void Add(SolveActionElement element) => Elements.Add(element);
+    public bool HasElements() => Elements.Count > 0;
+
     public override string ToString()
     {
         var sb = new StringBuilder();

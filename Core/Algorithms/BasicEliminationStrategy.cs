@@ -20,7 +20,7 @@ public class BasicEliminationStrategy : BaseStrategy<BasicEliminationStrategy>
             var cells = cell.Peers.Where(p => p.IsEmpty && p.Candidates.Contains(cell.Value)).ToList();
 
             if (cells.Count > 0)
-                action.Elements.Add(
+                action.Add(
                     new SolveActionElement()
                     {
                         Description = $"Cell {cell.Index} eliminates candidate {cell.Value} from: {string.Join(',', cells.Select(c => c.Index))}",
@@ -29,7 +29,7 @@ public class BasicEliminationStrategy : BaseStrategy<BasicEliminationStrategy>
                     });
         }
 
-        if (action.Elements.Count != 0)
+        if (action.HasElements())
             return action;
         else
             return null;
