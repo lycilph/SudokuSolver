@@ -9,7 +9,8 @@ public static class Solver
         [new BasicEliminationStrategy(),
          new NakedSinglesStrategy(),
          new HiddenSinglesStrategy(),
-         new NakedPairsStrategy()];
+         new NakedPairsStrategy(),
+         new HiddenPairsStrategy()];
 
     public static void Solve(Puzzle puzzle)
     {
