@@ -20,4 +20,20 @@ public class HiddenPairsTests
         Assert.NotNull(result);
         Assert.Equal(10, result.Elements.Count);
     }
+
+    [Fact]
+    public void Test2()
+    {
+        // Arrange
+        var input = ".49132....81479...327685914.96.518...75.28....38.46..5853267...712894563964513...";
+        var p = new Puzzle(input);
+        BasicEliminationStrategy.ExecuteAndApply(p.Grid);
+
+        // Act
+        var result = HiddenPairsStrategy.ExecuteAndApply(p.Grid);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(10, result.Elements.Count);
+    }
 }

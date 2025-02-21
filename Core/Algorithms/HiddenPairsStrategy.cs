@@ -8,9 +8,10 @@ namespace Core.Algorithms;
  * Take Hidden Pair: If you can find two cells within a house such as that two candidates appear nowhere outside 
  * those cells in that house, those two candidates must be placed in the two cells. All other candidates can therefore be eliminated.
  * (Source: https://hodoku.sourceforge.net/en/tech_hidden.php)
+ * (Source: https://www.sudokuwiki.org/Hidden_Candidates)
  * 
- * Test puzzle: 72.4.8.3..8.....474.1.768.281.739......851......264.8.2.968.41334......8168943275
- * (Source: https://www.sudokuwiki.org/Hidden_Candidates#HP)
+ * Test puzzle: 72.4.8.3..8.....474.1.768.281.739......851......264.8.2.968.41334......8168943275 (Source: https://www.sudokuwiki.org/Hidden_Candidates)
+ * Test puzzle: .49132....81479...327685914.96.518...75.28....38.46..5853267...712894563964513... (Source: https://hodoku.sourceforge.net/en/tech_hidden.php)
  */
 
 public class HiddenPairsStrategy : BaseStrategy<HiddenPairsStrategy>
