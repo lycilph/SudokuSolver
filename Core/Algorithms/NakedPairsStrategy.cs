@@ -5,6 +5,11 @@ namespace Core.Algorithms;
 /* Strategy name: Naked Pairs
  * 
  * Find pairs where 2 cells share the same 2 candidates, and remove these candidates from the other cells in the unit
+ * (Source: https://www.sudokuwiki.org/Naked_Candidates)
+ * (Source: https://hodoku.sourceforge.net/en/tech_naked.php)
+ * 
+ * Test puzzle(s): 
+ * 4.....938.32.941...953..24.37.6.9..4529..16736.47.3.9.957..83....39..4..24..3.7.9 (Source: https://www.sudokuwiki.org/Naked_Candidates)
  */
 
 public class NakedPairsStrategy : BaseStrategy<NakedPairsStrategy>

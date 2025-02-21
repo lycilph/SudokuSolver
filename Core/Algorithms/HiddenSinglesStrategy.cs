@@ -5,6 +5,10 @@ namespace Core.Algorithms;
 /* Strategy name: Hidden Singles
  * 
  * Find cells where a value is only present as a candidate in one cell in a unit
+ * (Source: https://hodoku.sourceforge.net/en/tech_singles.php)
+ * 
+ * Test puzzle(s): 
+ * .28..7....16.83.7.....2.85113729.......73........463.729..7.......86.14....3..7.. (Source: https://hodoku.sourceforge.net/en/tech_singles.php)
  */
 
 public class HiddenSinglesStrategy : BaseStrategy<HiddenSinglesStrategy>

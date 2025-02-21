@@ -3,6 +3,7 @@ using Core.Model;
 
 namespace SolverTests;
 
+// See more information in the BasicEliminationStrategy class
 public class BasicEliminationTests
 {
     [Fact]

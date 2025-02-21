@@ -3,6 +3,7 @@ using Core.Model;
 
 namespace SolverTests;
 
+// See more information in the NakedSinglesStrategy class
 public class NakedSinglesTests
 {
     [Fact]

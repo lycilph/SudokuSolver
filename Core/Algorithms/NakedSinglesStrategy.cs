@@ -5,6 +5,10 @@ namespace Core.Algorithms;
 /* Strategy name: Naked Singles
  * 
  * Find cells with only one candidate, and set the value for that cell
+ * (Source: https://hodoku.sourceforge.net/en/tech_singles.php)
+ * 
+ * Test puzzle(s): 
+ * .5..83.17...1..4..3.4..56.8....3...9.9.8245....6....7...9....5...729..861.36.72.4 (Source: first puzzle in file puzzles0_kaggle)
  */
 
 public class NakedSinglesStrategy : BaseStrategy<NakedSinglesStrategy>

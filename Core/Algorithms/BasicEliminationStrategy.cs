@@ -5,6 +5,7 @@ namespace Core.Algorithms;
 /* Strategy name: Basic Elimination
  * 
  * This removes a cells value from the candidates of all its peer cells
+ * (Source: N/A)
  */
 
 public class BasicEliminationStrategy : BaseStrategy<BasicEliminationStrategy>
@@ -17,15 +18,15 @@ public class BasicEliminationStrategy : BaseStrategy<BasicEliminationStrategy>
 
         foreach (var cell in grid.Cells.Where(c => c.HasValue))
         {
-            var cells = cell.Peers.Where(p => p.IsEmpty && p.Candidates.Contains(cell.Value)).ToList();
+            var peers = cell.Peers.Where(p => p.IsEmpty && p.Candidates.Contains(cell.Value)).ToList();
 
-            if (cells.Count > 0)
+            if (peers.Count > 0)
                 action.Add(
                     new SolveActionElement()
                     {
-                        Description = $"Cell {cell.Index} eliminates candidate {cell.Value} from: {string.Join(',', cells.Select(c => c.Index))}",
+                        Description = $"Cell {cell.Index} eliminates candidate {cell.Value} from cells: {string.Join(',', peers.Select(c => c.Index))}",
                         Number = cell.Value,
-                        Cells = cells
+                        Cells = peers
                     });
         }
 

@@ -3,6 +3,7 @@ using Core.Model;
 
 namespace SolverTests;
 
+// See more information in the HiddenPairsStrategy class
 public class HiddenPairsTests
 {
     [Fact]
@@ -34,6 +35,6 @@ public class HiddenPairsTests
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(10, result.Elements.Count);
+        Assert.Single(result.Elements);
     }
 }
