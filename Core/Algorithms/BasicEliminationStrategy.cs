@@ -24,7 +24,7 @@ public class BasicEliminationStrategy : BaseStrategy<BasicEliminationStrategy>
                 action.Add(
                     new SolveActionElement()
                     {
-                        Description = $"Cell {cell.Index} eliminates candidate {cell.Value} from cells: {string.Join(',', peers.Select(c => c.Index))}",
+                        Description = $"Cell {cell.Index} eliminates candidate {cell.Value} from cell(s): {string.Join(',', peers.Select(c => c.Index))}",
                         Number = cell.Value,
                         Cells = peers
                     });

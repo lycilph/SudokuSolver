@@ -21,30 +21,42 @@ public class NakedPairsStrategy : BaseStrategy<NakedPairsStrategy>
         var action = new EliminationSolveAction() { Description = Name };
 
         foreach (var unit in grid.AllUnits)
-        {
-            var empty_cells = unit.EmptyCells();
-
-            foreach (var pair in unit.FindNakedPairs())
-            {
-                // Since item1 and item2 in the pair are the same, any of them can be used here
-                foreach (var candidate in pair.Item1.Candidates)
-                {
-                    // Find all cells that contain this candidate and mark them for elimination
-                    var cells = empty_cells.Where(c => c != pair.Item1 && c != pair.Item2 && c.Candidates.Contains(candidate)).ToList();
-                    if (cells.Count > 0)
-                        action.Add(new SolveActionElement()
-                        {
-                            Description = $"Naked pair of {string.Join(',', pair.Item1.Candidates)} in {unit.FullName} in cells {pair.Item1.Index} and {pair.Item2.Index} removes {candidate} from cells {string.Join(',', cells.Select(c => c.Index))}",
-                            Number = candidate,
-                            Cells = cells
-                        });
-                }
-            }
-        }
+            FindNakedPairs(unit, action);
 
         if (action.HasElements())
             return action;
         else
             return null;
+    }
+
+    private void FindNakedPairs(Unit unit, EliminationSolveAction action)
+    {
+        var pair_candidates = unit.Cells.Where(c => c.CandidatesCount == 2).ToArray();
+
+        for (int i = 0; i < pair_candidates.Length - 1; i++)
+        {
+            for (int j = i + 1; j < pair_candidates.Length; j++)
+            {
+                if (pair_candidates[i].Candidates.SetEquals(pair_candidates[j].Candidates))
+                    MarkEliminations(unit, pair_candidates[i], pair_candidates[j], action);
+            }
+        }
+    }
+
+    private void MarkEliminations(Unit unit, Cell pair1, Cell pair2, EliminationSolveAction action)
+    {
+        // Since item1 and item2 in the pair are the same, any of them can be used here
+        foreach (var candidate in pair1.Candidates)
+        {
+            // Find all cells that contain this candidate and mark them for elimination
+            var cells = unit.EmptyCells().Where(c => c != pair1 && c != pair2 && c.Candidates.Contains(candidate)).ToList();
+            if (cells.Count > 0)
+                action.Add(new SolveActionElement()
+                {
+                    Description = $"Naked pair of {string.Join(',', pair1.Candidates)} in {unit.FullName} in cells {pair1.Index} and {pair2.Index} removes {candidate} from cell(s) {string.Join(',', cells.Select(c => c.Index))}",
+                    Number = candidate,
+                    Cells = cells
+                });
+        }
     }
 }
