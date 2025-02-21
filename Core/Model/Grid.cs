@@ -61,6 +61,8 @@ public class Grid
     public bool IsSolved() => Cells.All(c => c.HasValue);
     public int EmptyCellsCount() => Cells.Count(c => c.IsEmpty);
     public int TotalCandidatesCount() => Cells.Sum(c => c.CandidatesCount);
+    public IEnumerable<Cell> FilledCells() => Cells.Where(c => c.HasValue).ToArray();
+    public IEnumerable<Cell> EmptyCells() => Cells.Where(c => c.IsEmpty).ToArray();
 
     public Cell this[int row, int col]
     {

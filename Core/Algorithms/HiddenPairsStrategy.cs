@@ -35,13 +35,11 @@ public class HiddenPairsStrategy : BaseStrategy<HiddenPairsStrategy>
 
     private void FindHiddenPairs(Unit unit, EliminationSolveAction action, HashSet<(Cell, Cell)> pairs_found)
     {
-        var digit_to_cells = new Dictionary<int, Cell[]>();
-        var empty_cells = unit.EmptyCells();
-
         // Make a dictionary of digit to cells that contain that digit (but only if there are exactly 2 cells with that digit)
+        var digit_to_cells = new Dictionary<int, Cell[]>();
         foreach (var digit in Grid.PossibleValues)
         {
-            var cells_with_digit = empty_cells.Where(c => c.Candidates.Contains(digit)).ToArray();
+            var cells_with_digit = unit.EmptyCells().Where(c => c.Candidates.Contains(digit)).ToArray();
             if (cells_with_digit.Length == 2)
                 digit_to_cells[digit] = cells_with_digit;
         }

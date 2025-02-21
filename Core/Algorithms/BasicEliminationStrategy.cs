@@ -16,7 +16,7 @@ public class BasicEliminationStrategy : BaseStrategy<BasicEliminationStrategy>
     {
         var action = new EliminationSolveAction() { Description = Name };
 
-        foreach (var cell in grid.Cells.Where(c => c.HasValue))
+        foreach (var cell in grid.FilledCells())
         {
             var peers = cell.Peers.Where(p => p.IsEmpty && p.Candidates.Contains(cell.Value)).ToList();
 
