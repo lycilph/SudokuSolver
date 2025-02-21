@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net9.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>Assets\grid-3x3.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Assets\import.png" />
+    <None Remove="Assets\rotate-ccw.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\grid-3x3.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Core\Core.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Resource Include="Assets\circle-x.png" />
+    <Resource Include="Assets\import.png" />
+    <Resource Include="Assets\rotate-ccw.png" />
+  </ItemGroup>
+
+</Project>

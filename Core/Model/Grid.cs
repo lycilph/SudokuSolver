@@ -43,11 +43,7 @@ public class Grid
 
     public Grid(string puzzle) : this()
     {
-        foreach (var i in AllCellIndices)
-        {
-            if (puzzle[i] != '.')
-                Cells[i].Value = puzzle[i] - '0';
-        }
+        Set(puzzle);
     }
 
     public Grid(Grid grid) : this()
@@ -58,15 +54,24 @@ public class Grid
         }
     }
 
+    public Cell this[int row, int col]
+    {
+        get => Cells[row * 9 + col];  // Convert 2D indices to 1D
+    }
+
     public bool IsSolved() => Cells.All(c => c.HasValue);
     public int EmptyCellsCount() => Cells.Count(c => c.IsEmpty);
     public int TotalCandidatesCount() => Cells.Sum(c => c.CandidatesCount);
     public IEnumerable<Cell> FilledCells() => Cells.Where(c => c.HasValue).ToArray();
     public IEnumerable<Cell> EmptyCells() => Cells.Where(c => c.IsEmpty).ToArray();
 
-    public Cell this[int row, int col]
+    public void Set(string puzzle)
     {
-        get => Cells[row * 9 + col];  // Convert 2D indices to 1D
+        foreach (var i in AllCellIndices)
+        {
+            if (puzzle[i] != '.')
+                Cells[i].Value = puzzle[i] - '0';
+        }
     }
 
     private static int[] GetRowIndices(int row)

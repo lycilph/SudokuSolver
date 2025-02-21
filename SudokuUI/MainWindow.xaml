@@ -1,0 +1,136 @@
+﻿<Window x:Class="SudokuUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SudokuUI"
+        xmlns:vm="clr-namespace:SudokuUI.ViewModels"
+        mc:Ignorable="d"
+        Title="Sudoku UI" Height="450" Width="800">
+    <Window.Resources>
+        <Style x:Key="CircularToggleButtonStyle" TargetType="ToggleButton">
+            <Setter Property="Width" Value="45"/>
+            <Setter Property="Height" Value="45"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="BorderBrush" Value="Lavender"/>
+            <Setter Property="Background" Value="LightGray"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Grid>
+                            <Ellipse x:Name="Circle"
+                                 Width="{TemplateBinding Width}"
+                                 Height="{TemplateBinding Height}"
+                                 Stroke="{TemplateBinding BorderBrush}"
+                                 StrokeThickness="{TemplateBinding BorderThickness}"
+                                 Fill="{TemplateBinding Background}"/>
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <!-- Change color when checked -->
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Circle" Property="Fill" Value="LightBlue"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <DataTemplate DataType="{x:Type vm:DigitSelection}">
+            <ToggleButton x:Name="selection_button"
+                          Style="{StaticResource CircularToggleButtonStyle}"
+                          Margin="2">
+                <StackPanel>
+                    <TextBlock Text="{Binding Digit}" 
+                               HorizontalAlignment="Center"
+                               FontSize="20" 
+                               FontWeight="Bold"/>
+                    <TextBlock Text="{Binding Missing}" 
+                               HorizontalAlignment="Center"/>
+                </StackPanel>
+            </ToggleButton>
+
+            <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding Digit}" Value="0">
+                    <Setter TargetName="selection_button" Property="Content">
+                        <Setter.Value>
+                            <TextBlock Text="X" 
+                                       HorizontalAlignment="Center"
+                                       FontSize="20" 
+                                       FontWeight="Bold"/>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:GridViewModel}">
+            <ItemsControl ItemsSource="{Binding Boxes}"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Columns="3"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:BoxViewModel}">
+            <ItemsControl ItemsSource="{Binding Cells}"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Center">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Columns="3"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:CellViewModel}">
+            <TextBlock Text="{Binding Value}"/>
+        </DataTemplate>
+    </Window.Resources>
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Column="0" 
+                    Orientation="Vertical"
+                    Margin="5">
+            <Button>
+                <Image Source="/Assets/circle-x.png"/>
+            </Button>
+
+            <Button Margin="0,5,0,0">
+                <Image Source="/Assets/rotate-ccw.png"/>
+            </Button>
+
+            <Button Margin="0,5,0,0">
+                <Image Source="/Assets/import.png"/>
+            </Button>
+        </StackPanel>
+
+        <StackPanel Grid.Column="1">
+            <ContentControl Content="{Binding Grid}"/>
+
+            <ItemsControl ItemsSource="{Binding DigitSelections}"
+                          HorizontalAlignment="Center"
+                          Margin="0,10,0,0">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </StackPanel>
+    </Grid>
+</Window>

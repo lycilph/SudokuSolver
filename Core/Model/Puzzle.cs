@@ -8,8 +8,12 @@ public class Puzzle
 
     public bool IsSolved() => Grid.IsSolved();
 
+    public Puzzle() { }
+
     public Puzzle(string puzzle)
     {
         Grid = new Grid(puzzle);
     }
+
+    public void Set(string puzzle) => Grid.Set(puzzle);
 }
