@@ -13,6 +13,6 @@ public class Unit
 
     public string FullName => $"{Name} {Index}";
 
-    public IEnumerable<Cell> FilledCells() => Cells.Where(c => c.HasValue).ToArray();
+    public IEnumerable<Cell> FilledCells() => Cells.Where(c => c.IsFilled).ToArray();
     public IEnumerable<Cell> EmptyCells() => Cells.Where(c => c.IsEmpty).ToArray();
 }

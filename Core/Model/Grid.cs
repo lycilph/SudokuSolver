@@ -48,7 +48,7 @@ public class Grid
 
     public Grid(Grid grid) : this()
     {
-        foreach (var cell in grid.Cells.Where(c => c.HasValue))
+        foreach (var cell in grid.Cells.Where(c => c.IsFilled))
         {
             Cells[cell.Index].Value = cell.Value;
         }
@@ -59,10 +59,10 @@ public class Grid
         get => Cells[row * 9 + col];  // Convert 2D indices to 1D
     }
 
-    public bool IsSolved() => Cells.All(c => c.HasValue);
+    public bool IsSolved() => Cells.All(c => c.IsFilled);
     public int EmptyCellsCount() => Cells.Count(c => c.IsEmpty);
     public int TotalCandidatesCount() => Cells.Sum(c => c.CandidatesCount);
-    public IEnumerable<Cell> FilledCells() => Cells.Where(c => c.HasValue).ToArray();
+    public IEnumerable<Cell> FilledCells() => Cells.Where(c => c.IsFilled).ToArray();
     public IEnumerable<Cell> EmptyCells() => Cells.Where(c => c.IsEmpty).ToArray();
 
     public void Set(string puzzle)
@@ -131,7 +131,7 @@ public class Grid
         var sb = new StringBuilder();
         for (int i = 0; i < 81; i++)
         {
-            if (skip_cells_with_values && Cells[i].HasValue)
+            if (skip_cells_with_values && Cells[i].IsFilled)
                 continue;
             sb.AppendLine($"Cell {i}: {string.Join(' ', Cells[i].Candidates.Order())}");
         }
@@ -162,7 +162,7 @@ public class Grid
     {
         var sb = new StringBuilder();
         foreach (var cell in Cells)
-            if (cell.HasValue)
+            if (cell.IsFilled)
                 sb.Append(cell.Value);
             else
                 sb.Append('.');

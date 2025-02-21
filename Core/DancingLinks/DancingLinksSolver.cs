@@ -50,7 +50,7 @@ public static class DancingLinksSolver
             for (int col = 0; col < Size; col++)
             {
                 var cell = grid[row, col];
-                if (cell.HasValue)
+                if (cell.IsFilled)
                 {
                     for (int num = 0; num < Size; num++)
                     {
