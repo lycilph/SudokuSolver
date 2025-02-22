@@ -18,6 +18,7 @@ public partial class CellViewModel : ObservableObject
     public CellViewModel(Cell cell)
     {
         this.cell = cell;
+        Value = cell.Value;
 
         hints = Enumerable.Range(1, 9).Select(i => new HintViewModel(i)).ToObservableCollection();
     }

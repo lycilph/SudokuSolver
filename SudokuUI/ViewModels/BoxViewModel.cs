@@ -10,12 +10,16 @@ public partial class BoxViewModel : ObservableObject
     private Unit box;
 
     [ObservableProperty]
-    private ObservableCollection<CellViewModel> cells;
+    private ObservableCollection<CellViewModel> _cells;
+
+    [ObservableProperty]
+    private int _index = 0;
 
     public BoxViewModel(Unit box)
     {
         this.box = box;
 
-        cells = box.Cells.Select(c => new CellViewModel(c)).ToObservableCollection();
+        _cells = box.Cells.Select(c => new CellViewModel(c)).ToObservableCollection();
+        _index = box.Index;
     }
 }

@@ -6,39 +6,9 @@
         xmlns:local="clr-namespace:SudokuUI"
         xmlns:vm="clr-namespace:SudokuUI.ViewModels"
         mc:Ignorable="d"
-        Title="Sudoku UI" Height="450" Width="800">
+        Title="Sudoku UI" Height="700" Width="600"
+        WindowStartupLocation="CenterScreen">
     <Window.Resources>
-        <Style x:Key="CircularToggleButtonStyle" TargetType="ToggleButton">
-            <Setter Property="Width" Value="45"/>
-            <Setter Property="Height" Value="45"/>
-            <Setter Property="Foreground" Value="Black"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="BorderBrush" Value="Lavender"/>
-            <Setter Property="Background" Value="LightGray"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ToggleButton">
-                        <Grid>
-                            <Ellipse x:Name="Circle"
-                                 Width="{TemplateBinding Width}"
-                                 Height="{TemplateBinding Height}"
-                                 Stroke="{TemplateBinding BorderBrush}"
-                                 StrokeThickness="{TemplateBinding BorderThickness}"
-                                 Fill="{TemplateBinding Background}"/>
-                            <ContentPresenter HorizontalAlignment="Center"
-                                              VerticalAlignment="Center"/>
-                        </Grid>
-                        <ControlTemplate.Triggers>
-                            <!-- Change color when checked -->
-                            <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="Circle" Property="Fill" Value="LightBlue"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
         <DataTemplate DataType="{x:Type vm:DigitSelection}">
             <ToggleButton x:Name="selection_button"
                           Style="{StaticResource CircularToggleButtonStyle}"
@@ -67,33 +37,36 @@
             </DataTemplate.Triggers>
         </DataTemplate>
 
-        <DataTemplate DataType="{x:Type vm:GridViewModel}">
-            <ItemsControl ItemsSource="{Binding Boxes}"
-                          HorizontalAlignment="Center"
-                          VerticalAlignment="Center">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <UniformGrid Columns="3"/>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
-        </DataTemplate>
-
-        <DataTemplate DataType="{x:Type vm:BoxViewModel}">
-            <ItemsControl ItemsSource="{Binding Cells}"
-                  HorizontalAlignment="Center"
-                  VerticalAlignment="Center">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <UniformGrid Columns="3"/>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
-        </DataTemplate>
-
-        <DataTemplate DataType="{x:Type vm:CellViewModel}">
-            <TextBlock Text="{Binding Value}"/>
-        </DataTemplate>
+        <Style x:Key="CircularButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="45"/>
+            <Setter Property="Height" Value="45"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="BorderBrush" Value="Lavender"/>
+            <Setter Property="Background" Value="LightGray"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <Ellipse x:Name="Circle"
+                                     Width="{TemplateBinding Width}"
+                                     Height="{TemplateBinding Height}"
+                                     Stroke="{TemplateBinding BorderBrush}"
+                                     StrokeThickness="{TemplateBinding BorderThickness}"
+                                     Fill="{TemplateBinding Background}"/>
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <!-- Change color when checked -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Circle" Property="Fill" Value="LightBlue"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
     
     <Grid>
@@ -122,15 +95,29 @@
         <StackPanel Grid.Column="1">
             <ContentControl Content="{Binding Grid}"/>
 
-            <ItemsControl ItemsSource="{Binding DigitSelections}"
+            <ToggleButton Content="Hints / Values"
                           HorizontalAlignment="Center"
-                          Margin="0,10,0,0">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel Orientation="Horizontal"/>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
+                          Margin="0,10,0,0"/>
+
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Center">
+                <ItemsControl ItemsSource="{Binding DigitSelections}"
+                              HorizontalAlignment="Center"
+                              Margin="0,10,0,0">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+
+                <Button Content="X"
+                        Style="{StaticResource CircularButtonStyle}"
+                        Margin="10,10,0,0"
+                        HorizontalAlignment="Center"
+                        FontSize="20" 
+                        FontWeight="Bold"/>
+            </StackPanel>
         </StackPanel>
     </Grid>
 </Window>
