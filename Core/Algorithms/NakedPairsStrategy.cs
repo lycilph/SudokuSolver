@@ -53,7 +53,7 @@ public class NakedPairsStrategy : BaseStrategy<NakedPairsStrategy>
             if (cells.Count > 0)
                 action.Add(new SolveActionElement()
                 {
-                    Description = $"Naked pair of {string.Join(',', pair1.Candidates)} in {unit.FullName} in cells {pair1.Index} and {pair2.Index} removes {candidate} from cell(s) {string.Join(',', cells.Select(c => c.Index))}",
+                    Description = $"Naked pair of ({string.Join(',', pair1.Candidates)}) in {unit.FullName} in cells ({pair1.Index}, {pair2.Index}) removes {candidate} from cell(s) {string.Join(',', cells.Select(c => c.Index))}",
                     Number = candidate,
                     Cells = cells
                 });
