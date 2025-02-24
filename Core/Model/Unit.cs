@@ -12,4 +12,7 @@ public class Unit
     public Cell[] Cells { get; set; } = [];
 
     public string FullName => $"{Name} {Index}";
+
+    public IEnumerable<Cell> FilledCells() => Cells.Where(c => c.IsFilled).ToArray();
+    public IEnumerable<Cell> EmptyCells() => Cells.Where(c => c.IsEmpty).ToArray();
 }

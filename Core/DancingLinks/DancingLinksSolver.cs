@@ -1,7 +1,9 @@
-﻿using Core.Model;
-using Core.Strategies;
+﻿using Core.Algorithms;
+using Core.DancingLinks;
+using Core.Model;
+using System.Diagnostics;
 
-namespace Core.DancingLinks;
+namespace Core.Archive.DancingLinks;
 
 /*
  * Info:
@@ -14,19 +16,27 @@ public static class DancingLinksSolver
     private const int Size = 9;
     private const int BoxSize = 3;
     private const int TotalColumns = 324; // 81 (cell) + 81 (row) + 81 (column) + 81 (box)
-    //private const int TotalRows = 729; // 9 possibilities for each of 81 cells
 
-    public static List<Grid> Solve(Grid grid, bool run_basic_elimination = true)
+    public static List<Grid> Solve(Puzzle puzzle, bool run_basic_elimination = true)
     {
         if (run_basic_elimination)
-            BasicEliminationStrategy.Execute(grid);
+            BasicEliminationStrategy.ExecuteAndApply(puzzle.Grid);
+        
+        puzzle.Stats.Reset();
+        
+        Stopwatch stopwatch = Stopwatch.StartNew(); // Start the stopwatch
 
-        var constraint_matrix = BuildConstraintMatrix(grid);
-
+        // Setup the data structures
+        var constraint_matrix = BuildConstraintMatrix(puzzle.Grid);
         var root = CreateDancingLinksMatrix(constraint_matrix);
         var solution = new Stack<DLXNode>();
         var all_solutions = new List<int[]>();
+
+        // Run the dancing links algorithm
         Search(root, solution, 0, all_solutions);
+
+        stopwatch.Stop(); // Stop the stopwatch
+        puzzle.Stats.ElapsedTime = stopwatch.ElapsedMilliseconds;
 
         return all_solutions.Select(ExtractSolution).ToList();
     }
@@ -40,7 +50,7 @@ public static class DancingLinksSolver
             for (int col = 0; col < Size; col++)
             {
                 var cell = grid[row, col];
-                if (cell.HasValue)
+                if (cell.IsFilled)
                 {
                     for (int num = 0; num < Size; num++)
                     {
@@ -54,7 +64,7 @@ public static class DancingLinksSolver
                 {
                     for (int num = 0; num < Size; num++)
                     {
-                        if (cell.Candidates.Contains(num+1))
+                        if (cell.Candidates.Contains(num + 1))
                             matrix.Add(CreateConstraintRow(row, col, num));
                         else
                             matrix.Add(new int[TotalColumns]); // Add empty rows to keep the structure of the constraint matrix
@@ -72,10 +82,10 @@ public static class DancingLinksSolver
 
         // Compute column indices
         int cellConstraint = row * Size + col;
-        int rowConstraint = Size * Size + (row * Size + num);
-        int colConstraint = 2 * Size * Size + (col * Size + num);
-        int boxIndex = (row / BoxSize) * BoxSize + (col / BoxSize);
-        int boxConstraint = 3 * Size * Size + (boxIndex * Size + num);
+        int rowConstraint = Size * Size + row * Size + num;
+        int colConstraint = 2 * Size * Size + col * Size + num;
+        int boxIndex = row / BoxSize * BoxSize + col / BoxSize;
+        int boxConstraint = 3 * Size * Size + boxIndex * Size + num;
 
         // Set the constraints
         constraints[cellConstraint] = 1;
@@ -181,6 +191,24 @@ public static class DancingLinksSolver
         Uncover(column);
     }
 
+    private static ColumnNode SelectColumn(ColumnNode root)
+    {
+        ColumnNode selected = null!;
+        int min_size = int.MaxValue;
+
+        // Start from the root column header and iterate through all columns
+        for (ColumnNode column = (ColumnNode)root.Right; column != root; column = (ColumnNode)column.Right)
+        {
+            if (column.Size < min_size) // Choose the column with the fewest 1s
+            {
+                selected = column;
+                min_size = column.Size;
+            }
+        }
+
+        return selected;
+    }
+
     private static void Cover(ColumnNode column)
     {
         // Remove column from the header list
@@ -217,24 +245,6 @@ public static class DancingLinksSolver
         // Restore column into the header list
         column.Right.Left = column;
         column.Left.Right = column;
-    }
-
-    private static ColumnNode SelectColumn(ColumnNode root)
-    {
-        ColumnNode selected = null!;
-        int min_size = int.MaxValue;
-
-        // Start from the root column header and iterate through all columns
-        for (ColumnNode column = (ColumnNode)root.Right; column != root; column = (ColumnNode)column.Right)
-        {
-            if (column.Size < min_size) // Choose the column with the fewest 1s
-            {
-                selected = column;
-                min_size = column.Size;
-            }
-        }
-
-        return selected;
     }
 
     private static Grid ExtractSolution(int[] solution)

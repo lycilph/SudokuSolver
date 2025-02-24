@@ -1,9 +1,28 @@
 ﻿<Application x:Class="SudokuUI.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:SudokuUI"
+             xmlns:local="clr-namespace:SudokuUI" 
+             xmlns:vm="clr-namespace:SudokuUI.ViewModels"
+             xmlns:v="clr-namespace:SudokuUI.Views"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Views/CommonStyles.xaml"/>
+                <ResourceDictionary Source="Views/CircularToggleButtonStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            
+            <DataTemplate DataType="{x:Type vm:GridViewModel}">
+                <v:GridView/>
+            </DataTemplate>
+            
+            <DataTemplate DataType="{x:Type vm:BoxViewModel}">
+                <v:BoxView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:CellViewModel}">
+                <v:CellViewModel/>
+            </DataTemplate>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

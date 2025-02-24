@@ -24,7 +24,7 @@ public class Cell(int index)
 
     public Cell[] Peers { get; set; } = [];
 
-    public bool HasValue => Value != 0;
+    public bool IsFilled => Value != 0;
     public bool IsEmpty => Value == 0;
     public int CandidatesCount => Candidates.Count;
 

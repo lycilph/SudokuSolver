@@ -4,35 +4,62 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SudokuUI"
+        xmlns:vm="clr-namespace:SudokuUI.ViewModels"
         mc:Ignorable="d"
-        Title="MainWindow"
-        SizeToContent="WidthAndHeight">
+        Title="Sudoku UI" Height="700" Width="600"
+        WindowStartupLocation="CenterScreen">
     <Window.Resources>
-        <Style x:Key="CircularToggleButtonStyle" TargetType="ToggleButton">
-            <Setter Property="Width" Value="30"/>
-            <Setter Property="Height" Value="30"/>
-            <Setter Property="FontSize" Value="16"/>
-            <Setter Property="FontWeight" Value="Bold"/>
+        <DataTemplate DataType="{x:Type vm:DigitSelection}">
+            <ToggleButton x:Name="selection_button"
+                          Style="{StaticResource CircularToggleButtonStyle}"
+                          Margin="2">
+                <StackPanel>
+                    <TextBlock Text="{Binding Digit}" 
+                               HorizontalAlignment="Center"
+                               FontSize="20" 
+                               FontWeight="Bold"/>
+                    <TextBlock Text="{Binding Missing}" 
+                               HorizontalAlignment="Center"/>
+                </StackPanel>
+            </ToggleButton>
+
+            <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding Digit}" Value="0">
+                    <Setter TargetName="selection_button" Property="Content">
+                        <Setter.Value>
+                            <TextBlock Text="X" 
+                                       HorizontalAlignment="Center"
+                                       FontSize="20" 
+                                       FontWeight="Bold"/>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+
+        <Style x:Key="CircularButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="45"/>
+            <Setter Property="Height" Value="45"/>
             <Setter Property="Foreground" Value="Black"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="BorderBrush" Value="Lavender"/>
             <Setter Property="Background" Value="LightGray"/>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="ToggleButton">
+                    <ControlTemplate TargetType="Button">
                         <Grid>
                             <Ellipse x:Name="Circle"
-                                 Width="{TemplateBinding Width}"
-                                 Height="{TemplateBinding Height}"
-                                 Stroke="{TemplateBinding BorderBrush}"
-                                 StrokeThickness="{TemplateBinding BorderThickness}"
-                                 Fill="{TemplateBinding Background}"/>
+                                     Width="{TemplateBinding Width}"
+                                     Height="{TemplateBinding Height}"
+                                     Stroke="{TemplateBinding BorderBrush}"
+                                     StrokeThickness="{TemplateBinding BorderThickness}"
+                                     Fill="{TemplateBinding Background}"/>
                             <ContentPresenter HorizontalAlignment="Center"
                                               VerticalAlignment="Center"/>
                         </Grid>
                         <ControlTemplate.Triggers>
                             <!-- Change color when checked -->
-                            <Trigger Property="IsChecked" Value="True">
+                            <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="Circle" Property="Fill" Value="LightBlue"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
@@ -40,239 +67,57 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
-        <Style x:Key="cell_border_style" TargetType="Border">
-            <Setter Property="BorderBrush" Value="LightGray"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Padding" Value="4"/>
-            <Setter Property="Width" Value="50"/>
-            <Setter Property="Height" Value="50"/>
-        </Style>
-
-        <DataTemplate x:Key="value_template">
-            <DataTemplate.Resources>
-                <Storyboard x:Key="ExpandAnimation">
-                    <DoubleAnimation 
-                        Storyboard.TargetName="SelectionCircle"
-                        Storyboard.TargetProperty="Width"
-                        From="0" To="40" Duration="0:0:0.2">
-                        <DoubleAnimation.EasingFunction>
-                            <BackEase EasingMode="EaseOut" Amplitude="0.5"/>
-                        </DoubleAnimation.EasingFunction>
-                    </DoubleAnimation>
-                    <DoubleAnimation 
-                        Storyboard.TargetName="SelectionCircle"
-                        Storyboard.TargetProperty="Height"
-                        From="0" To="40" Duration="0:0:0.2">
-                        <DoubleAnimation.EasingFunction>
-                            <BackEase EasingMode="EaseOut" Amplitude="0.5"/>
-                        </DoubleAnimation.EasingFunction>
-                    </DoubleAnimation>
-                </Storyboard>
-                <Storyboard x:Key="ContractAnimation">
-                    <DoubleAnimation 
-                        Storyboard.TargetName="SelectionCircle"
-                        Storyboard.TargetProperty="Width"
-                        To="0" Duration="0:0:0.2">
-                        <DoubleAnimation.EasingFunction>
-                            <QuadraticEase EasingMode="EaseIn"/>
-                        </DoubleAnimation.EasingFunction>
-                    </DoubleAnimation>
-                    <DoubleAnimation 
-                        Storyboard.TargetName="SelectionCircle"
-                        Storyboard.TargetProperty="Height"
-                        To="0" Duration="0:0:0.2">
-                        <DoubleAnimation.EasingFunction>
-                            <QuadraticEase EasingMode="EaseIn"/>
-                        </DoubleAnimation.EasingFunction>
-                    </DoubleAnimation>
-                </Storyboard>
-            </DataTemplate.Resources>
-
-            <Border Style="{StaticResource cell_border_style}">
-                <Grid>
-                    <Ellipse x:Name="SelectionCircle"
-                             Stroke="LightBlue"
-                             Fill="LightBlue"
-                             StrokeThickness="2"
-                             Opacity="0.75"
-                             Height="0"
-                             Width="0"
-                             Margin="-2"/>
-                    
-                    <TextBlock Text="{Binding Value}"
-                               FontSize="24"
-                               FontWeight="Bold"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Center"/>
-
-                </Grid>
-            </Border>
-
-            <DataTemplate.Triggers>
-                <DataTrigger Binding="{Binding Selected}" Value="True">
-                    <DataTrigger.EnterActions>
-                        <BeginStoryboard Storyboard="{StaticResource ExpandAnimation}"/>
-                    </DataTrigger.EnterActions>
-                    <DataTrigger.ExitActions>
-                        <BeginStoryboard Storyboard="{StaticResource ContractAnimation}"/>
-                    </DataTrigger.ExitActions>
-                </DataTrigger>
-            </DataTemplate.Triggers>
-        </DataTemplate>
-
-        <DataTemplate x:Key="hints_template">
-            <DataTemplate.Resources>
-                <Storyboard x:Key="ExpandAnimation">
-                    <DoubleAnimation 
-                        Storyboard.TargetName="SelectionCircle"
-                        Storyboard.TargetProperty="Width"
-                        From="0" To="40" Duration="0:0:0.2">
-                        <DoubleAnimation.EasingFunction>
-                            <BackEase EasingMode="EaseOut" Amplitude="0.5"/>
-                        </DoubleAnimation.EasingFunction>
-                    </DoubleAnimation>
-                    <DoubleAnimation 
-                        Storyboard.TargetName="SelectionCircle"
-                        Storyboard.TargetProperty="Height"
-                        From="0" To="40" Duration="0:0:0.2">
-                        <DoubleAnimation.EasingFunction>
-                            <BackEase EasingMode="EaseOut" Amplitude="0.5"/>
-                        </DoubleAnimation.EasingFunction>
-                    </DoubleAnimation>
-                </Storyboard>
-                <Storyboard x:Key="ContractAnimation">
-                    <DoubleAnimation 
-                        Storyboard.TargetName="SelectionCircle"
-                        Storyboard.TargetProperty="Width"
-                        To="0" Duration="0:0:0.2">
-                        <DoubleAnimation.EasingFunction>
-                            <QuadraticEase EasingMode="EaseIn"/>
-                        </DoubleAnimation.EasingFunction>
-                    </DoubleAnimation>
-                    <DoubleAnimation 
-                        Storyboard.TargetName="SelectionCircle"
-                        Storyboard.TargetProperty="Height"
-                        To="0" Duration="0:0:0.2">
-                        <DoubleAnimation.EasingFunction>
-                            <QuadraticEase EasingMode="EaseIn"/>
-                        </DoubleAnimation.EasingFunction>
-                    </DoubleAnimation>
-                </Storyboard>
-            </DataTemplate.Resources>
-
-            <Border Style="{StaticResource cell_border_style}">
-                <Grid>
-                    <Border x:Name="SelectionCircle"
-                            Background="LightBlue"
-                            Opacity="0.75"
-                            Height="0"
-                            Width="0"
-                            CornerRadius="3"/>
-
-                    <ItemsControl ItemsSource="{Binding Candidates}"
-                                  HorizontalAlignment="Stretch"
-                                  VerticalAlignment="Stretch">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <UniformGrid Columns="3"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
-                </Grid>
-            </Border>
-            
-            <DataTemplate.Triggers>
-                <DataTrigger Binding="{Binding Selected}" Value="True">
-                    <DataTrigger.EnterActions>
-                        <BeginStoryboard Storyboard="{StaticResource ExpandAnimation}"/>
-                    </DataTrigger.EnterActions>
-                    <DataTrigger.ExitActions>
-                        <BeginStoryboard Storyboard="{StaticResource ContractAnimation}"/>
-                    </DataTrigger.ExitActions>
-                </DataTrigger>
-            </DataTemplate.Triggers>
-        </DataTemplate>
     </Window.Resources>
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
 
-    <StackPanel>
-        <ItemsControl x:Name="cells_control"
-                      ItemsSource="{Binding Cells}"
-                      Margin="10">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <ContentControl x:Name="cell_content_control" 
-                                    Content="{Binding}"
-                                    ContentTemplate="{StaticResource value_template}"/>
+        <StackPanel Grid.Column="0" 
+                    Orientation="Vertical"
+                    Margin="5">
+            <Button>
+                <Image Source="/Assets/circle-x.png"/>
+            </Button>
 
-                    <DataTemplate.Triggers>
-                        <DataTrigger Binding="{Binding HasValue}" Value="False">
-                            <Setter TargetName="cell_content_control" 
-                                    Property="ContentTemplate" 
-                                    Value="{StaticResource hints_template}"/>
-                        </DataTrigger>
-                    </DataTemplate.Triggers>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
+            <Button Margin="0,5,0,0">
+                <Image Source="/Assets/rotate-ccw.png"/>
+            </Button>
 
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <UniformGrid Columns="9"/>
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-        </ItemsControl>
-
-        <StackPanel x:Name="button_panel"
-                    Orientation="Horizontal">
-            <ToggleButton Style="{StaticResource CircularToggleButtonStyle}" 
-                          Content="1" 
-                          Checked="Button_Checked"
-                          Unchecked="Button_Unchecked"
-                          Margin="5"/>
-            <ToggleButton Style="{StaticResource CircularToggleButtonStyle}" 
-                          Content="2" 
-                          Checked="Button_Checked"
-                          Unchecked="Button_Unchecked"
-                          Margin="5"/>
-            <ToggleButton Style="{StaticResource CircularToggleButtonStyle}" 
-                          Content="3" 
-                          Checked="Button_Checked"
-                          Unchecked="Button_Unchecked"
-                          Margin="5"/>
-            <ToggleButton Style="{StaticResource CircularToggleButtonStyle}" 
-                          Content="4" 
-                          Checked="Button_Checked"
-                          Unchecked="Button_Unchecked"
-                          Margin="5"/>
-            <ToggleButton Style="{StaticResource CircularToggleButtonStyle}" 
-                          Content="5" 
-                          Checked="Button_Checked"
-                          Unchecked="Button_Unchecked"
-                          Margin="5"/>
-            <ToggleButton Style="{StaticResource CircularToggleButtonStyle}" 
-                          Content="6" 
-                          Checked="Button_Checked"
-                          Unchecked="Button_Unchecked"
-                          Margin="5"/>
-            <ToggleButton Style="{StaticResource CircularToggleButtonStyle}" 
-                          Content="7" 
-                          Checked="Button_Checked"
-                          Unchecked="Button_Unchecked"
-                          Margin="5"/>
-            <ToggleButton Style="{StaticResource CircularToggleButtonStyle}" 
-                          Content="8" 
-                          Checked="Button_Checked"
-                          Unchecked="Button_Unchecked"
-                          Margin="5"/>
-            <ToggleButton Style="{StaticResource CircularToggleButtonStyle}" 
-                          Content="9" 
-                          Checked="Button_Checked"
-                          Unchecked="Button_Unchecked"
-                          Margin="5"/>
+            <Button Margin="0,5,0,0">
+                <Image Source="/Assets/import.png"/>
+            </Button>
         </StackPanel>
 
-        <Button Click="Button_Click"
-                Content="Test"
-                Margin="10"/>
-    </StackPanel>
+        <StackPanel Grid.Column="1">
+            <ContentControl Content="{Binding Grid}"/>
+
+            <ToggleButton Content="Hints / Values"
+                          HorizontalAlignment="Center"
+                          Margin="0,10,0,0"/>
+
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Center">
+                <ItemsControl ItemsSource="{Binding DigitSelections}"
+                              HorizontalAlignment="Center"
+                              Margin="0,10,0,0">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+
+                <Button Content="X"
+                        Style="{StaticResource CircularButtonStyle}"
+                        Margin="10,10,0,0"
+                        HorizontalAlignment="Center"
+                        FontSize="20" 
+                        FontWeight="Bold"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
 </Window>

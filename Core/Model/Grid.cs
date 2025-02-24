@@ -13,6 +13,7 @@ public class Grid
     public Unit[] Columns { get; set; }
     public Unit[] Boxes { get; set; }
     public Unit[] AllUnits { get; set; }
+    public Chute[] Chutes { get; set; }
 
     public Grid()
     {
@@ -31,32 +32,46 @@ public class Grid
 
         foreach (var cell in Cells)
             cell.Peers = GetPeerIndices(cell.Index).Select(i => Cells[i]).ToArray();
+
+        Chutes = new Chute[6];
+        for (int i = 0; i < 3; i++)
+        {
+            Chutes[i] = new Chute { Name = "Chute Horizontal", Index = i, Boxes = Enumerable.Range(0, 3).Select(n => Boxes[n + i * 3]).ToArray() };
+            Chutes[i + 3] = new Chute { Name = "Chute Vertical", Index = i + 3, Boxes = Enumerable.Range(0, 3).Select(n => Boxes[n * 3 + i]).ToArray() };
+        }
     }
 
     public Grid(string puzzle) : this()
+    {
+        Set(puzzle);
+    }
+
+    public Grid(Grid grid) : this()
+    {
+        foreach (var cell in grid.Cells.Where(c => c.IsFilled))
+        {
+            Cells[cell.Index].Value = cell.Value;
+        }
+    }
+
+    public Cell this[int row, int col]
+    {
+        get => Cells[row * 9 + col];  // Convert 2D indices to 1D
+    }
+
+    public bool IsSolved() => Cells.All(c => c.IsFilled);
+    public int EmptyCellsCount() => Cells.Count(c => c.IsEmpty);
+    public int TotalCandidatesCount() => Cells.Sum(c => c.CandidatesCount);
+    public IEnumerable<Cell> FilledCells() => Cells.Where(c => c.IsFilled).ToArray();
+    public IEnumerable<Cell> EmptyCells() => Cells.Where(c => c.IsEmpty).ToArray();
+
+    public void Set(string puzzle)
     {
         foreach (var i in AllCellIndices)
         {
             if (puzzle[i] != '.')
                 Cells[i].Value = puzzle[i] - '0';
         }
-    }
-
-    public Grid(Grid grid) : this()
-    {
-        foreach (var cell in grid.Cells.Where(c => c.HasValue))
-        {
-            Cells[cell.Index].Value = cell.Value;
-        }
-    }
-
-    public bool IsSolved => Cells.All(c => c.HasValue);
-    public int EmptyCellsCount => Cells.Count(c => c.IsEmpty);
-    public int TotalCandidatesCount => Cells.Sum(c => c.CandidatesCount);
-
-    public Cell this[int row, int col]
-    {
-        get => Cells[row * 9 + col];  // Convert 2D indices to 1D
     }
 
     private static int[] GetRowIndices(int row)
@@ -116,9 +131,9 @@ public class Grid
         var sb = new StringBuilder();
         for (int i = 0; i < 81; i++)
         {
-            if (skip_cells_with_values && Cells[i].HasValue)
+            if (skip_cells_with_values && Cells[i].IsFilled)
                 continue;
-            sb.AppendLine($"Cell {i}: {string.Join(' ', Cells[i].Candidates)}");
+            sb.AppendLine($"Cell {i}: {string.Join(' ', Cells[i].Candidates.Order())}");
         }
         return sb.ToString();
     }
@@ -147,7 +162,7 @@ public class Grid
     {
         var sb = new StringBuilder();
         foreach (var cell in Cells)
-            if (cell.HasValue)
+            if (cell.IsFilled)
                 sb.Append(cell.Value);
             else
                 sb.Append('.');
