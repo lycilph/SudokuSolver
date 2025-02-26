@@ -10,12 +10,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\flag.png" />
+    <None Remove="Assets\hash.png" />
     <None Remove="Assets\import.png" />
+    <None Remove="Assets\lightbulb.png" />
     <None Remove="Assets\rotate-ccw.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Assets\grid-3x3.ico" />
+    <Resource Include="Assets\flag.png" />
+    <Resource Include="Assets\grid-3x3.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,7 +32,9 @@
   
   <ItemGroup>
     <Resource Include="Assets\circle-x.png" />
+    <Resource Include="Assets\hash.png" />
     <Resource Include="Assets\import.png" />
+    <Resource Include="Assets\lightbulb.png" />
     <Resource Include="Assets\rotate-ccw.png" />
   </ItemGroup>
 

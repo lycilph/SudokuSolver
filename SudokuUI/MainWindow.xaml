@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:SudokuUI"
         xmlns:vm="clr-namespace:SudokuUI.ViewModels"
         mc:Ignorable="d"
-        Title="Sudoku UI" Height="700" Width="600"
+        Title="Sudoku UI" Height="700" Width="700"
         WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <DataTemplate DataType="{x:Type vm:DigitSelection}">
@@ -79,15 +79,17 @@
         <StackPanel Grid.Column="0" 
                     Orientation="Vertical"
                     Margin="5">
-            <Button>
+            <Button ToolTip="Clear">
                 <Image Source="/Assets/circle-x.png"/>
             </Button>
 
-            <Button Margin="0,5,0,0">
+            <Button Margin="0,5,0,0"
+                    ToolTip="Reset">
                 <Image Source="/Assets/rotate-ccw.png"/>
             </Button>
 
-            <Button Margin="0,5,0,0">
+            <Button Margin="0,5,0,0"
+                    ToolTip="Import">
                 <Image Source="/Assets/import.png"/>
             </Button>
         </StackPanel>
@@ -118,6 +120,24 @@
                         FontSize="20" 
                         FontWeight="Bold"/>
             </StackPanel>
+        </StackPanel>
+
+        <StackPanel Grid.Column="2"
+                    Orientation="Vertical"
+                    Margin="5">
+            <Button ToolTip="Hint">
+                <Image Source="/Assets/lightbulb.png"/>
+            </Button>
+
+            <Button Margin="0,5,0,0"
+                    ToolTip="Solve the puzzle">
+                <Image Source="/Assets/flag.png"/>
+            </Button>
+
+            <Button Margin="0,5,0,0"
+                    ToolTip="Count # of solutions">
+                <Image Source="/Assets/hash.png"/>
+            </Button>
         </StackPanel>
     </Grid>
 </Window>
