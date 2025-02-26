@@ -1,6 +1,6 @@
-﻿using Core.Algorithms;
-using Core.Archive.DancingLinks;
+﻿using Core.Archive.DancingLinks;
 using Core.Model;
+using Core.Strategies;
 
 namespace Sandbox;
 

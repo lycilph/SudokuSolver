@@ -1,5 +1,5 @@
-﻿using Core.Algorithms;
-using Core.Model;
+﻿using Core.Model;
+using Core.Strategies;
 
 namespace SolverTests;
 

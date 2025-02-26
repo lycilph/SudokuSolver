@@ -1,5 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Core.Model;
+﻿using Core.Model;
 using SudokuUI.ViewModels;
 using System.Collections.ObjectModel;
 using System.Windows;

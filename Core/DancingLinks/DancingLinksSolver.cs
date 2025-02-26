@@ -1,6 +1,6 @@
-﻿using Core.Algorithms;
-using Core.DancingLinks;
+﻿using Core.DancingLinks;
 using Core.Model;
+using Core.Strategies;
 using System.Diagnostics;
 
 namespace Core.Archive.DancingLinks;

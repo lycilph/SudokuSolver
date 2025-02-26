@@ -1,6 +1,6 @@
 ﻿using Core.Model;
 
-namespace Core.Algorithms;
+namespace Core.Strategies;
 
 /* Strategy name: Hidden Singles
  * 

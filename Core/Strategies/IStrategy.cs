@@ -1,6 +1,6 @@
 ﻿using Core.Model;
 
-namespace Core.Algorithms;
+namespace Core.Strategies;
 
 public interface IStrategy
 {

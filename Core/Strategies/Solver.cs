@@ -1,7 +1,7 @@
 ﻿using Core.Model;
 using System.Diagnostics;
 
-namespace Core.Algorithms;
+namespace Core.Strategies;
 
 public static class Solver
 {
