@@ -1,9 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace SudokuUI.ViewModels;
 
 public partial class DigitSelectionViewModel : ObservableObject
 {
+    private readonly Action<int> select_digit;
+
     [ObservableProperty]
     private int _digit;
 
@@ -14,8 +17,15 @@ public partial class DigitSelectionViewModel : ObservableObject
     [ObservableProperty]
     private bool _selected = false;
 
-    public DigitSelectionViewModel(int digit)
+    public DigitSelectionViewModel(int digit, Action<int> select_action)
     {
         Digit = digit;
+        select_digit = select_action;
+    }
+
+    [RelayCommand]
+    private void Select()
+    {
+        select_digit(Digit);
     }
 }

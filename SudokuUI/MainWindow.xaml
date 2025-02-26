@@ -4,12 +4,15 @@
                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                  xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                 xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
                  xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                  mc:Ignorable="d"
                  Title="Sudoku UI" 
                  Height="700" 
                  WindowStartupLocation="CenterScreen"
-                 SizeToContent="Width">
+                 SizeToContent="Width"
+                 ResizeMode="CanMinimize"
+                 Dialog:DialogParticipation.Register="{Binding}">
     <StackPanel>
         <Grid>
             <Grid.ColumnDefinitions>
@@ -22,20 +25,24 @@
                         Orientation="Vertical"
                         Margin="5">
                 <Button Content="{iconPacks:Lucide Kind=Settings, Height=32, Width=32}"
+                        IsEnabled="False"
                         Padding="5"
                         ToolTip="Settings"/>
 
                 <Button Content="{iconPacks:Lucide Kind=CircleX, Height=32, Width=32}"
+                        IsEnabled="False"
                         Padding="5"
                         Margin="0,15,0,0"
                         ToolTip="Clear"/>
 
                 <Button Content="{iconPacks:Lucide Kind=RotateCcw, Height=32, Width=32}"
+                        IsEnabled="False"
                         Padding="5"
                         Margin="0,5,0,0"
                         ToolTip="Reset"/>
 
                 <Button Content="{iconPacks:Lucide Kind=Import, Height=32, Width=32}"
+                        IsEnabled="False"
                         Padding="5"
                         Margin="0,5,0,0"
                         ToolTip="Import"/>
@@ -48,15 +55,18 @@
                         Orientation="Vertical"
                         Margin="5">
                 <Button Content="{iconPacks:Lucide Kind=Lightbulb, Height=32, Width=32}"
+                        IsEnabled="False"
                         Padding="5"
                         ToolTip="Hint"/>
             
                 <Button Content="{iconPacks:Lucide Kind=Flag, Height=32, Width=32}"
+                        IsEnabled="False"
                         Padding="5"
                         Margin="0,5,0,0"
                         ToolTip="Solve the puzzle"/>
 
                 <Button Content="{iconPacks:Lucide Kind=Hash, Height=32, Width=32}"
+                        Command="{Binding ShowSolutionCountCommand}"
                         Padding="5"
                         Margin="0,5,0,0"
                         ToolTip="Count # of solutions"/>

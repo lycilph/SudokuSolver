@@ -26,6 +26,7 @@
             </ItemsControl>
             
             <Button Content="{iconPacks:Lucide Kind=X}"
+                    Command="{Binding ClearSelectionCommand}"
                     Style="{DynamicResource MahApps.Styles.Button.Circle}"
                     Width="40"
                     Height="40"

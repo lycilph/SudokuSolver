@@ -1,6 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using ControlzEx.Standard;
+using Core.Archive.DancingLinks;
 using Core.Model;
 using Core.Strategies;
+using MahApps.Metro.Controls.Dialogs;
+using System.Text;
 
 namespace SudokuUI.ViewModels;
 
@@ -19,5 +24,17 @@ public partial class MainViewModel : ObservableObject
         BasicEliminationStrategy.ExecuteAndApply(puzzle.Grid);
         _grid = new GridViewModel(puzzle.Grid);
         _selections = new SelectionViewModel();
+    }
+
+    [RelayCommand]
+    private async Task ShowSolutionCount()
+    {
+        var results = DancingLinksSolver.Solve(puzzle);
+        var sb = new StringBuilder();
+
+        sb.AppendLine($"The puzzle has {results.Count} solutions");
+        sb.AppendLine($"Execution Time: {puzzle.Stats.ElapsedTime} ms");
+
+        await DialogCoordinator.Instance.ShowMessageAsync(this, "Solution Count", sb.ToString());
     }
 }
