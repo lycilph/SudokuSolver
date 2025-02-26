@@ -10,8 +10,17 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Views/CommonStyles.xaml"/>
                 <ResourceDictionary Source="Views/CircularToggleButtonStyle.xaml"/>
+                <ResourceDictionary Source="Views/CircularButtonStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-            
+
+            <DataTemplate DataType="{x:Type vm:SelectionViewModel}">
+                <v:SelectionView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:DigitSelectionViewModel}">
+                <v:DigitSelectionView/>
+            </DataTemplate>
+
             <DataTemplate DataType="{x:Type vm:GridViewModel}">
                 <v:GridView/>
             </DataTemplate>

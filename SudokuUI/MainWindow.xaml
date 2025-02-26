@@ -8,67 +8,6 @@
         mc:Ignorable="d"
         Title="Sudoku UI" Height="700" Width="700"
         WindowStartupLocation="CenterScreen">
-    <Window.Resources>
-        <DataTemplate DataType="{x:Type vm:DigitSelection}">
-            <ToggleButton x:Name="selection_button"
-                          Style="{StaticResource CircularToggleButtonStyle}"
-                          Margin="2">
-                <StackPanel>
-                    <TextBlock Text="{Binding Digit}" 
-                               HorizontalAlignment="Center"
-                               FontSize="20" 
-                               FontWeight="Bold"/>
-                    <TextBlock Text="{Binding Missing}" 
-                               HorizontalAlignment="Center"/>
-                </StackPanel>
-            </ToggleButton>
-
-            <DataTemplate.Triggers>
-                <DataTrigger Binding="{Binding Digit}" Value="0">
-                    <Setter TargetName="selection_button" Property="Content">
-                        <Setter.Value>
-                            <TextBlock Text="X" 
-                                       HorizontalAlignment="Center"
-                                       FontSize="20" 
-                                       FontWeight="Bold"/>
-                        </Setter.Value>
-                    </Setter>
-                </DataTrigger>
-            </DataTemplate.Triggers>
-        </DataTemplate>
-
-        <Style x:Key="CircularButtonStyle" TargetType="Button">
-            <Setter Property="Width" Value="45"/>
-            <Setter Property="Height" Value="45"/>
-            <Setter Property="Foreground" Value="Black"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="BorderBrush" Value="Lavender"/>
-            <Setter Property="Background" Value="LightGray"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Grid>
-                            <Ellipse x:Name="Circle"
-                                     Width="{TemplateBinding Width}"
-                                     Height="{TemplateBinding Height}"
-                                     Stroke="{TemplateBinding BorderBrush}"
-                                     StrokeThickness="{TemplateBinding BorderThickness}"
-                                     Fill="{TemplateBinding Background}"/>
-                            <ContentPresenter HorizontalAlignment="Center"
-                                              VerticalAlignment="Center"/>
-                        </Grid>
-                        <ControlTemplate.Triggers>
-                            <!-- Change color when checked -->
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Circle" Property="Fill" Value="LightBlue"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </Window.Resources>
-    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -99,32 +38,10 @@
             </Button>
         </StackPanel>
 
-        <StackPanel Grid.Column="1">
+        <StackPanel Grid.Column="1"
+                    Orientation="Vertical">
             <ContentControl Content="{Binding Grid}"/>
-
-            <ToggleButton Content="Hints / Values"
-                          HorizontalAlignment="Center"
-                          Margin="0,10,0,0"/>
-
-            <StackPanel Orientation="Horizontal"
-                        HorizontalAlignment="Center">
-                <ItemsControl ItemsSource="{Binding DigitSelections}"
-                              HorizontalAlignment="Center"
-                              Margin="0,10,0,0">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel Orientation="Horizontal"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
-
-                <Button Content="X"
-                        Style="{StaticResource CircularButtonStyle}"
-                        Margin="10,10,0,0"
-                        HorizontalAlignment="Center"
-                        FontSize="20" 
-                        FontWeight="Bold"/>
-            </StackPanel>
+            <ContentControl Content="{Binding Selections}"/>
         </StackPanel>
 
         <StackPanel Grid.Column="2"

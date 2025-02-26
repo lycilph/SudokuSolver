@@ -2,7 +2,7 @@
 
 namespace SudokuUI.ViewModels;
 
-public partial class DigitSelection : ObservableObject
+public partial class DigitSelectionViewModel : ObservableObject
 {
     [ObservableProperty]
     private int _digit;
@@ -14,7 +14,7 @@ public partial class DigitSelection : ObservableObject
     [ObservableProperty]
     private bool _selected = false;
 
-    public DigitSelection(int digit)
+    public DigitSelectionViewModel(int digit)
     {
         Digit = digit;
     }

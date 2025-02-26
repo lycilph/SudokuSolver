@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Data;
 
-namespace SudokuUI.Views;
+namespace SudokuUI.Converters;
 
 public class IndexToThicknessConverter : IValueConverter
 {
