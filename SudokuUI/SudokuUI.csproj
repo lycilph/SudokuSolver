@@ -15,6 +15,7 @@
     <None Remove="Assets\import.png" />
     <None Remove="Assets\lightbulb.png" />
     <None Remove="Assets\rotate-ccw.png" />
+    <None Remove="Assets\settings.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -36,6 +37,7 @@
     <Resource Include="Assets\import.png" />
     <Resource Include="Assets\lightbulb.png" />
     <Resource Include="Assets\rotate-ccw.png" />
+    <Resource Include="Assets\settings.png" />
   </ItemGroup>
 
 </Project>
