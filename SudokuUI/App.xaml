@@ -19,9 +19,31 @@
             <DataTemplate DataType="{x:Type vm:BoxViewModel}">
                 <v:BoxView/>
             </DataTemplate>
+            
+            <DataTemplate x:Key="cell_digit_template">
+                <v:CellDigitView/>
+            </DataTemplate>
+
+            <DataTemplate x:Key="cell_hints_template">
+                <v:CellHintsView/>
+            </DataTemplate>
 
             <DataTemplate DataType="{x:Type vm:CellViewModel}">
-                <v:CellViewModel/>
+                <ContentControl x:Name="cell_content_control"
+                                Content="{Binding}"
+                                ContentTemplate="{StaticResource cell_digit_template}"/>
+                
+                <DataTemplate.Triggers>
+                    <DataTrigger Binding="{Binding Value}" Value="0">
+                        <Setter TargetName="cell_content_control" 
+                                Property="ContentTemplate" 
+                                Value="{StaticResource cell_hints_template}"/>
+                    </DataTrigger>
+                </DataTemplate.Triggers>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:HintViewModel}">
+                <v:HintView/>
             </DataTemplate>
         </ResourceDictionary>
     </Application.Resources>

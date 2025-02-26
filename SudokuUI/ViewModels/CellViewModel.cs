@@ -20,6 +20,6 @@ public partial class CellViewModel : ObservableObject
         this.cell = cell;
         Value = cell.Value;
 
-        hints = Enumerable.Range(1, 9).Select(i => new HintViewModel(i)).ToObservableCollection();
+        hints = Enumerable.Range(1, 9).Select(i => new HintViewModel(cell.Candidates.Contains(i) ? i : 0)).ToObservableCollection();
     }
 }

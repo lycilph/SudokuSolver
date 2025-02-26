@@ -1,4 +1,5 @@
 ﻿using Core.Model;
+using Core.Strategies;
 using SudokuUI.ViewModels;
 using System.Collections.ObjectModel;
 using System.Windows;
@@ -23,11 +24,11 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
+        BasicEliminationStrategy.ExecuteAndApply(puzzle.Grid);
+
         DataContext = this;
 
-        //DigitSelections = [.. Enumerable.Range(1, 9).Select(d => new DigitSelection(d)), new DigitSelection(0)];
         DigitSelections = [.. Enumerable.Range(1, 9).Select(d => new DigitSelection(d))];
-
         Grid = new GridViewModel(puzzle.Grid);
     }
 }

@@ -2,9 +2,9 @@
 
 namespace SudokuUI.Views;
 
-public partial class CellViewModel : UserControl
+public partial class CellHintsView : UserControl
 {
-    public CellViewModel()
+    public CellHintsView()
     {
         InitializeComponent();
     }
