@@ -45,7 +45,11 @@
             <DataTemplate DataType="{x:Type vm:CellViewModel}">
                 <ContentControl x:Name="cell_content_control"
                                 Content="{Binding}"
-                                ContentTemplate="{StaticResource cell_digit_template}"/>
+                                ContentTemplate="{StaticResource cell_digit_template}">
+                    <ContentControl.InputBindings>
+                        <MouseBinding MouseAction="LeftClick" Command="{Binding CellClickedCommand}"/>
+                    </ContentControl.InputBindings>
+                </ContentControl>
                 
                 <DataTemplate.Triggers>
                     <DataTrigger Binding="{Binding Value}" Value="0">

@@ -21,6 +21,8 @@ public partial class DigitSelectionViewModel : ObservableObject
     {
         Digit = digit;
         select_digit = select_action;
+
+        
     }
 
     [RelayCommand]

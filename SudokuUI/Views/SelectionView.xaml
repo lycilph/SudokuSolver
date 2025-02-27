@@ -25,7 +25,7 @@
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
             </ItemsControl>
-            
+
             <Button Content="{iconPacks:Lucide Kind=X}"
                     Command="{Binding ClearSelectionCommand}"
                     Style="{DynamicResource MahApps.Styles.Button.Circle}"

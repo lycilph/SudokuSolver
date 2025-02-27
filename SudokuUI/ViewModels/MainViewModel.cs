@@ -1,12 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using ControlzEx.Standard;
 using Core.Archive.DancingLinks;
 using Core.Model;
 using Core.Strategies;
 using MahApps.Metro.Controls.Dialogs;
 using System.Text;
-using System.Windows;
 
 namespace SudokuUI.ViewModels;
 
@@ -24,7 +22,7 @@ public partial class MainViewModel : ObservableObject
     {
         BasicEliminationStrategy.ExecuteAndApply(puzzle.Grid);
         _grid = new GridViewModel(puzzle.Grid);
-        _selections = new SelectionViewModel();
+        _selections = new SelectionViewModel(puzzle.Grid);
     }
 
     [RelayCommand]
