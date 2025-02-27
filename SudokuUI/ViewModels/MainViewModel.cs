@@ -6,6 +6,7 @@ using Core.Model;
 using Core.Strategies;
 using MahApps.Metro.Controls.Dialogs;
 using System.Text;
+using System.Windows;
 
 namespace SudokuUI.ViewModels;
 
@@ -36,5 +37,26 @@ public partial class MainViewModel : ObservableObject
         sb.AppendLine($"Execution Time: {puzzle.Stats.ElapsedTime} ms");
 
         await DialogCoordinator.Instance.ShowMessageAsync(this, "Solution Count", sb.ToString());
+    }
+
+    [RelayCommand]
+    private void NumberKeyPressed(string number)
+    {
+        if (int.TryParse(number, out int digit))
+        {
+            Selections.Select(digit);
+        }
+    }
+
+    [RelayCommand]
+    private void ClearSelection()
+    {
+        Selections.ClearSelection();
+    }
+
+    [RelayCommand]
+    private void ToggleInput()
+    {
+        Selections.ToggleInput();
     }
 }
