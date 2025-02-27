@@ -24,7 +24,7 @@
         <KeyBinding Key="D8" Command="{Binding NumberKeyPressedCommand}" CommandParameter="8"/>
         <KeyBinding Key="D9" Command="{Binding NumberKeyPressedCommand}" CommandParameter="9"/>
         <KeyBinding Key="Esc" Command="{Binding ClearSelectionCommand}"/>
-        <KeyBinding Key="Space" Command="{Binding ToggleInputCommand}"/>
+        <KeyBinding Key="Space" Command="{Binding ToggleInputModeCommand}"/>
     </Window.InputBindings>
     
     <StackPanel>

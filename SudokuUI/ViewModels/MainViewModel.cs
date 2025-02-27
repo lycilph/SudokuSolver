@@ -4,6 +4,7 @@ using Core.Archive.DancingLinks;
 using Core.Model;
 using Core.Strategies;
 using MahApps.Metro.Controls.Dialogs;
+using SudokuUI.Controllers;
 using System.Text;
 
 namespace SudokuUI.ViewModels;
@@ -11,6 +12,7 @@ namespace SudokuUI.ViewModels;
 public partial class MainViewModel : ObservableObject
 {
     private readonly Puzzle puzzle = new("4......38.32.941...953..24.37.6.9..4.29..16.36.47.3.9.957..83....39..4..24..3.7.9");
+    private SelectionController selection_controller = new();
 
     [ObservableProperty]
     private GridViewModel _grid;
@@ -21,8 +23,8 @@ public partial class MainViewModel : ObservableObject
     public MainViewModel()
     {
         BasicEliminationStrategy.ExecuteAndApply(puzzle.Grid);
-        _grid = new GridViewModel(puzzle.Grid);
-        _selections = new SelectionViewModel(puzzle.Grid);
+        _grid = new GridViewModel(puzzle.Grid, selection_controller);
+        _selections = new SelectionViewModel(puzzle.Grid, selection_controller);
     }
 
     [RelayCommand]
@@ -42,19 +44,19 @@ public partial class MainViewModel : ObservableObject
     {
         if (int.TryParse(number, out int digit))
         {
-            Selections.Select(digit);
+            selection_controller.DigitSelected = digit;
         }
     }
 
     [RelayCommand]
     private void ClearSelection()
     {
-        Selections.ClearSelection();
+        selection_controller.ClearDigitSelection();
     }
 
     [RelayCommand]
-    private void ToggleInput()
+    private void ToggleInputMode()
     {
-        Selections.ToggleInput();
+        selection_controller.ToggleInputMode();
     }
 }

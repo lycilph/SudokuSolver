@@ -11,7 +11,8 @@
                   Style="{DynamicResource MahApps.Styles.ToggleButton.Circle}"
                   Width="40"
                   Height="40"
-                  Margin="2,0">
+                  Margin="2,0"
+                  Focusable="False">
         <StackPanel>
             <TextBlock Text="{Binding Digit}" 
                        HorizontalAlignment="Center"

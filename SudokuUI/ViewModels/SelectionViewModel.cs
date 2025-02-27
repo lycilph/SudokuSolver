@@ -1,31 +1,45 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
 using Core.Model;
-using SudokuUI.Extensions;
-using SudokuUI.Messages;
+using SudokuUI.Controllers;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace SudokuUI.ViewModels;
 
-public partial class SelectionViewModel : ObservableObject, IRecipient<SelectDigitMessage>
+public partial class SelectionViewModel : ObservableObject
 {
     private Grid grid;
+    private SelectionController selection_controller;
 
     public ObservableCollection<DigitSelectionViewModel> DigitSelections { get; private set; }
 
     [ObservableProperty]
     private bool _inputtingHints = false;
 
-    public SelectionViewModel(Grid grid)
+    public SelectionViewModel(Grid grid, SelectionController selection_controller)
     {
         this.grid = grid;
-        DigitSelections = [.. Enumerable.Range(1, 9).Select(d => new DigitSelectionViewModel(d, Select))];
-        
-        RefreshFromModel();
+        this.selection_controller = selection_controller;
 
-        StrongReferenceMessenger.Default.RegisterAll(this);
-        StrongReferenceMessenger.Default.Register<SelectionViewModel, RequestSelectedDigitMessage>(this, (vm, m) => m.Reply(vm.GetSelection()));
+        DigitSelections = [.. Enumerable.Range(1, 9).Select(d => new DigitSelectionViewModel(d, selection_controller))];
+
+        selection_controller.PropertyChanged += SelectionChanged;
+
+        RefreshFromModel();
+    }
+
+    partial void OnInputtingHintsChanged(bool value)
+    {
+        selection_controller.InputMode = InputtingHints ? SelectionController.Mode.Hints : SelectionController.Mode.Digits;
+    }
+
+    private void SelectionChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(SelectionController.InputMode))
+        {
+            InputtingHints = selection_controller.InputMode == SelectionController.Mode.Hints;
+        }
     }
 
     public void RefreshFromModel()
@@ -38,25 +52,8 @@ public partial class SelectionViewModel : ObservableObject, IRecipient<SelectDig
     }
 
     [RelayCommand]
-    public void ClearSelection()
+    private void ClearSelection()
     {
-        DigitSelections.ForEach(s => s.Selected = false);
-    }
-
-    public void Select(int digit)
-    {
-        DigitSelections.ForEach(s => s.Selected = (digit == s.Digit));
-    }
-
-    public int GetSelection()
-    {
-        return DigitSelections.FirstOrDefault(s => s.Selected)?.Digit ?? 0;
-    }
-
-    public void ToggleInput() => InputtingHints = !InputtingHints;
-
-    public void Receive(SelectDigitMessage message)
-    {
-        Select(message.digit);
+        selection_controller.ClearDigitSelection();
     }
 }

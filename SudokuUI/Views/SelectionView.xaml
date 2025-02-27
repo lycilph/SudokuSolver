@@ -12,7 +12,8 @@
                           OnContent="Hints"
                           OffContent="Digit"
                           HorizontalAlignment="Center"
-                          Margin="60,10,0,0"/>
+                          Margin="60,10,0,0"
+                          Focusable="False"/>
 
         <StackPanel Orientation="Horizontal"
                     HorizontalAlignment="Center"
@@ -32,7 +33,8 @@
                     Width="40"
                     Height="40"
                     Margin="5,0,0,0"
-                    ToolTip="Clear digit selection"/>
+                    ToolTip="Clear digit selection"
+                    Focusable="False"/>
         </StackPanel>
     </StackPanel>
 </UserControl>

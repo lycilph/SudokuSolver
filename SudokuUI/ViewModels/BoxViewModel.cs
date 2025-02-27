@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Core.Extensions;
 using Core.Model;
+using SudokuUI.Controllers;
 using System.Collections.ObjectModel;
 
 namespace SudokuUI.ViewModels;
@@ -15,11 +16,11 @@ public partial class BoxViewModel : ObservableObject
     [ObservableProperty]
     private int _index = 0;
 
-    public BoxViewModel(Unit box)
+    public BoxViewModel(Unit box, SelectionController selection_controller)
     {
         this.box = box;
 
-        _cells = box.Cells.Select(c => new CellViewModel(c)).ToObservableCollection();
+        _cells = box.Cells.Select(c => new CellViewModel(c, selection_controller)).ToObservableCollection();
         _index = box.Index;
     }
 }
