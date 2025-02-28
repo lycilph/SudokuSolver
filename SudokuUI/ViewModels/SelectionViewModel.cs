@@ -8,7 +8,7 @@ using System.Collections.ObjectModel;
 
 namespace SudokuUI.ViewModels;
 
-public partial class SelectionViewModel : ObservableObject
+public partial class SelectionViewModel : ObservableRecipient, IRecipient<RefreshFromModelMessage>
 {
     private Grid grid;
 
@@ -21,22 +21,22 @@ public partial class SelectionViewModel : ObservableObject
         SelectionService = selection_service;
 
         DigitSelections = [.. Enumerable.Range(1, 9).Select(d => new DigitSelectionViewModel(d, selection_service)), new DigitSelectionViewModel(0, selection_service)];
-
-        RefreshFromModel();
-    }
-
-    public void RefreshFromModel()
-    {
-        foreach (var digit in Grid.PossibleValues)
-        {
-            var cells_with_digit = grid.Cells.Count(c => c.Value == digit);
-            DigitSelections[digit - 1].Missing = 9 - cells_with_digit;
-        }
+       
+        IsActive = true; // Make sure we are active to receive messages
     }
 
     [RelayCommand]
     private void ClearSelection()
     {
         SelectionService.ClearDigitSelection();
+    }
+
+    public void Receive(RefreshFromModelMessage message)
+    {
+        foreach (var digit in Grid.PossibleValues)
+        {
+            var cells_with_digit = grid.Cells.Count(c => c.Value == digit);
+            DigitSelections[digit - 1].Missing = 9 - cells_with_digit;
+        }
     }
 }

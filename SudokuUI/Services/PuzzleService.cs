@@ -24,6 +24,7 @@ public partial class PuzzleService : ObservableRecipient, IRecipient<WindowShown
     {
         puzzle.Set(input);
         BasicEliminationStrategy.ExecuteAndApply(Grid);
+        WeakReferenceMessenger.Default.Send(new RefreshFromModelMessage());
     }
 
     public int GetSolutionCount()
@@ -36,17 +37,22 @@ public partial class PuzzleService : ObservableRecipient, IRecipient<WindowShown
 
     public void SetDigit(Cell cell, int digit)
     {
-
+        cell.Value = digit;
+        WeakReferenceMessenger.Default.Send(new RefreshFromModelMessage());
     }
 
-    public void ToggleHint(int digit)
+    public void ToggleHint(Cell cell, int digit)
     {
+        if (cell.Candidates.Contains(digit))
+            cell.Candidates.Remove(digit);
+        else
+            cell.Candidates.Add(digit);
 
+        WeakReferenceMessenger.Default.Send(new RefreshFromModelMessage());
     }
 
     public void Receive(WindowShownMessage message)
     {
         Reset();
-        WeakReferenceMessenger.Default.Send(new RefreshFromModelMessage());
     }
 }

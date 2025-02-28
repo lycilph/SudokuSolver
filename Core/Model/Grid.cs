@@ -71,6 +71,8 @@ public class Grid
         {
             if (puzzle[i] != '.')
                 Cells[i].Value = puzzle[i] - '0';
+            else
+                Cells[i].Reset();
         }
     }
 

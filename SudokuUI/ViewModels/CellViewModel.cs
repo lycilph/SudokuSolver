@@ -46,20 +46,11 @@ public partial class CellViewModel : ObservableRecipient, IRecipient<RefreshFrom
             {
                 if (selection_service.InputMode == SelectionService.Mode.Digits)
                     puzzle_service.SetDigit(cell, selection_service.Digit);
-                    //Value = selection_service.Digit;
-                //else
-                //    ToggleHint(selection_service.Digit);
+                else
+                    puzzle_service.ToggleHint(cell, selection_service.Digit);
             }
         }
     }
-
-    //private void ToggleHint(int digit)
-    //{
-    //    if (Hints[digit-1].Digit == 0)
-    //        Hints[digit-1].Digit = digit;
-    //    else
-    //        Hints[digit-1].Digit = 0;
-    //}
 
     public void Receive(RefreshFromModelMessage message)
     {

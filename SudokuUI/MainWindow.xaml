@@ -51,7 +51,7 @@
                         ToolTip="Clear"/>
 
                 <Button Content="{iconPacks:Lucide Kind=RotateCcw, Height=32, Width=32}"
-                        IsEnabled="False"
+                        Command="{Binding ResetPuzzleCommand}"
                         Padding="5"
                         Margin="0,5,0,0"
                         ToolTip="Reset"/>

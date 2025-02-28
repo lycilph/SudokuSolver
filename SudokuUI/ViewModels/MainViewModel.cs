@@ -53,4 +53,10 @@ public partial class MainViewModel : ObservableObject
     {
         selection_service.ToggleInputMode();
     }
+
+    [RelayCommand]
+    private void ResetPuzzle()
+    {
+        puzzle_service.Reset();
+    }
 }

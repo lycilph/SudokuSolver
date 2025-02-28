@@ -32,4 +32,10 @@ public class Cell(int index)
     public int Column => Index % 9;
 
     public int GetUnitIndex(UnitType type) => type == UnitType.Row ? Row : Column;
+
+    public void Reset()
+    {
+        Value = 0;
+        Candidates = new HashSet<int>(Grid.PossibleValues);
+    }
 }
