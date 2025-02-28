@@ -12,7 +12,8 @@
                  WindowStartupLocation="CenterScreen"
                  SizeToContent="Width"
                  ResizeMode="CanMinimize"
-                 Dialog:DialogParticipation.Register="{Binding}">
+                 Dialog:DialogParticipation.Register="{Binding}"
+                 ContentRendered="WindowContentRendered">
     <Window.InputBindings>
         <KeyBinding Key="D1" Command="{Binding NumberKeyPressedCommand}" CommandParameter="1"/>
         <KeyBinding Key="D2" Command="{Binding NumberKeyPressedCommand}" CommandParameter="2"/>

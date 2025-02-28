@@ -15,7 +15,7 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Steel.xaml" />
                 
                 <!-- Styles -->
-                <ResourceDictionary Source="Views/CommonStyles.xaml"/>
+                <ResourceDictionary Source="Styles/CommonStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <DataTemplate DataType="{x:Type vm:SelectionViewModel}">

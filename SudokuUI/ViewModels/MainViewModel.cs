@@ -1,8 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Core.Archive.DancingLinks;
-using Core.Model;
-using Core.Strategies;
 using MahApps.Metro.Controls.Dialogs;
 using SudokuUI.Services;
 using System.Text;
@@ -11,8 +8,8 @@ namespace SudokuUI.ViewModels;
 
 public partial class MainViewModel : ObservableObject
 {
-    private readonly Puzzle puzzle = new("4......38.32.941...953..24.37.6.9..4.29..16.36.47.3.9.957..83....39..4..24..3.7.9");
-    private SelectionService selection_service = new();
+    private PuzzleService puzzle_service;
+    private SelectionService selection_service;
 
     [ObservableProperty]
     private GridViewModel _grid;
@@ -20,22 +17,21 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     private SelectionViewModel _selections;
 
-    public MainViewModel()
+    public MainViewModel(PuzzleService puzzle_service, SelectionService selection_service)
     {
-        BasicEliminationStrategy.ExecuteAndApply(puzzle.Grid);
-        _grid = new GridViewModel(puzzle.Grid, selection_service);
-        _selections = new SelectionViewModel(puzzle.Grid, selection_service);
+        this.puzzle_service = puzzle_service;
+        this.selection_service = selection_service;
+
+        _grid = new GridViewModel(puzzle_service.Grid);
+        _selections = new SelectionViewModel(puzzle_service.Grid, selection_service);
     }
 
     [RelayCommand]
     private async Task ShowSolutionCount()
     {
-        var results = DancingLinksSolver.Solve(puzzle);
         var sb = new StringBuilder();
-
-        sb.AppendLine($"The puzzle has {results.Count} solutions");
-        sb.AppendLine($"Execution Time: {puzzle.Stats.ElapsedTime} ms");
-
+        sb.AppendLine($"The puzzle has {puzzle_service.GetSolutionCount()} solutions");
+        sb.AppendLine($"Execution Time: {puzzle_service.GetStatistics().ElapsedTime} ms");
         await DialogCoordinator.Instance.ShowMessageAsync(this, "Solution Count", sb.ToString());
     }
 
