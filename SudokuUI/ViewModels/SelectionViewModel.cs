@@ -1,46 +1,46 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Core.Model;
-using SudokuUI.Controllers;
+using SudokuUI.Services;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 
 namespace SudokuUI.ViewModels;
 
 public partial class SelectionViewModel : ObservableObject
 {
     private Grid grid;
-    private SelectionController selection_controller;
+    //private SelectionService selection_service;
 
     public ObservableCollection<DigitSelectionViewModel> DigitSelections { get; private set; }
+    public SelectionService SelectionService { get; private set; }
 
-    [ObservableProperty]
-    private bool _inputtingHints = false;
+    //[ObservableProperty]
+    //private bool _inputtingHints = false;
 
-    public SelectionViewModel(Grid grid, SelectionController selection_controller)
+    public SelectionViewModel(Grid grid, SelectionService selection_service)
     {
         this.grid = grid;
-        this.selection_controller = selection_controller;
+        SelectionService = selection_service;
 
-        DigitSelections = [.. Enumerable.Range(1, 9).Select(d => new DigitSelectionViewModel(d, selection_controller))];
+        DigitSelections = [.. Enumerable.Range(1, 9).Select(d => new DigitSelectionViewModel(d, selection_service)), new DigitSelectionViewModel(0, selection_service)];
 
-        selection_controller.PropertyChanged += SelectionChanged;
+        //selection_service.PropertyChanged += SelectionChanged;
 
         RefreshFromModel();
     }
 
-    partial void OnInputtingHintsChanged(bool value)
-    {
-        selection_controller.InputMode = InputtingHints ? SelectionController.Mode.Hints : SelectionController.Mode.Digits;
-    }
+    //partial void OnInputtingHintsChanged(bool value)
+    //{
+    //    selection_service.InputMode = InputtingHints ? SelectionService.Mode.Hints : SelectionService.Mode.Digits;
+    //}
 
-    private void SelectionChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName == nameof(SelectionController.InputMode))
-        {
-            InputtingHints = selection_controller.InputMode == SelectionController.Mode.Hints;
-        }
-    }
+    //private void SelectionChanged(object? sender, PropertyChangedEventArgs e)
+    //{
+    //    if (e.PropertyName == nameof(SelectionService.InputMode))
+    //    {
+    //        InputtingHints = selection_service.InputMode == SelectionService.Mode.Hints;
+    //    }
+    //}
 
     public void RefreshFromModel()
     {
@@ -54,6 +54,6 @@ public partial class SelectionViewModel : ObservableObject
     [RelayCommand]
     private void ClearSelection()
     {
-        selection_controller.ClearDigitSelection();
+        SelectionService.ClearDigitSelection();
     }
 }

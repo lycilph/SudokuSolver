@@ -1,9 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Core.Model;
 
-namespace SudokuUI.Controllers;
+namespace SudokuUI.Services;
 
-public partial class SelectionController : ObservableObject
+public partial class SelectionService : ObservableObject
 {
     public enum Mode { Digits, Hints };
 
@@ -11,12 +11,12 @@ public partial class SelectionController : ObservableObject
     private Mode inputMode = Mode.Digits;
 
     [ObservableProperty]
-    private int digitSelected = 0;
+    private int digit = -1; // -1 is no select, 0 is empty, 
 
     [ObservableProperty]
-    private Cell? cellSelected = null;
+    private Cell? cell = null;
 
-    public void ClearDigitSelection() => DigitSelected = 0;
+    public void ClearDigitSelection() => Digit = -1;
 
     public void ToggleInputMode() => InputMode = (InputMode == Mode.Digits ? Mode.Hints : Mode.Digits);
 }

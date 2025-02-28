@@ -2,7 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using Core.Extensions;
 using Core.Model;
-using SudokuUI.Controllers;
+using SudokuUI.Services;
 using System.Collections.ObjectModel;
 
 namespace SudokuUI.ViewModels;
@@ -10,7 +10,7 @@ namespace SudokuUI.ViewModels;
 public partial class CellViewModel : ObservableObject
 {
     private Cell cell;
-    private SelectionController selection_controller;
+    private SelectionService selection_service;
 
     [ObservableProperty]
     private ObservableCollection<HintViewModel> hints;
@@ -18,13 +18,13 @@ public partial class CellViewModel : ObservableObject
     [ObservableProperty]
     private int value = 0;
 
-    public CellViewModel(Cell cell, SelectionController selection_controller)
+    public CellViewModel(Cell cell, SelectionService selection_service)
     {
         this.cell = cell;
         Value = cell.Value;
 
         hints = Enumerable.Range(1, 9).Select(i => new HintViewModel(cell.Candidates.Contains(i) ? i : 0)).ToObservableCollection();
-        this.selection_controller = selection_controller;
+        this.selection_service = selection_service;
     }
 
     [RelayCommand]
@@ -32,16 +32,16 @@ public partial class CellViewModel : ObservableObject
     {
         if (cell.IsFilled)
         {
-            selection_controller.DigitSelected = cell.Value;
+            selection_service.Digit = cell.Value;
         }
         else
         {
-            if (selection_controller.DigitSelected != 0)
+            if (selection_service.Digit != -1)
             {
-                if (selection_controller.InputMode == SelectionController.Mode.Digits)
-                    Value = selection_controller.DigitSelected;
+                if (selection_service.InputMode == SelectionService.Mode.Digits)
+                    Value = selection_service.Digit;
                 else
-                    ToggleHint(selection_controller.DigitSelected);
+                    ToggleHint(selection_service.Digit);
             }
 
         }

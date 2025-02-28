@@ -1,13 +1,13 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using SudokuUI.Controllers;
+using SudokuUI.Services;
 using System.ComponentModel;
 
 namespace SudokuUI.ViewModels;
 
 public partial class DigitSelectionViewModel : ObservableObject
 {
-    private SelectionController selection_controller;
+    private SelectionService selection_service;
 
     [ObservableProperty]
     private int _digit;
@@ -19,25 +19,25 @@ public partial class DigitSelectionViewModel : ObservableObject
     [ObservableProperty]
     private bool _selected = false;
 
-    public DigitSelectionViewModel(int digit, SelectionController selection_controller)
+    public DigitSelectionViewModel(int digit, SelectionService selection_service)
     {
         Digit = digit;
-        this.selection_controller = selection_controller;
+        this.selection_service = selection_service;
 
-        selection_controller.PropertyChanged += SelectionChanged;
+        selection_service.PropertyChanged += SelectionChanged;
     }
 
     private void SelectionChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(SelectionController.DigitSelected))
+        if (e.PropertyName == nameof(SelectionService.Digit))
         {
-            Selected = selection_controller.DigitSelected == Digit;
+            Selected = selection_service.Digit == Digit;
         }
     }
 
     [RelayCommand]
     private void Select()
     {
-        selection_controller.DigitSelected = Digit;
+        selection_service.Digit = Digit;
     }
 }
