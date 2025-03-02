@@ -22,6 +22,9 @@ public partial class CellViewModel : ObservableRecipient, IRecipient<RefreshFrom
     [ObservableProperty]
     private int value = 0;
 
+    [ObservableProperty]
+    private bool isClue = false;
+
     public CellViewModel(Cell cell)
     {
         this.cell = cell;
@@ -60,5 +63,6 @@ public partial class CellViewModel : ObservableRecipient, IRecipient<RefreshFrom
                 Hints[digit - 1].Digit = digit;
             else
                 Hints[digit - 1].Digit = 0;
+        IsClue = cell.IsClue;
     }
 }

@@ -9,6 +9,8 @@ public class Cell(int index)
 {
     public int Index { get; set; } = index;
 
+    public bool IsClue { get; set; } = false;
+
     private int _value = 0;
     public int Value
     {
@@ -37,5 +39,6 @@ public class Cell(int index)
     {
         Value = 0;
         Candidates = new HashSet<int>(Grid.PossibleValues);
+        IsClue = false;
     }
 }

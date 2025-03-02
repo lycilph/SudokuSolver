@@ -46,14 +46,6 @@ public class Grid
         Set(puzzle);
     }
 
-    public Grid(Grid grid) : this()
-    {
-        foreach (var cell in grid.Cells.Where(c => c.IsFilled))
-        {
-            Cells[cell.Index].Value = cell.Value;
-        }
-    }
-
     public Cell this[int row, int col]
     {
         get => Cells[row * 9 + col];  // Convert 2D indices to 1D
@@ -70,7 +62,10 @@ public class Grid
         foreach (var i in AllCellIndices)
         {
             if (puzzle[i] != '.')
+            {
                 Cells[i].Value = puzzle[i] - '0';
+                Cells[i].IsClue = true;
+            }
             else
                 Cells[i].Reset();
         }
