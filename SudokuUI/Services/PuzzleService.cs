@@ -37,8 +37,11 @@ public partial class PuzzleService : ObservableRecipient, IRecipient<WindowShown
 
     public void SetDigit(Cell cell, int digit)
     {
-        cell.Value = digit;
-        WeakReferenceMessenger.Default.Send(new RefreshFromModelMessage());
+        if (cell.Value != digit)
+        {
+            cell.Value = digit;
+            WeakReferenceMessenger.Default.Send(new RefreshFromModelMessage());
+        }
     }
 
     public void ToggleHint(Cell cell, int digit)

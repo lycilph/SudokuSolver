@@ -17,7 +17,7 @@
                           OnContent="Hints"
                           OffContent="Digit"
                           HorizontalAlignment="Center"
-                          Margin="60,10,0,0"
+                          Margin="65,10,0,0"
                           Focusable="False"/>
 
         <StackPanel Orientation="Horizontal"

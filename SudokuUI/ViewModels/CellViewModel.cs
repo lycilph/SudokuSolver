@@ -39,20 +39,19 @@ public partial class CellViewModel : ObservableRecipient, IRecipient<RefreshFrom
     [RelayCommand]
     private void CellClicked()
     {
-        if (cell.IsFilled)
+        if (cell.IsClue)
         {
             selection_service.Digit = cell.Value;
+            return;
         }
+
+        if (selection_service.Digit == -1)
+            return;
+
+        if (selection_service.InputMode == SelectionService.Mode.Digits)
+            puzzle_service.SetDigit(cell, selection_service.Digit);
         else
-        {
-            if (selection_service.Digit != -1)
-            {
-                if (selection_service.InputMode == SelectionService.Mode.Digits)
-                    puzzle_service.SetDigit(cell, selection_service.Digit);
-                else
-                    puzzle_service.ToggleHint(cell, selection_service.Digit);
-            }
-        }
+            puzzle_service.ToggleHint(cell, selection_service.Digit);
     }
 
     public void Receive(RefreshFromModelMessage message)
