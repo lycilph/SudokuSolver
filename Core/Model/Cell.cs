@@ -22,6 +22,8 @@ public partial class Cell(int index) : ObservableObject
     public int GetIndexInUnit(UnitType type) => type == UnitType.Row ? Row : Column;
 
     public int CandidatesCount() => Candidates.Count;
+    public bool HasCandidate(int i) => Candidates.Contains(i);
+    public void RemoveCandidate(int i) => Candidates.Remove(i);
 
     public void Reset()
     {

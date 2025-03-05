@@ -1,4 +1,6 @@
-﻿namespace Core.Model;
+﻿using System.Text.RegularExpressions;
+
+namespace Core.Model;
 
 public class Grid
 {
@@ -37,6 +39,11 @@ public class Grid
             Chutes[i] = new Chute { Name = "Chute Horizontal", Index = i, Boxes = Enumerable.Range(0, 3).Select(n => Boxes[n + i * 3]).ToArray() };
             Chutes[i + 3] = new Chute { Name = "Chute Vertical", Index = i + 3, Boxes = Enumerable.Range(0, 3).Select(n => Boxes[n * 3 + i]).ToArray() };
         }
+    }
+
+    public Grid(string puzzle) : this()
+    {
+        Set(puzzle);
     }
 
     private static int[] GetRowIndices(int row)
@@ -90,4 +97,24 @@ public class Grid
         peers.Remove(cell);
         return peers.Order().ToArray();
     }
+
+    public void Set(string puzzle)
+    {
+        if (string.IsNullOrWhiteSpace(puzzle) || puzzle.Length != AllCellIndices.Count() || !Regex.IsMatch(puzzle, @"^[1-9.]+$"))
+            throw new ArgumentException("The input string must be 81 characters long and consist only of digits and .");
+
+        foreach (var cell in Cells)
+            cell.Reset();
+
+        foreach (var i in AllCellIndices)
+        {
+            if (puzzle[i] != '.')
+            {
+                Cells[i].Value = puzzle[i] - '0';
+                Cells[i].IsClue = true;
+            }
+        }
+    }
+
+    public IEnumerable<Cell> FilledCells() => Cells.Where(c => c.IsFilled);
 }

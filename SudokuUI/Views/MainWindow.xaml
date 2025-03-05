@@ -3,14 +3,31 @@
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                 xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" xmlns:viewmodels="clr-namespace:SudokuUI.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
+                 xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" 
+                 xmlns:vm="clr-namespace:SudokuUI.ViewModels" 
+                 xmlns:icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
                  mc:Ignorable="d"
                  Title="Sudoku UI" 
                  Height="700" 
                  WindowStartupLocation="CenterScreen"
                  SizeToContent="Width"
-                 ResizeMode="CanMinimize">
-    <Grid>
-
-    </Grid>
+                 ResizeMode="CanMinimize"
+                 d:DataContext="{d:DesignInstance Type=vm:MainViewModel}">
+    <mah:MetroWindow.RightWindowCommands>
+        <mah:WindowCommands ShowSeparators="False">
+            <Button ToolTip="Undo (ctrl+z)">
+                <icon:Lucide Kind="Undo"/>
+            </Button>
+            <Button ToolTip="Redo (crtl+y)">
+                <icon:Lucide Kind="Redo"/>
+            </Button>
+        </mah:WindowCommands>
+    </mah:MetroWindow.RightWindowCommands>
+    
+    <StackPanel Orientation="Vertical">
+        <ContentControl Content="{Binding Grid}"/>
+        <Button Margin="0 20 0 0"
+                Content="Toggle theme"
+                Click="Button_Click"/>
+    </StackPanel>
 </mah:MetroWindow>
