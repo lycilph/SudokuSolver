@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Core.Infrastructure;
 using System.Diagnostics;
 
 namespace Core.Model;
@@ -10,8 +11,9 @@ public partial class Cell(int index) : ObservableObject
     [ObservableProperty]
     private bool isClue = false;
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsFilled), nameof(IsEmpty))]
     private int value = 0;
-    public HashSet<int> Candidates { get; set; } = [.. Grid.PossibleValues];
+    public ObservableHashSet<int> Candidates { get; set; } = [.. Grid.PossibleValues];
     public Cell[] Peers { get; set; } = [];
 
     public bool IsFilled => Value != 0;
@@ -23,6 +25,7 @@ public partial class Cell(int index) : ObservableObject
 
     public int CandidatesCount() => Candidates.Count;
     public bool HasCandidate(int i) => Candidates.Contains(i);
+    public void AddCandidate(int i) => Candidates.Add(i);
     public void RemoveCandidate(int i) => Candidates.Remove(i);
 
     public void Reset()

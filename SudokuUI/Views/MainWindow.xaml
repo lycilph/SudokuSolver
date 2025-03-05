@@ -28,6 +28,9 @@
         <ContentControl Content="{Binding Grid}"/>
         <Button Margin="0 20 0 0"
                 Content="Toggle theme"
-                Click="Button_Click"/>
+                Click="ToggleThemeButtonClick"/>
+        <Button Margin="0 20 0 0"
+                Content="Toggle Color"
+                Click="ToggleColorButtonClick"/>
     </StackPanel>
 </mah:MetroWindow>

@@ -58,5 +58,12 @@
     </UserControl.Resources>
 
     <ContentControl Content="{Binding}"
-                    ContentTemplate="{StaticResource base_cell_template}"/>
+                    ContentTemplate="{StaticResource base_cell_template}">
+        <ContentControl.InputBindings>
+            <MouseBinding MouseAction="LeftClick"
+                          Command="{Binding SetValueCommand}"/>
+            <MouseBinding MouseAction="RightClick"
+                          Command="{Binding SetCandidateCommand}"/>
+        </ContentControl.InputBindings>
+    </ContentControl>
 </UserControl>
