@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-namespace Core.Model;
+﻿namespace Core.Model;
 
 public class Grid
 {
@@ -20,13 +18,13 @@ public class Grid
         Cells = AllCellIndices.Select(i => new Cell(i)).ToArray();
 
         Rows = AllUnitIndices
-            .Select(r => new Unit { Name = "Row", Index = r, Cells = GetRowIndices(r).Select(i => Cells[i]).ToArray() }).ToArray();
+            .Select(r => new Unit { Name = "Row", Index = r, Cells = [.. GetRowIndices(r).Select(i => Cells[i])] }).ToArray();
 
         Columns = AllUnitIndices
-            .Select(c => new Unit { Name = "Column", Index = c, Cells = GetColumnIndices(c).Select(i => Cells[i]).ToArray() }).ToArray();
+            .Select(c => new Unit { Name = "Column", Index = c, Cells = [.. GetColumnIndices(c).Select(i => Cells[i])] }).ToArray();
 
         Boxes = AllUnitIndices
-            .Select(c => new Unit { Name = "Box", Index = c, Cells = GetBoxIndices(c).Select(i => Cells[i]).ToArray() }).ToArray();
+            .Select(c => new Unit { Name = "Box", Index = c, Cells = [.. GetBoxIndices(c).Select(i => Cells[i])] }).ToArray();
 
         AllUnits = Rows.Concat(Columns).Concat(Boxes).ToArray();
 
@@ -38,36 +36,6 @@ public class Grid
         {
             Chutes[i] = new Chute { Name = "Chute Horizontal", Index = i, Boxes = Enumerable.Range(0, 3).Select(n => Boxes[n + i * 3]).ToArray() };
             Chutes[i + 3] = new Chute { Name = "Chute Vertical", Index = i + 3, Boxes = Enumerable.Range(0, 3).Select(n => Boxes[n * 3 + i]).ToArray() };
-        }
-    }
-
-    public Grid(string puzzle) : this()
-    {
-        Set(puzzle);
-    }
-
-    public Cell this[int row, int col]
-    {
-        get => Cells[row * 9 + col];  // Convert 2D indices to 1D
-    }
-
-    public bool IsSolved() => Cells.All(c => c.IsFilled);
-    public int EmptyCellsCount() => Cells.Count(c => c.IsEmpty);
-    public int TotalCandidatesCount() => Cells.Sum(c => c.CandidatesCount);
-    public IEnumerable<Cell> FilledCells() => Cells.Where(c => c.IsFilled).ToArray();
-    public IEnumerable<Cell> EmptyCells() => Cells.Where(c => c.IsEmpty).ToArray();
-
-    public void Set(string puzzle)
-    {
-        foreach (var i in AllCellIndices)
-        {
-            if (puzzle[i] != '.')
-            {
-                Cells[i].Value = puzzle[i] - '0';
-                Cells[i].IsClue = true;
-            }
-            else
-                Cells[i].Reset();
         }
     }
 
@@ -121,63 +89,5 @@ public class Grid
         }
         peers.Remove(cell);
         return peers.Order().ToArray();
-    }
-
-    public string CandidatesToString(bool skip_cells_with_values = false)
-    {
-        var sb = new StringBuilder();
-        for (int i = 0; i < 81; i++)
-        {
-            if (skip_cells_with_values && Cells[i].IsFilled)
-                continue;
-            sb.AppendLine($"Cell {i}: {string.Join(' ', Cells[i].Candidates.Order())}");
-        }
-        return sb.ToString();
-    }
-
-    public string PeersToString()
-    {
-        var sb = new StringBuilder();
-        for (int i = 0; i < 81; i++)
-        {
-            sb.AppendLine($"Peers for Cell {i}: {string.Join(' ', Cells[i].Peers.Select(p => p.Index))}");
-        }
-        return sb.ToString();
-    }
-
-    public string UnitsToString()
-    {
-        var sb = new StringBuilder();
-
-        foreach (var unit in AllUnits)
-            sb.AppendLine($"{unit.Name} {unit.Index}: {string.Join(' ', unit.Cells.Select(c => c.Index))}");
-
-        return sb.ToString();
-    }
-
-    public string ToSimpleString()
-    {
-        var sb = new StringBuilder();
-        foreach (var cell in Cells)
-            if (cell.IsFilled)
-                sb.Append(cell.Value);
-            else
-                sb.Append('.');
-        return sb.ToString();
-    }
-
-    public override string ToString()
-    {
-        var sb = new StringBuilder();
-        for (int row = 0; row < 9; row++)
-        {
-            for (int col = 0; col < 9; col++)
-            {
-                sb.Append(Cells[row * 9 + col].Value);
-                sb.Append(' ');
-            }
-            sb.AppendLine();
-        }
-        return sb.ToString();
     }
 }

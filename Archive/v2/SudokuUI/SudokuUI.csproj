@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="Assets\grid-3x3.ico" />
+    <Resource Include="Assets\grid-3x3.ico" />
   </ItemGroup>
 
   <ItemGroup>

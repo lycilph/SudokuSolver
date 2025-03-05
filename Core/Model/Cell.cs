@@ -1,44 +1,34 @@
-﻿using System.Diagnostics;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using System.Diagnostics;
 
 namespace Core.Model;
 
-public enum UnitType { Row, Column };
-
-[DebuggerDisplay("I = {Index}, V = {Value}, Candidates = {CandidatesCount}")]
-public class Cell(int index)
+[DebuggerDisplay("Id = {Index}, ({Value}) [{GetCandidatesAsString()}]")]
+public partial class Cell(int index) : ObservableObject
 {
     public int Index { get; set; } = index;
-
-    public bool IsClue { get; set; } = false;
-
-    private int _value = 0;
-    public int Value
-    {
-        get => _value;
-        set
-        {
-            _value = value;
-            Candidates.Clear();
-        }
-    }
-
-    public HashSet<int> Candidates { get; set; } = new HashSet<int>(Grid.PossibleValues);
-
+    [ObservableProperty]
+    private bool isClue = false;
+    [ObservableProperty]
+    private int value = 0;
+    public HashSet<int> Candidates { get; set; } = [.. Grid.PossibleValues];
     public Cell[] Peers { get; set; } = [];
 
     public bool IsFilled => Value != 0;
     public bool IsEmpty => Value == 0;
-    public int CandidatesCount => Candidates.Count;
 
     public int Row => Index / 9;
     public int Column => Index % 9;
+    public int GetIndexInUnit(UnitType type) => type == UnitType.Row ? Row : Column;
 
-    public int GetUnitIndex(UnitType type) => type == UnitType.Row ? Row : Column;
+    public int CandidatesCount() => Candidates.Count;
 
     public void Reset()
     {
         Value = 0;
-        Candidates = new HashSet<int>(Grid.PossibleValues);
         IsClue = false;
+        Candidates = [.. Grid.PossibleValues];
     }
+
+    public string GetCandidatesAsString() => string.Join("", Grid.PossibleValues.Select(v => Candidates.Contains(v) ? v.ToString() : "."));
 }

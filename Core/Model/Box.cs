@@ -1,5 +1,5 @@
 ﻿namespace Core.Model;
 
-public class Puzzle
+public class Box
 {
 }

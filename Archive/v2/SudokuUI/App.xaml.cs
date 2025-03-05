@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using SudokuUI.Services;
 using SudokuUI.ViewModels;
-using SudokuUI.Views;
 using System.Windows;
 
 namespace SudokuUI;
@@ -9,7 +9,7 @@ public partial class App : Application
 {
     public new static App Current => (App)Application.Current;
     public IServiceProvider Services { get; }
-    
+
     public App()
     {
         Services = ConfigureServices();
@@ -20,6 +20,9 @@ public partial class App : Application
     private static IServiceProvider ConfigureServices()
     {
         var services = new ServiceCollection();
+
+        services.AddSingleton<SelectionService>();
+        services.AddSingleton<PuzzleService>();
 
         services.AddTransient<MainViewModel>();
 
@@ -34,3 +37,4 @@ public partial class App : Application
         win.Show();
     }
 }
+

@@ -3,16 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.12.35707.178
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sandbox", "Sandbox\Sandbox.csproj", "{55E33D87-BEAA-43CD-81B0-87E3371247EC}"
-	ProjectSection(ProjectDependencies) = postProject
-		{22E15D94-DA51-4412-948A-8D8F93F3E9CC} = {22E15D94-DA51-4412-948A-8D8F93F3E9CC}
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{CEB79F43-A03E-48BB-814A-2B05162B0500}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolverTests", "SolverTests\SolverTests.csproj", "{CA7C897F-58D6-45EB-AA51-DD4CD3846C0F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SudokuUI", "SudokuUI\SudokuUI.csproj", "{D43676E1-BECC-443C-B075-3878F2C3AACB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{22E15D94-DA51-4412-948A-8D8F93F3E9CC}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SudokuUI", "SudokuUI\SudokuUI.csproj", "{AE065F80-F4EA-4C6D-9C67-F4913B0D244A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{01E75A5B-E29E-46C0-AACE-C56ECA9F1CBB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,24 +15,23 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{55E33D87-BEAA-43CD-81B0-87E3371247EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{55E33D87-BEAA-43CD-81B0-87E3371247EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{55E33D87-BEAA-43CD-81B0-87E3371247EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{55E33D87-BEAA-43CD-81B0-87E3371247EC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CA7C897F-58D6-45EB-AA51-DD4CD3846C0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CA7C897F-58D6-45EB-AA51-DD4CD3846C0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CA7C897F-58D6-45EB-AA51-DD4CD3846C0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CA7C897F-58D6-45EB-AA51-DD4CD3846C0F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{22E15D94-DA51-4412-948A-8D8F93F3E9CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{22E15D94-DA51-4412-948A-8D8F93F3E9CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{22E15D94-DA51-4412-948A-8D8F93F3E9CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{22E15D94-DA51-4412-948A-8D8F93F3E9CC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AE065F80-F4EA-4C6D-9C67-F4913B0D244A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AE065F80-F4EA-4C6D-9C67-F4913B0D244A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AE065F80-F4EA-4C6D-9C67-F4913B0D244A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AE065F80-F4EA-4C6D-9C67-F4913B0D244A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CEB79F43-A03E-48BB-814A-2B05162B0500}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEB79F43-A03E-48BB-814A-2B05162B0500}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEB79F43-A03E-48BB-814A-2B05162B0500}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEB79F43-A03E-48BB-814A-2B05162B0500}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D43676E1-BECC-443C-B075-3878F2C3AACB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D43676E1-BECC-443C-B075-3878F2C3AACB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D43676E1-BECC-443C-B075-3878F2C3AACB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D43676E1-BECC-443C-B075-3878F2C3AACB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01E75A5B-E29E-46C0-AACE-C56ECA9F1CBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01E75A5B-E29E-46C0-AACE-C56ECA9F1CBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01E75A5B-E29E-46C0-AACE-C56ECA9F1CBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01E75A5B-E29E-46C0-AACE-C56ECA9F1CBB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {85BB54D5-AD3C-4E59-A531-EE1E4B66ECC4}
 	EndGlobalSection
 EndGlobal

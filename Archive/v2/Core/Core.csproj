@@ -7,7 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <Compile Remove="Archive\**" />
+    <EmbeddedResource Remove="Archive\**" />
+    <None Remove="Archive\**" />
   </ItemGroup>
 
 </Project>
