@@ -32,6 +32,14 @@
             <DataTemplate DataType="{x:Type vm:CandidateViewModel}">
                 <v:CandidateView/>
             </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:SelectionViewModel}">
+                <v:SelectionView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:DigitViewModel}">
+                <v:DigitView/>
+            </DataTemplate>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

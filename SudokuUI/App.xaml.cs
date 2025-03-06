@@ -9,13 +9,13 @@ namespace SudokuUI;
 
 public partial class App : Application
 {
-    private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+    private static readonly Logger logger = LogManager.GetCurrentClassLogger();
     public new static App Current => (App)Application.Current;
     public IServiceProvider Services { get; }
     
     public App()
     {
-        Logger.Info("Application starting...");
+        logger.Info("Application starting...");
 
         Services = ConfigureServices();
 
@@ -28,9 +28,11 @@ public partial class App : Application
 
         // Register singletons
         services.AddSingleton<PuzzleService>();
+        services.AddSingleton<SelectionService>();
 
         // Register view models
         services.AddTransient<MainViewModel>();
+        services.AddTransient<SelectionViewModel>();
 
         return services.BuildServiceProvider();
     }
