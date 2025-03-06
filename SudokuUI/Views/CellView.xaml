@@ -14,14 +14,14 @@
 
         <DataTemplate x:Key="value_cell_template">
             <Border Style="{StaticResource cell_border_style}">
-                <TextBlock Text="{Binding Value}"
+                <TextBlock Text="{Binding Cell.Value}"
                            FontSize="24"
                            FontWeight="Bold"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center">
                     <TextBlock.Foreground>
                         <MultiBinding Converter="{StaticResource bool_to_brush_converter}">
-                            <Binding Path="IsClue"/>
+                            <Binding Path="Cell.IsClue"/>
                             <Binding Source="{StaticResource clue_brush}" Path="Data"/>
                             <Binding Source="{StaticResource digit_brush}" Path="Data"/>
                         </MultiBinding>
@@ -48,7 +48,7 @@
                             ContentTemplate="{StaticResource value_cell_template}"/>
 
             <DataTemplate.Triggers>
-                <DataTrigger Binding="{Binding IsFilled}" Value="false">
+                <DataTrigger Binding="{Binding Cell.IsFilled}" Value="false">
                     <Setter TargetName="base_cell" 
                             Property="ContentTemplate" 
                             Value="{StaticResource candidates_cell_template}"/>
@@ -61,9 +61,9 @@
                     ContentTemplate="{StaticResource base_cell_template}">
         <ContentControl.InputBindings>
             <MouseBinding MouseAction="LeftClick"
-                          Command="{Binding SetValueCommand}"/>
+                          Command="{Binding SetDigitCommand}"/>
             <MouseBinding MouseAction="RightClick"
-                          Command="{Binding SetCandidateCommand}"/>
+                          Command="{Binding ClearDigitCommand}"/>
         </ContentControl.InputBindings>
     </ContentControl>
 </UserControl>

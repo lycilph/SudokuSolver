@@ -9,6 +9,9 @@ public partial class MainViewModel : ObservableObject
     private readonly SelectionService selection_service;
 
     [ObservableProperty]
+    private PuzzleService puzzle;
+
+    [ObservableProperty]
     private GridViewModel _grid = null!;
 
     [ObservableProperty]
@@ -17,10 +20,11 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     private SettingsViewModel _settings;
 
-    public MainViewModel(SelectionService selection_service, GridViewModel grid, SelectionViewModel selection, SettingsViewModel settings)
+    public MainViewModel(SelectionService selection_service, PuzzleService puzzle_service, GridViewModel grid, SelectionViewModel selection, SettingsViewModel settings)
     {
         this.selection_service = selection_service;
 
+        Puzzle = puzzle_service;
         Grid = grid;
         Selection = selection;
         Settings = settings;

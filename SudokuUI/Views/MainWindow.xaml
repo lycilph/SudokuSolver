@@ -29,10 +29,12 @@
     
     <mah:MetroWindow.RightWindowCommands>
         <mah:WindowCommands ShowSeparators="False">
-            <Button ToolTip="Undo (ctrl+z)">
+            <Button ToolTip="Undo (ctrl+z)"
+                    Command="{Binding Puzzle.UndoCommand}">
                 <icon:Lucide Kind="Undo"/>
             </Button>
-            <Button ToolTip="Redo (crtl+y)">
+            <Button ToolTip="Redo (crtl+y)"
+                    Command="{Binding Puzzle.RedoCommand}">
                 <icon:Lucide Kind="Redo"/>
             </Button>
             <Button ToolTip="Settings"

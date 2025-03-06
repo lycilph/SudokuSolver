@@ -1,11 +1,15 @@
-﻿using Core.Model;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Core.Model;
+using Core.Model.Actions;
 using Core.Strategy;
 using NLog;
+using System;
 using System.ComponentModel;
 
 namespace SudokuUI.Services;
 
-public class PuzzleService
+public partial class PuzzleService : ObservableObject
 {
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
@@ -14,6 +18,9 @@ public class PuzzleService
     public Grid Grid { get; private set; }
 
     public event EventHandler GridValuesChanged = null!;
+
+    private Stack<IPuzzleAction> undo_stack = new();
+    private Stack<IPuzzleAction> redo_stack = new();
 
     public PuzzleService()
     {
@@ -35,6 +42,34 @@ public class PuzzleService
         logger.Debug("Grid values changed");
         GridValuesChanged?.Invoke(this, EventArgs.Empty);
     }
+    
+    private bool CanUndo() => undo_stack.Count > 0;
+
+    [RelayCommand(CanExecute = nameof(CanUndo))]
+    private void Undo()
+    {
+        var action = undo_stack.Pop();
+        redo_stack.Push(action);
+
+        action.Undo();
+
+        UndoCommand.NotifyCanExecuteChanged();
+        RedoCommand.NotifyCanExecuteChanged();
+    }
+    
+    private bool CanRedo() => redo_stack.Count > 0;
+
+    [RelayCommand(CanExecute = nameof(CanRedo))]
+    private void Redo()
+    {
+        var action = redo_stack.Pop();
+        undo_stack.Push(action);
+
+        action.Do();
+
+        UndoCommand.NotifyCanExecuteChanged();
+        RedoCommand.NotifyCanExecuteChanged();
+    }
 
     public IEnumerable<int> CountDigits()
     {
@@ -43,11 +78,27 @@ public class PuzzleService
 
     public void SetValue(Cell cell, int value)
     {
-
+        AddPuzzleAction(new SetValuePuzzleAction(cell, value));
     }
 
     public void ToggleCandidate(Cell cell, int value)
     {
+        AddPuzzleAction(new ToggleCandidatePuzzleAction(cell, value));
+    }
 
+    public void ClearCell(Cell cell)
+    {
+        AddPuzzleAction(new ClearCellPuzzleAction(cell));
+    }
+
+    private void AddPuzzleAction(IPuzzleAction action)
+    {
+        action.Do();
+
+        undo_stack.Push(action);
+        redo_stack.Clear();
+
+        UndoCommand.NotifyCanExecuteChanged();
+        RedoCommand.NotifyCanExecuteChanged();
     }
 }

@@ -7,7 +7,6 @@ using NLog;
 using SudokuUI.Services;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.ComponentModel;
 
 namespace SudokuUI.ViewModels;
 
@@ -17,28 +16,16 @@ public partial class CellViewModel : ObservableObject
 
     private readonly PuzzleService puzzle_service;
     private readonly SelectionService selection_service;
-    private readonly Cell cell;
 
-    public int Value
-    {
-        get => cell.Value;
-        set => cell.Value = value;
-    }
-
-    public bool IsClue
-    {
-        get => cell.IsClue;
-        set => cell.IsClue = value;
-    }
-
-    public bool IsFilled { get => cell.IsFilled; }
+    [ObservableProperty]
+    private Cell _cell;
 
     [ObservableProperty]
     private ObservableCollection<CandidateViewModel> candidates;
 
     public CellViewModel(Cell cell)
     {
-        this.cell = cell;
+        Cell = cell;
 
         puzzle_service = App.Current.Services.GetRequiredService<PuzzleService>();
         selection_service = App.Current.Services.GetRequiredService<SelectionService>();
@@ -47,34 +34,40 @@ public partial class CellViewModel : ObservableObject
             .Select(i => new CandidateViewModel(i) { IsVisible = cell.HasCandidate(i) })
             .ToObservableCollection();
 
-        cell.PropertyChanged += CellPropertyChanged;
-        cell.Candidates.CollectionChanged += CandidatesChanged;
+        Cell.Candidates.CollectionChanged += CandidatesChanged;
     }
-
+    
     private void CandidatesChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        logger.Debug($"Cell {cell.Index} candidates changed: {e.Action}");
+        logger.Debug($"Cell {Cell.Index} candidates changed: {e.Action}");
         foreach (var candidate in Candidates)
         {
-            candidate.IsVisible = cell.HasCandidate(candidate.Value);
+            candidate.IsVisible = Cell.HasCandidate(candidate.Value);
         }
     }
 
-    private void CellPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    [RelayCommand]
+    private void SetDigit()
     {
-        logger.Debug($"Cell {cell.Index} property changed: {e.PropertyName}");
-        OnPropertyChanged(e.PropertyName);
+        if (Cell.IsClue)
+        {
+            selection_service.Digit = Cell.Value;
+            return;
+        }
+
+        if (selection_service.InputMode == SelectionService.Mode.Digits)
+            puzzle_service.SetValue(Cell, selection_service.Digit);
+        
+        if (selection_service.InputMode == SelectionService.Mode.Hints && Cell.IsEmpty)
+            puzzle_service.ToggleCandidate(Cell, selection_service.Digit);
     }
 
     [RelayCommand]
-    private void SetValue()
+    private void ClearDigit()
     {
-        Value = selection_service.Digit;
-    }
+        if (Cell.IsClue)
+            return;
 
-    [RelayCommand]
-    private void SetCandidate()
-    {
-        cell.AddCandidate(5);
+        puzzle_service.ClearCell(Cell);
     }
 }
