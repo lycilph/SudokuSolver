@@ -15,7 +15,7 @@ public partial class SelectionService : ObservableObject
     [ObservableProperty]
     private int _digit = 0; // 0 is empty
 
-    public void ClearDigitSelection() => Digit = 0;
+    public void ClearDigit() => Digit = 0;
 
     public void ToggleInputMode() => InputMode = (InputMode == Mode.Digits ? Mode.Hints : Mode.Digits);
 
