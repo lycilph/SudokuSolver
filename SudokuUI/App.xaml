@@ -17,6 +17,8 @@
                 <ResourceDictionary Source="/Styles/CellBorderStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
+            <BooleanToVisibilityConverter x:Key="bool_to_visibilty_converter"/>
+
             <DataTemplate DataType="{x:Type vm:GridViewModel}">
                 <v:GridView/>
             </DataTemplate>
@@ -39,6 +41,10 @@
 
             <DataTemplate DataType="{x:Type vm:DigitViewModel}">
                 <v:DigitView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:SettingsViewModel}">
+                <v:SettingsView/>
             </DataTemplate>
         </ResourceDictionary>
     </Application.Resources>

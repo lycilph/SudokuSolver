@@ -35,20 +35,69 @@
             <Button ToolTip="Redo (crtl+y)">
                 <icon:Lucide Kind="Redo"/>
             </Button>
+            <Button ToolTip="Settings"
+                    Command="{Binding ShowSettingsCommand}">
+                <icon:Lucide Kind="Settings"/>
+            </Button>
         </mah:WindowCommands>
     </mah:MetroWindow.RightWindowCommands>
     
-    <StackPanel Orientation="Vertical">
-        <ContentControl Content="{Binding Grid}"/>
-        
-        <ContentControl Content="{Binding Selection}"
-                        Margin="0 10 0 0"/>
-        
-        <Button Margin="0 20 0 0"
-                Content="Toggle theme"
-                Click="ToggleThemeButtonClick"/>
-        <Button Margin="0 5 0 0"
-                Content="Toggle Color"
-                Click="ToggleColorButtonClick"/>
-    </StackPanel>
+    <mah:MetroWindow.Flyouts>
+        <mah:FlyoutsControl>
+            <mah:Flyout Header="Settings" 
+                        Theme="Adapt"
+                        Position="Right" 
+                        Width="250"
+                        IsOpen="{Binding Settings.IsOpen}">
+                <ContentControl Content="{Binding Settings}"/>
+            </mah:Flyout>
+        </mah:FlyoutsControl>
+    </mah:MetroWindow.Flyouts>
+
+    <Grid>
+        <StackPanel Orientation="Vertical">
+            <ContentControl Content="{Binding Grid}"/>
+
+            <ContentControl Content="{Binding Selection}"
+                            Margin="0 10 0 0"/>
+        </StackPanel>
+
+        <!-- On overlay to catch mouse events, when the settings flyout is visible -->
+        <Border Background="Gray" 
+                Opacity="0.75">
+            <Border.InputBindings>
+                <MouseBinding MouseAction="LeftClick"
+                              Command="{Binding HideSettingsCommand}"/>
+            </Border.InputBindings>
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="Visibility" Value="Hidden"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Settings.IsOpen}" Value="True">
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{x:Static Visibility.Visible}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0" To="0.75" Duration="0:0:0.3"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.EnterActions>
+                            <DataTrigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0.75" To="0" Duration="0:0:0.3"/>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0:0:0.3" Value="{x:Static Visibility.Hidden}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.ExitActions>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+        </Border>
+    </Grid>
 </mah:MetroWindow>

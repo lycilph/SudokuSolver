@@ -6,10 +6,6 @@
              xmlns:vm="clr-namespace:SudokuUI.ViewModels" 
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=vm:CandidateViewModel, IsDesignTimeCreatable=False}">
-    <UserControl.Resources>
-        <BooleanToVisibilityConverter x:Key="bool_to_visibilty_converter"/>
-    </UserControl.Resources>
-
     <TextBlock Text="{Binding Value}"
                Visibility="{Binding IsVisible, Converter={StaticResource bool_to_visibilty_converter}}"
                HorizontalAlignment="Center"

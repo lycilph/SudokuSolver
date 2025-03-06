@@ -14,12 +14,16 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     private SelectionViewModel _selection;
 
-    public MainViewModel(PuzzleService puzzle_service, SelectionService selection_service, SelectionViewModel selection)
+    [ObservableProperty]
+    private SettingsViewModel _settings;
+
+    public MainViewModel(SelectionService selection_service, GridViewModel grid, SelectionViewModel selection, SettingsViewModel settings)
     {
         this.selection_service = selection_service;
 
-        Grid = new GridViewModel(puzzle_service.Grid);
+        Grid = grid;
         Selection = selection;
+        Settings = settings;
     }
 
     [RelayCommand]
@@ -39,5 +43,17 @@ public partial class MainViewModel : ObservableObject
     private void ToggleInputMode()
     {
         selection_service.ToggleInputMode();
+    }
+
+    [RelayCommand]
+    private void ShowSettings()
+    {
+        Settings.IsOpen = true;
+    }
+
+    [RelayCommand]
+    private void HideSettings()
+    {
+        Settings.IsOpen = false;
     }
 }
