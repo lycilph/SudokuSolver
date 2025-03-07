@@ -1,4 +1,5 @@
 ﻿using Core.Model;
+using Core.Model.Actions;
 
 namespace Core.Strategy;
 
@@ -10,12 +11,12 @@ public abstract class BaseStrategy<T> : IStrategy where T : BaseStrategy<T>, ISt
 
     public abstract string Name { get; }
 
-    //public abstract ISolveAction? Execute(Grid grid);
+    public abstract IPuzzleAction? Execute(Grid grid);
 
-    //public static ISolveAction? ExecuteAndApply(Grid grid)
-    //{
-    //    var actions = Instance.Execute(grid);
-    //    actions?.Apply();
-    //    return actions;
-    //}
+    public static IPuzzleAction? ExecuteAndApply(Grid grid)
+    {
+        var actions = Instance.Execute(grid);
+        actions?.Do();
+        return actions;
+    }
 }

@@ -31,7 +31,7 @@ public partial class CellViewModel : ObservableObject
         selection_service = App.Current.Services.GetRequiredService<SelectionService>();
 
         Candidates = Grid.PossibleValues
-            .Select(i => new CandidateViewModel(i) { IsVisible = cell.HasCandidate(i) })
+            .Select(i => new CandidateViewModel(i) { IsVisible = cell.Has(i) })
             .ToObservableCollection();
 
         Cell.Candidates.CollectionChanged += CandidatesChanged;
@@ -42,7 +42,7 @@ public partial class CellViewModel : ObservableObject
         logger.Debug($"Cell {Cell.Index} candidates changed: {e.Action}");
         foreach (var candidate in Candidates)
         {
-            candidate.IsVisible = Cell.HasCandidate(candidate.Value);
+            candidate.IsVisible = Cell.Has(candidate.Value);
         }
     }
 

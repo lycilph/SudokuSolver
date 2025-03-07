@@ -1,5 +1,9 @@
 ﻿namespace Core.Model.Actions;
 
+/// <summary>
+/// This action is initiated in the UI by left clicking on a cell with the input mode set to Digit,
+/// and it will set the value of the cell and clear all candidates
+/// </summary>
 public class SetValuePuzzleAction : IPuzzleAction
 {
     private readonly Cell cell;

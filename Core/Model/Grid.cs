@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using Core.Infrastructure;
+using System.Text.RegularExpressions;
 
 namespace Core.Model;
 
@@ -115,6 +116,8 @@ public class Grid
             }
         }
     }
+
+    public void ClearCandidates() => Cells.ForEach(c => c.Candidates.Clear());
 
     public IEnumerable<Cell> FilledCells() => Cells.Where(c => c.IsFilled);
 }

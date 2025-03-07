@@ -4,7 +4,6 @@ using Core.Model;
 using Core.Model.Actions;
 using Core.Strategy;
 using NLog;
-using System;
 using System.ComponentModel;
 
 namespace SudokuUI.Services;
@@ -25,7 +24,8 @@ public partial class PuzzleService : ObservableObject
     public PuzzleService()
     {
         Grid = new Grid(input);
-        BasicEliminationStrategy.Temp(Grid);
+        var action = BasicEliminationStrategy.ExecuteAndApply(Grid);
+        AddPuzzleAction(action!);
 
         foreach (var cell in Grid.Cells)
             cell.PropertyChanged += CellChanged;

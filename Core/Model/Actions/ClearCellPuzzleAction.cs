@@ -1,5 +1,9 @@
 ﻿namespace Core.Model.Actions;
 
+/// <summary>
+/// This action is initiated in the UI by right clicking on a cell,
+/// and will clear the cell of both the value and candidates
+/// </summary>
 public class ClearCellPuzzleAction : IPuzzleAction
 {
     private readonly Cell cell;

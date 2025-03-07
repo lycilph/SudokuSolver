@@ -1,5 +1,9 @@
 ﻿namespace Core.Model.Actions;
 
+/// <summary>
+/// This action is initiated in the UI by left clicking on a cell with the input mode set to Hint,
+/// and will add or remove a single candidate to a cell
+/// </summary>
 public class ToggleCandidatePuzzleAction : IPuzzleAction
 {
     private readonly Cell cell;
@@ -13,17 +17,17 @@ public class ToggleCandidatePuzzleAction : IPuzzleAction
 
     public void Do()
     {
-        if (cell.HasCandidate(value))
-            cell.RemoveCandidate(value);
+        if (cell.Has(value))
+            cell.Remove(value);
         else
-            cell.AddCandidate(value);
+            cell.Add(value);
     }
 
     public void Undo()
     {
-        if (cell.HasCandidate(value))
-            cell.RemoveCandidate(value);
+        if (cell.Has(value))
+            cell.Remove(value);
         else
-            cell.AddCandidate(value);
+            cell.Add(value);
     }
 }
