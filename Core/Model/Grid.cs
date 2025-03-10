@@ -47,7 +47,12 @@ public class Grid
     {
         Set(puzzle);
     }
-    
+
+    public Cell this[int i]
+    {
+        get => Cells[i]; 
+    }
+
     public Cell this[int row, int col]
     {
         get => Cells[row * 9 + col];  // Convert 2D indices to 1D

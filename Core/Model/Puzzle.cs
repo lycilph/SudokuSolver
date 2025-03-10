@@ -17,5 +17,10 @@ public class Puzzle
         Grid = new Grid(puzzle);
     }
 
+    public Puzzle(Grid grid)
+    {
+        Grid = grid;
+    }
+
     public void Set(string puzzle) => Grid.Set(puzzle);
 }

@@ -16,7 +16,12 @@ public static class DancingLinksSolver
     private const int BoxSize = 3;
     private const int TotalColumns = 324; // 81 (cell) + 81 (row) + 81 (column) + 81 (box)
 
-    public static List<Grid> Solve(Puzzle puzzle, bool run_basic_elimination = true)
+    public static List<Grid> Solve(Grid grid, bool run_basic_elimination = true, int max_solutions_to_find = 0)
+    {
+        return Solve(new Puzzle(grid), run_basic_elimination, max_solutions_to_find);
+    }
+
+    public static List<Grid> Solve(Puzzle puzzle, bool run_basic_elimination = true, int max_solutions_to_find = 0)
     {
         if (run_basic_elimination)
             BasicEliminationStrategy.ExecuteAndApply(puzzle.Grid);
@@ -32,7 +37,7 @@ public static class DancingLinksSolver
         var all_solutions = new List<int[]>();
 
         // Run the dancing links algorithm
-        Search(root, solution, 0, all_solutions);
+        Search(root, solution, 0, all_solutions, max_solutions_to_find);
 
         stopwatch.Stop(); // Stop the stopwatch
         puzzle.Stats.ElapsedTime = stopwatch.ElapsedMilliseconds;
@@ -160,8 +165,11 @@ public static class DancingLinksSolver
         return root;
     }
 
-    private static void Search(DLXNode root, Stack<DLXNode> solution, int level, List<int[]> all_solutions)
+    private static void Search(DLXNode root, Stack<DLXNode> solution, int level, List<int[]> all_solutions, int max_solutions_to_find)
     {
+        //if (max_solutions_to_find > 0 && all_solutions.Count >= max_solutions_to_find)
+        //    return;
+
         if (root.Right == root) // All constraints are satisfied!
         {
             all_solutions.Add(solution.OrderBy(n => n.RowID).Select(n => n.RowID % 9 + 1).ToArray());
@@ -179,7 +187,7 @@ public static class DancingLinksSolver
             for (DLXNode node = row.Right; node != row; node = node.Right)
                 Cover(node.Column);
 
-            Search(root, solution, level + 1, all_solutions);
+            Search(root, solution, level + 1, all_solutions, max_solutions_to_find);
 
             // Backtrack
             solution.Pop();
