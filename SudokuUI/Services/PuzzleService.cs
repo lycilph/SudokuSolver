@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Core.Infrastructure;
 using Core.Model;
 using Core.Model.Actions;
 using Core.Strategy;
@@ -12,8 +13,6 @@ public partial class PuzzleService : ObservableObject
 {
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-    private string input = "4......38.32.941...953..24.37.6.9..4.29..16.36.47.3.9.957..83....39..4..24..3.7.9";
-
     public Grid Grid { get; private set; }
 
     public event EventHandler GridValuesChanged = null!;
@@ -23,9 +22,14 @@ public partial class PuzzleService : ObservableObject
 
     public PuzzleService()
     {
-        Grid = new Grid(input);
+#if DEBUG
+        Grid = new Grid("4......38.32.941...953..24.37.6.9..4.29..16.36.47.3.9.957..83....39..4..24..3.7.9");
         var action = BasicEliminationStrategy.ExecuteAndApply(Grid);
         AddPuzzleAction(action!);
+#else
+        Grid = new Grid();
+        Grid.EmptyCells().ForEach(cell => cell.Candidates.Clear());
+#endif
 
         foreach (var cell in Grid.Cells)
             cell.PropertyChanged += CellChanged;

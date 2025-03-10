@@ -6,12 +6,14 @@
                  xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" 
                  xmlns:vm="clr-namespace:SudokuUI.ViewModels" 
                  xmlns:icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                 xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
                  mc:Ignorable="d"
                  Title="Sudoku UI" 
                  Height="700" 
                  WindowStartupLocation="CenterScreen"
                  SizeToContent="Width"
                  ResizeMode="CanMinimize"
+                 Dialog:DialogParticipation.Register="{Binding}"
                  d:DataContext="{d:DesignInstance Type=vm:MainViewModel}">
     <Window.InputBindings>
         <KeyBinding Key="D1" Command="{Binding NumberKeyPressedCommand}" CommandParameter="1"/>
@@ -29,21 +31,21 @@
     
     <mah:MetroWindow.RightWindowCommands>
         <mah:WindowCommands ShowSeparators="False">
-            <Button ToolTip="Reset">
-                <icon:Lucide Kind="RotateCcw"/>
-            </Button>
-            <Button ToolTip="Undo (ctrl+z)"
-                    Command="{Binding Puzzle.UndoCommand}">
-                <icon:Lucide Kind="Undo"/>
-            </Button>
-            <Button ToolTip="Redo (crtl+y)"
-                    Command="{Binding Puzzle.RedoCommand}">
-                <icon:Lucide Kind="Redo"/>
-            </Button>
-            <Button ToolTip="Settings"
-                    Command="{Binding ShowSettingsCommand}">
-                <icon:Lucide Kind="Settings"/>
-            </Button>
+            <Button Content="{icon:Lucide Kind=RotateCcw}"
+                    ToolTip="Reset"
+                    IsEnabled="False"/>
+
+            <Button Content="{icon:Lucide Kind=Undo}"
+                    ToolTip="Undo (ctrl+z)"
+                    Command="{Binding Puzzle.UndoCommand}"/>
+
+            <Button Content="{icon:Lucide Kind=Redo}"
+                    ToolTip="Redo (crtl+y)"
+                    Command="{Binding Puzzle.RedoCommand}"/>
+
+            <Button Content="{icon:Lucide Kind=Settings}"
+                    ToolTip="Settings"
+                    Command="{Binding ShowSettingsCommand}"/>
         </mah:WindowCommands>
     </mah:MetroWindow.RightWindowCommands>
     
@@ -61,7 +63,62 @@
 
     <Grid>
         <StackPanel Orientation="Vertical">
-            <ContentControl Content="{Binding Grid}"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" 
+                            Orientation="Vertical"
+                            Margin="5">
+                    <Button Content="{icon:Lucide Kind=CircleX, Height=32, Width=32}"
+                            IsEnabled="False"
+                            ToolTip="Clear"/>
+
+                    <Button Content="{icon:Lucide Kind=ArrowDownToLine, Height=32, Width=32}"
+                            IsEnabled="False"
+                            Margin="0,5,0,0"
+                            ToolTip="Import"/>
+
+                    <Button Content="{icon:Lucide Kind=ArrowUpFromLine, Height=32, Width=32}"
+                            IsEnabled="False"
+                            Margin="0,5,0,0"
+                            ToolTip="Export"/>
+                </StackPanel>
+
+                <ContentControl Grid.Column="1"
+                                Content="{Binding Grid}"/>
+
+                <StackPanel Grid.Column="2"
+                            Orientation="Vertical"
+                            Margin="5">
+                    <Button Content="{icon:Lucide Kind=Lightbulb, Height=32, Width=32}"
+                            IsEnabled="False"
+                            ToolTip="Hint"/>
+
+                    <Button Content="{icon:Lucide Kind=Flag, Height=32, Width=32}"
+                            IsEnabled="False"
+                            Margin="0,5,0,0"
+                            ToolTip="Solve the puzzle"/>
+
+                    <Button Content="{icon:Lucide Kind=Hash, Height=32, Width=32}"
+                            Command="{Binding ShowSolutionCountCommand}"
+                            Margin="0,5,0,0"
+                            ToolTip="Count # of solutions"/>
+
+                    <Button Content="{icon:Lucide Kind=Grid2x2, Height=32, Width=32}"
+                            IsEnabled="False"
+                            Margin="0,15,0,0"
+                            ToolTip="Fill in all candidates"/>
+
+                    <Button Content="{icon:Lucide Kind=Grid2x2X, Height=32, Width=32}"
+                            IsEnabled="False"
+                            Margin="0,5,0,0"
+                            ToolTip="Delete all candidates"/>
+                </StackPanel>
+            </Grid>
 
             <ContentControl Content="{Binding Selection}"
                             Margin="0 10 0 0"/>

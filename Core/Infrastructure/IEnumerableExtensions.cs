@@ -2,7 +2,7 @@
 
 namespace Core.Infrastructure;
 
-public static class ObservableCollectionsExtensions
+public static class IEnumerableExtensions
 {
     public static ObservableCollection<T> ToObservableCollection<T>(this IEnumerable<T> list)
     {

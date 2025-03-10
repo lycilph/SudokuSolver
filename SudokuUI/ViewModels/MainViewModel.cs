@@ -1,6 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Core.DancingLinks;
+using Core.Model;
+using MahApps.Metro.Controls.Dialogs;
 using SudokuUI.Services;
+using System.Text;
 
 namespace SudokuUI.ViewModels;
 
@@ -28,6 +32,18 @@ public partial class MainViewModel : ObservableObject
         Grid = grid;
         Selection = selection;
         Settings = settings;
+    }
+
+    [RelayCommand]
+    private async Task ShowSolutionCount()
+    {
+        var temp = new Puzzle(Puzzle.Grid.ToSimpleString()); // Create a copy of the puzzle
+        var count = DancingLinksSolver.Solve(temp).Count; // This can change the puzzle (thus the copy)
+
+        var sb = new StringBuilder();
+        sb.AppendLine($"The puzzle has {count} solutions");
+        sb.AppendLine($"Execution Time: {temp.Stats.ElapsedTime} ms");
+        await DialogCoordinator.Instance.ShowMessageAsync(this, "Solution Count", sb.ToString());
     }
 
     [RelayCommand]
