@@ -1,4 +1,5 @@
 ﻿using Core.Infrastructure;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Core.Model;
@@ -120,4 +121,63 @@ public class Grid
     public void ClearCandidates() => Cells.ForEach(c => c.Candidates.Clear());
 
     public IEnumerable<Cell> FilledCells() => Cells.Where(c => c.IsFilled);
+    public bool IsSolved() => Cells.All(c => c.IsFilled);
+
+    public string CandidatesToString(bool skip_cells_with_values = false)
+    {
+        var sb = new StringBuilder();
+        for (int i = 0; i < 81; i++)
+        {
+            if (skip_cells_with_values && Cells[i].IsFilled)
+                continue;
+            sb.AppendLine($"Cell {i}: {string.Join(' ', Cells[i].Candidates.Order())}");
+        }
+        return sb.ToString();
+    }
+
+    public string PeersToString()
+    {
+        var sb = new StringBuilder();
+        for (int i = 0; i < 81; i++)
+        {
+            sb.AppendLine($"Peers for Cell {i}: {string.Join(' ', Cells[i].Peers.Select(p => p.Index))}");
+        }
+        return sb.ToString();
+    }
+
+    public string UnitsToString()
+    {
+        var sb = new StringBuilder();
+
+        foreach (var unit in AllUnits)
+            sb.AppendLine($"{unit.Name} {unit.Index}: {string.Join(' ', unit.Cells.Select(c => c.Index))}");
+
+        return sb.ToString();
+    }
+
+    public string ToSimpleString()
+    {
+        var sb = new StringBuilder();
+        foreach (var cell in Cells)
+            if (cell.IsFilled)
+                sb.Append(cell.Value);
+            else
+                sb.Append('.');
+        return sb.ToString();
+    }
+
+    public override string ToString()
+    {
+        var sb = new StringBuilder();
+        for (int row = 0; row < 9; row++)
+        {
+            for (int col = 0; col < 9; col++)
+            {
+                sb.Append(Cells[row * 9 + col].Value);
+                sb.Append(' ');
+            }
+            sb.AppendLine();
+        }
+        return sb.ToString();
+    }
 }

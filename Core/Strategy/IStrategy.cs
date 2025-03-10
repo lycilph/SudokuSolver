@@ -1,8 +1,11 @@
-﻿namespace Core.Strategy;
+﻿using Core.Model;
+using Core.Model.Actions;
+
+namespace Core.Strategy;
 
 public interface IStrategy
 {
     string Name { get; }
 
-    //ISolveAction? Execute(Grid grid);
+    IPuzzleAction? Execute(Grid grid);
 }
