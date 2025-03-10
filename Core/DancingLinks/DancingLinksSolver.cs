@@ -167,8 +167,8 @@ public static class DancingLinksSolver
 
     private static void Search(DLXNode root, Stack<DLXNode> solution, int level, List<int[]> all_solutions, int max_solutions_to_find)
     {
-        //if (max_solutions_to_find > 0 && all_solutions.Count >= max_solutions_to_find)
-        //    return;
+        if (max_solutions_to_find > 0 && all_solutions.Count >= max_solutions_to_find)
+            return;
 
         if (root.Right == root) // All constraints are satisfied!
         {

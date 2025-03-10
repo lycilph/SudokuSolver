@@ -131,6 +131,7 @@ public class Grid
     public void ClearCandidates() => Cells.ForEach(c => c.Candidates.Clear());
 
     public IEnumerable<Cell> FilledCells() => Cells.Where(c => c.IsFilled);
+    public IEnumerable<Cell> EmptyCells() => Cells.Where(c => c.IsEmpty);
     public bool IsSolved() => Cells.All(c => c.IsFilled);
 
     public string CandidatesToString(bool skip_cells_with_values = false)

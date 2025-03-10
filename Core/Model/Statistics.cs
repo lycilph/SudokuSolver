@@ -14,4 +14,9 @@ public class Statistics
         ElapsedTime = 0;
         CluesGiven = 0;
     }
+
+    public override string ToString()
+    {
+        return $"Iterations: {Iterations}, Elapsed time: {ElapsedTime} ms, Clues given: {CluesGiven}";
+    }
 }
