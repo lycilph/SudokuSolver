@@ -29,6 +29,9 @@
     
     <mah:MetroWindow.RightWindowCommands>
         <mah:WindowCommands ShowSeparators="False">
+            <Button ToolTip="Reset">
+                <icon:Lucide Kind="RotateCcw"/>
+            </Button>
             <Button ToolTip="Undo (ctrl+z)"
                     Command="{Binding Puzzle.UndoCommand}">
                 <icon:Lucide Kind="Undo"/>
