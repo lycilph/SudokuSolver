@@ -114,7 +114,6 @@
                             ToolTip="Count # of solutions"/>
 
                     <Button Content="{icon:Lucide Kind=Grid2x2, Height=32, Width=32}"
-                            IsEnabled="False"
                             Margin="0,25,0,0"
                             ToolTip="Fill in all candidates"/>
 
