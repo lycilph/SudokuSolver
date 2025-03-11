@@ -75,22 +75,26 @@
                             Margin="5">
                     <Button Content="{icon:Lucide Kind=SquarePlus, Height=32, Width=32}"
                             Command="{Binding NewPuzzleCommand}"
-                            ToolTip="New"/>
+                            ToolTip="New"
+                            Focusable="False"/>
 
                     <Button Content="{icon:Lucide Kind=SquareX, Height=32, Width=32}"
                             Command="{Binding ClearCommand}"
                             Margin="0,5,0,0"
-                            ToolTip="Clear"/>
+                            ToolTip="Clear"
+                            Focusable="False"/>
 
                     <Button Content="{icon:Lucide Kind=ArrowDownToLine, Height=32, Width=32}"
                             Command="{Binding ImportCommand}"
                             Margin="0,25,0,0"
-                            ToolTip="Import"/>
+                            ToolTip="Import"
+                            Focusable="False"/>
 
                     <Button Content="{icon:Lucide Kind=ArrowUpFromLine, Height=32, Width=32}"
                             Command="{Binding ExportCommand}"
                             Margin="0,5,0,0"
-                            ToolTip="Export"/>
+                            ToolTip="Export"
+                            Focusable="False"/>
                 </StackPanel>
 
                 <ContentControl Grid.Column="1"
@@ -101,26 +105,32 @@
                             Margin="5">
                     <Button Content="{icon:Lucide Kind=Lightbulb, Height=32, Width=32}"
                             IsEnabled="False"
-                            ToolTip="Hint"/>
+                            ToolTip="Hint"
+                            Focusable="False"/>
 
                     <Button Content="{icon:Lucide Kind=Flag, Height=32, Width=32}"
                             IsEnabled="False"
                             Margin="0,5,0,0"
-                            ToolTip="Solve the puzzle"/>
+                            ToolTip="Solve the puzzle"
+                            Focusable="False"/>
 
                     <Button Content="{icon:Lucide Kind=Hash, Height=32, Width=32}"
                             Command="{Binding ShowSolutionCountCommand}"
                             Margin="0,5,0,0"
-                            ToolTip="Count # of solutions"/>
+                            ToolTip="Count # of solutions"
+                            Focusable="False"/>
 
                     <Button Content="{icon:Lucide Kind=Grid2x2, Height=32, Width=32}"
+                            Command="{Binding FillInCandidatesCommand}"
                             Margin="0,25,0,0"
-                            ToolTip="Fill in all candidates"/>
+                            ToolTip="Fill in all candidates"
+                            Focusable="False"/>
 
                     <Button Content="{icon:Lucide Kind=Grid2x2X, Height=32, Width=32}"
                             IsEnabled="False"
                             Margin="0,5,0,0"
-                            ToolTip="Delete all candidates"/>
+                            ToolTip="Delete all candidates"
+                            Focusable="False"/>
                 </StackPanel>
             </Grid>
 

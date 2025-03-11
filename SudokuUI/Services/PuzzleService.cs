@@ -1,7 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Core.Infrastructure;
 using Core.Model;
 using Core.Model.Actions;
+using Core.Strategy;
 using NLog;
 using System.ComponentModel;
 
@@ -21,6 +23,7 @@ public partial class PuzzleService : ObservableObject
 
     public PuzzleService()
     {
+        source = ".................................................................................";
         Grid = new Grid();
         Grid.ClearCandidates();
 
@@ -85,6 +88,27 @@ public partial class PuzzleService : ObservableObject
         return str;
     }
 
+    public void FillInCandidates()
+    {
+        logger.Info("Filling in candidates for empty cells");
+
+        var cells = Grid.EmptyCells().Where(c => c.CandidatesCount() == 0);
+        var aggregate = new AggregatePuzzleAction();
+
+        var a1 = new AddAllCandidatesPuzzleAction(cells);
+        a1.Do();
+        aggregate.Add(a1);
+
+        var a2 = BasicEliminationStrategy.Instance.Execute(Grid);
+        if (a2 != null)
+        {
+            a2.Do();
+            aggregate.Add(a2);
+        }
+
+        AddPuzzleAction(aggregate, false);
+    }
+
     private bool CanReset() => CanUndo() || CanRedo();
 
     [RelayCommand(CanExecute = nameof(CanReset))]
@@ -145,9 +169,10 @@ public partial class PuzzleService : ObservableObject
         AddPuzzleAction(new ClearCellPuzzleAction(cell));
     }
 
-    private void AddPuzzleAction(IPuzzleAction action)
+    private void AddPuzzleAction(IPuzzleAction action, bool execute_action = true)
     {
-        action.Do();
+        if (execute_action)
+            action.Do();
 
         undo_stack.Push(action);
         redo_stack.Clear();

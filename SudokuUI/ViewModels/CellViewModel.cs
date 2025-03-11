@@ -55,6 +55,12 @@ public partial class CellViewModel : ObservableObject
             return;
         }
 
+        if (selection_service.Digit == 0)
+        {
+            logger.Info("Nothing to set");
+            return;
+        }
+
         if (selection_service.InputMode == SelectionService.Mode.Digits)
             puzzle_service.SetValue(Cell, selection_service.Digit);
         

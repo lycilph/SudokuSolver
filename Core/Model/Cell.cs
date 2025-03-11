@@ -24,6 +24,7 @@ public partial class Cell(int index) : ObservableObject
     public int GetIndexInUnit(UnitType type) => type == UnitType.Row ? Row : Column;
 
     public int CandidatesCount() => Candidates.Count;
+    public void AddAllCandidates() => Candidates.UnionWith([.. Grid.PossibleValues]);
     public bool Has(int candidate) => Candidates.Contains(candidate);
     public void Add(int candidate) => Candidates.Add(candidate);
     public void Remove(int candidate) => Candidates.Remove(candidate);
@@ -32,7 +33,7 @@ public partial class Cell(int index) : ObservableObject
     {
         Value = 0;
         IsClue = false;
-        Candidates.UnionWith([.. Grid.PossibleValues]);
+        AddAllCandidates();
     }
 
     public string GetCandidatesAsString() => string.Join("", Grid.PossibleValues.Select(v => Candidates.Contains(v) ? v.ToString() : "."));
