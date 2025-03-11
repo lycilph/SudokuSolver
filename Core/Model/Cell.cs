@@ -32,7 +32,7 @@ public partial class Cell(int index) : ObservableObject
     {
         Value = 0;
         IsClue = false;
-        Candidates = [.. Grid.PossibleValues];
+        Candidates.UnionWith([.. Grid.PossibleValues]);
     }
 
     public string GetCandidatesAsString() => string.Join("", Grid.PossibleValues.Select(v => Candidates.Contains(v) ? v.ToString() : "."));

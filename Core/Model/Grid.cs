@@ -115,8 +115,7 @@ public class Grid
         if (string.IsNullOrWhiteSpace(puzzle) || puzzle.Length != AllCellIndices.Count() || !Regex.IsMatch(puzzle, @"^[1-9.]+$"))
             throw new ArgumentException("The input string must be 81 characters long and consist only of digits and .");
 
-        foreach (var cell in Cells)
-            cell.Reset();
+        ResetCells();
 
         foreach (var i in AllCellIndices)
         {
@@ -129,6 +128,7 @@ public class Grid
     }
 
     public void ClearCandidates() => Cells.ForEach(c => c.Candidates.Clear());
+    public void ResetCells() => Cells.ForEach(c => c.Reset());
 
     public IEnumerable<Cell> FilledCells() => Cells.Where(c => c.IsFilled);
     public IEnumerable<Cell> EmptyCells() => Cells.Where(c => c.IsEmpty);

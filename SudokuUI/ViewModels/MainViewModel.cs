@@ -1,9 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Core;
 using Core.DancingLinks;
 using Core.Model;
 using MahApps.Metro.Controls.Dialogs;
 using SudokuUI.Services;
+using SudokuUI.Views;
 using System.Text;
 
 namespace SudokuUI.ViewModels;
@@ -13,7 +15,7 @@ public partial class MainViewModel : ObservableObject
     private readonly SelectionService selection_service;
 
     [ObservableProperty]
-    private PuzzleService puzzle;
+    private PuzzleService puzzleService;
 
     [ObservableProperty]
     private GridViewModel _grid = null!;
@@ -28,16 +30,59 @@ public partial class MainViewModel : ObservableObject
     {
         this.selection_service = selection_service;
 
-        Puzzle = puzzle_service;
+        PuzzleService = puzzle_service;
         Grid = grid;
         Selection = selection;
         Settings = settings;
     }
 
+
+    [RelayCommand]
+    private void NewPuzzle()
+    {
+        var temp = Generator.Generate();
+        var str = temp.Grid.ToSimpleString();
+
+        PuzzleService.Import(str);
+    }
+
+    [RelayCommand]
+    private void Clear()
+    {
+        PuzzleService.Clear();
+    }
+
+    [RelayCommand]
+    private async Task Import()
+    {
+        var vm = new ImportDialogViewModel();
+        var view = new ImportDialogView { DataContext = vm };
+        var dialog = new CustomDialog { Title = "Import Puzzle", Content = view };
+        
+        await DialogCoordinator.Instance.ShowMetroDialogAsync(this, dialog);
+        var result = await vm.DialogResult;
+        await DialogCoordinator.Instance.HideMetroDialogAsync(this, dialog);
+
+        if (!string.IsNullOrWhiteSpace(result))
+            PuzzleService.Import(result);
+    }
+
+    [RelayCommand]
+    private async Task Export()
+    {
+        var vm = new ExportDialogViewModel { Puzzle = PuzzleService.Export() };
+        var view = new ExportDialogView { DataContext = vm };
+        var dialog = new CustomDialog { Title = "Export Puzzle", Content = view };
+
+        await DialogCoordinator.Instance.ShowMetroDialogAsync(this, dialog);
+        await vm.DialogResult;
+        await DialogCoordinator.Instance.HideMetroDialogAsync(this, dialog);
+    }
+
     [RelayCommand]
     private async Task ShowSolutionCount()
     {
-        var temp = new Puzzle(Puzzle.Grid.ToSimpleString()); // Create a copy of the puzzle
+        var temp = new Puzzle(PuzzleService.Grid.ToSimpleString()); // Create a copy of the puzzle
         var count = DancingLinksSolver.Solve(temp).Count; // This can change the puzzle (thus the copy)
 
         var sb = new StringBuilder();
