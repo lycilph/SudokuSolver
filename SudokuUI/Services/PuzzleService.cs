@@ -1,9 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Core.Infrastructure;
 using Core.Model;
 using Core.Model.Actions;
-using Core.Strategy;
 using NLog;
 using System.ComponentModel;
 
@@ -13,23 +11,18 @@ public partial class PuzzleService : ObservableObject
 {
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
+    public string source = string.Empty;
     public Grid Grid { get; private set; }
 
     public event EventHandler GridValuesChanged = null!;
 
-    private Stack<IPuzzleAction> undo_stack = new();
-    private Stack<IPuzzleAction> redo_stack = new();
+    private readonly Stack<IPuzzleAction> undo_stack = new();
+    private readonly Stack<IPuzzleAction> redo_stack = new();
 
     public PuzzleService()
     {
-#if DEBUG
-        Grid = new Grid("4......38.32.941...953..24.37.6.9..4.29..16.36.47.3.9.957..83....39..4..24..3.7.9");
-        var action = BasicEliminationStrategy.ExecuteAndApply(Grid);
-        AddPuzzleAction(action!);
-#else
         Grid = new Grid();
-        Grid.EmptyCells().ForEach(cell => cell.Candidates.Clear());
-#endif
+        Grid.ClearCandidates();
 
         foreach (var cell in Grid.Cells)
             cell.PropertyChanged += CellChanged;
@@ -46,7 +39,62 @@ public partial class PuzzleService : ObservableObject
         logger.Debug("Grid values changed");
         GridValuesChanged?.Invoke(this, EventArgs.Empty);
     }
-    
+
+    private void ResetPuzzle()
+    {
+        Grid.Set(source);
+        Grid.ClearCandidates();
+
+        undo_stack.Clear();
+        redo_stack.Clear();
+
+        ResetCommand.NotifyCanExecuteChanged();
+        UndoCommand.NotifyCanExecuteChanged();
+        RedoCommand.NotifyCanExecuteChanged();
+    }
+
+    public void Clear()
+    {
+        logger.Info("Clearing puzzle");
+
+        Grid.ResetCells();
+        Grid.ClearCandidates();
+
+        undo_stack.Clear();
+        redo_stack.Clear();
+
+        ResetCommand.NotifyCanExecuteChanged();
+        UndoCommand.NotifyCanExecuteChanged();
+        RedoCommand.NotifyCanExecuteChanged();
+    }
+
+    public void Import(string puzzle)
+    {
+        logger.Info($"Importing the puzzle: {puzzle}");
+
+        source = puzzle;
+        ResetPuzzle();
+    }
+
+    public string Export()
+    {
+        var str = Grid.ToSimpleString();
+
+        logger.Info($"Importing the puzzle: {str}");
+
+        return str;
+    }
+
+    private bool CanReset() => CanUndo() || CanRedo();
+
+    [RelayCommand(CanExecute = nameof(CanReset))]
+    public void Reset()
+    {
+        logger.Info("Resetting the puzzle");
+
+        ResetPuzzle();
+    }
+
     private bool CanUndo() => undo_stack.Count > 0;
 
     [RelayCommand(CanExecute = nameof(CanUndo))]
@@ -57,6 +105,7 @@ public partial class PuzzleService : ObservableObject
 
         action.Undo();
 
+        ResetCommand.NotifyCanExecuteChanged(); 
         UndoCommand.NotifyCanExecuteChanged();
         RedoCommand.NotifyCanExecuteChanged();
     }
@@ -71,6 +120,7 @@ public partial class PuzzleService : ObservableObject
 
         action.Do();
 
+        ResetCommand.NotifyCanExecuteChanged(); 
         UndoCommand.NotifyCanExecuteChanged();
         RedoCommand.NotifyCanExecuteChanged();
     }
@@ -102,6 +152,7 @@ public partial class PuzzleService : ObservableObject
         undo_stack.Push(action);
         redo_stack.Clear();
 
+        ResetCommand.NotifyCanExecuteChanged();
         UndoCommand.NotifyCanExecuteChanged();
         RedoCommand.NotifyCanExecuteChanged();
     }
