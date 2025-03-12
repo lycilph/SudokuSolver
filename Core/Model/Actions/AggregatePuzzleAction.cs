@@ -2,6 +2,10 @@
 
 namespace Core.Model.Actions;
 
+/// <summary>
+/// This action can aggregate puzzle and execute them 1 at a time. This is used
+/// when multiple actions needs to the done/undone at once
+/// </summary>
 public class AggregatePuzzleAction : IPuzzleAction
 {
     public readonly List<IPuzzleAction> actions = [];

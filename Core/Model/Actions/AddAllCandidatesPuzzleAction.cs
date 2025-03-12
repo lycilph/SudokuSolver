@@ -1,5 +1,8 @@
 ﻿namespace Core.Model.Actions;
 
+/// <summary>
+/// This action adds all candidates to the list of cells given
+/// </summary>
 public class AddAllCandidatesPuzzleAction : IPuzzleAction
 {
     private readonly List<Cell> cells;

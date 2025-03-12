@@ -1,5 +1,9 @@
 ﻿namespace Core.Model.Actions;
 
+/// <summary>
+/// This action is used multiple places, both when placing a value in a cell
+/// and when filling in candidates
+/// </summary>
 public class EliminateCandidatesPuzzleAction : IPuzzleAction
 {
     private readonly List<Cell> cells;

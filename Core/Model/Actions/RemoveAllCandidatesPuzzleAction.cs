@@ -1,5 +1,9 @@
 ﻿namespace Core.Model.Actions;
 
+/// <summary>
+/// This action is initiated in the UI by clicking the "Clear Candidates" button
+/// and it will remove all candidates in the list of cells given
+/// </summary>
 public class RemoveAllCandidatesPuzzleAction : IPuzzleAction
 {
     private readonly List<Cell> cells;

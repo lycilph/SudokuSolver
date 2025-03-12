@@ -2,6 +2,9 @@
 
 namespace Core.Model.Actions;
 
+/// <summary>
+/// This is a base class for the ValueSolvePuzzleAction and EliminationSolvePuzzleAction used by the solver
+/// </summary>
 public abstract class BaseSolveAction : IPuzzleAction
 {
     public string Description { get; set; } = string.Empty;
