@@ -8,7 +8,8 @@ public static class Solver
 {
     private static readonly IStrategy[] strategies =
         [new BasicEliminationStrategy(),
-        new NakedSinglesStrategy()];
+        new NakedSinglesStrategy(),
+        new HiddenSinglesStrategy()];
 
     public static void Solve(Puzzle puzzle)
     {

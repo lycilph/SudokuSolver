@@ -2,7 +2,7 @@
 using Core.Model.Actions;
 using Core.Strategy;
 
-namespace SolverTests;
+namespace UnitTests.Strategy;
 
 // See more information in the NakedSinglesStrategy class
 public class NakedSinglesTests
