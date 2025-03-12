@@ -15,6 +15,7 @@
 
                 <!-- Styles -->
                 <ResourceDictionary Source="/Styles/CellBorderStyle.xaml"/>
+                <ResourceDictionary Source="/Styles/NonFocusableExpander.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <BooleanToVisibilityConverter x:Key="bool_to_visibilty_converter"/>

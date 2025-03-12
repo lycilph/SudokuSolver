@@ -138,9 +138,11 @@
                             Margin="0 10 0 0"/>
 
             <Expander Header="Solution"
-                      IsExpanded="True"
+                      IsExpanded="False"
                       Padding="8"
-                      Margin="0 20 0 0">
+                      Margin="0 20 0 0"
+                      Focusable="False"
+                      Style="{StaticResource non_focusable_expander}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -148,13 +150,15 @@
                     </Grid.ColumnDefinitions>
                     
                     <StackPanel Grid.Column="0">
-                        <Button Content="Back"/>
-                        <Button Content="Next"/>
-                        <Button Content="Finish"/>
+                        <Button Content="Back" Focusable="False"/>
+                        <Button Content="Next" Focusable="False"/>
+                        <Button Content="Finish" Focusable="False"/>
                     </StackPanel>
 
                     <TextBox Grid.Column="1"
-                             Margin="8 0 0 0"/>
+                             Margin="8 0 0 0"
+                             IsReadOnly="True"
+                             Focusable="False"/>
                 </Grid>
             </Expander>
         </StackPanel>
