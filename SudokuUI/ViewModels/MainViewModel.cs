@@ -53,6 +53,12 @@ public partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void ClearCandidates()
+    {
+        PuzzleService.ClearCandidates();
+    }
+
+    [RelayCommand]
     private void FillInCandidates()
     {
         PuzzleService.FillInCandidates();

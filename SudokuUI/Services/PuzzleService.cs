@@ -88,6 +88,15 @@ public partial class PuzzleService : ObservableObject
         return str;
     }
 
+    public void ClearCandidates()
+    {
+        logger.Info("Clearing all candidates");
+
+        var cells = Grid.EmptyCells().Where(c => c.CandidatesCount() > 0);
+        var action = new RemoveAllCandidatesPuzzleAction(cells);
+        AddPuzzleAction(action);
+    }
+
     public void FillInCandidates()
     {
         logger.Info("Filling in candidates for empty cells");

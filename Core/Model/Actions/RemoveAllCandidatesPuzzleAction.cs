@@ -1,11 +1,11 @@
 ﻿namespace Core.Model.Actions;
 
-public class AddAllCandidatesPuzzleAction : IPuzzleAction
+public class RemoveAllCandidatesPuzzleAction : IPuzzleAction
 {
     private readonly List<Cell> cells;
     private readonly Dictionary<Cell, IEnumerable<int>> candidates = [];
-
-    public AddAllCandidatesPuzzleAction(IEnumerable<Cell> cells)
+    
+    public RemoveAllCandidatesPuzzleAction(IEnumerable<Cell> cells)
     {
         this.cells = [.. cells];
     }
@@ -18,7 +18,7 @@ public class AddAllCandidatesPuzzleAction : IPuzzleAction
         foreach (var cell in cells)
         {
             candidates.Add(cell, cell.Candidates.ToArray());
-            cell.AddAllCandidates();
+            cell.ClearCandidates();
         }
     }
 

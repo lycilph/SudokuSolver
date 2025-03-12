@@ -127,7 +127,7 @@
                             Focusable="False"/>
 
                     <Button Content="{icon:Lucide Kind=Grid2x2X, Height=32, Width=32}"
-                            IsEnabled="False"
+                            Command="{Binding ClearCandidatesCommand}"
                             Margin="0,5,0,0"
                             ToolTip="Delete all candidates"
                             Focusable="False"/>
