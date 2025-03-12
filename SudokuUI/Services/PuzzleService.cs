@@ -102,20 +102,15 @@ public partial class PuzzleService : ObservableObject
         logger.Info("Filling in candidates for empty cells");
 
         var cells = Grid.EmptyCells().Where(c => c.CandidatesCount() == 0);
-        var aggregate = new AggregatePuzzleAction();
-
-        var a1 = new AddAllCandidatesPuzzleAction(cells);
-        a1.Do();
-        aggregate.Add(a1);
-
-        var a2 = BasicEliminationStrategy.Instance.Execute(Grid);
-        if (a2 != null)
+        if (cells.Any())
         {
-            a2.Do();
-            aggregate.Add(a2);
-        }
+            var aggregate = new AggregatePuzzleAction();
+            
+            aggregate.Add(new AddAllCandidatesPuzzleAction(cells));
+            aggregate.Add(new EliminateCandidatesPuzzleAction(cells));
 
-        AddPuzzleAction(aggregate, false);
+            AddPuzzleAction(aggregate);
+        }
     }
 
     private bool CanReset() => CanUndo() || CanRedo();
@@ -178,10 +173,9 @@ public partial class PuzzleService : ObservableObject
         AddPuzzleAction(new ClearCellPuzzleAction(cell));
     }
 
-    private void AddPuzzleAction(IPuzzleAction action, bool execute_action = true)
+    private void AddPuzzleAction(IPuzzleAction action)
     {
-        if (execute_action)
-            action.Do();
+        action.Do();
 
         undo_stack.Push(action);
         redo_stack.Clear();
