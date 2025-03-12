@@ -102,20 +102,23 @@ public partial class PuzzleService : ObservableObject
         logger.Info("Filling in candidates for empty cells");
 
         var cells = Grid.EmptyCells().Where(c => c.CandidatesCount() == 0);
-        var aggregate = new AggregatePuzzleAction();
-
-        var a1 = new AddAllCandidatesPuzzleAction(cells);
-        a1.Do();
-        aggregate.Add(a1);
-
-        var a2 = BasicEliminationStrategy.Instance.Execute(Grid);
-        if (a2 != null)
+        if (cells.Any())
         {
-            a2.Do();
-            aggregate.Add(a2);
-        }
+            var aggregate = new AggregatePuzzleAction();
 
-        AddPuzzleAction(aggregate, false);
+            var a1 = new AddAllCandidatesPuzzleAction(cells);
+            a1.Do();
+            aggregate.Add(a1);
+
+            var a2 = BasicEliminationStrategy.Instance.Execute(Grid);
+            if (a2 != null)
+            {
+                a2.Do();
+                aggregate.Add(a2);
+            }
+
+            AddPuzzleAction(aggregate, false);
+        }
     }
 
     private bool CanReset() => CanUndo() || CanRedo();
