@@ -1,9 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Core.Infrastructure;
 using Core.Model;
 using Core.Model.Actions;
-using Core.Strategy;
 using NLog;
 using System.ComponentModel;
 
@@ -160,8 +158,6 @@ public partial class PuzzleService : ObservableObject
 
     public void SetValue(Cell cell, int value)
     {
-        //AddPuzzleAction(new SetValuePuzzleAction(cell, value));
-
         var action = new AggregatePuzzleAction();
         action.Add(new SetValuePuzzleAction(cell, value));
 

@@ -14,19 +14,29 @@
 
         <DataTemplate x:Key="value_cell_template">
             <Border Style="{StaticResource cell_border_style}">
-                <TextBlock Text="{Binding Cell.Value}"
-                           FontSize="24"
-                           FontWeight="Bold"
-                           HorizontalAlignment="Center"
-                           VerticalAlignment="Center">
-                    <TextBlock.Foreground>
-                        <MultiBinding Converter="{StaticResource bool_to_brush_converter}">
-                            <Binding Path="Cell.IsClue"/>
-                            <Binding Source="{StaticResource clue_brush}" Path="Data"/>
-                            <Binding Source="{StaticResource digit_brush}" Path="Data"/>
-                        </MultiBinding>
-                    </TextBlock.Foreground>
-                </TextBlock>
+                <Grid>
+                    <Ellipse Fill="LightBlue"
+                             Opacity="0.5"
+                             Margin="5"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Stretch"
+                             Visibility="{Binding HighlightNumber, Converter={StaticResource bool_to_visibilty_converter}}"/>
+
+                    <TextBlock Text="{Binding Cell.Value}"
+                               FontSize="24"
+                               FontWeight="Bold"
+                               Margin="0 -2 0 0"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center">
+                        <TextBlock.Foreground>
+                            <MultiBinding Converter="{StaticResource bool_to_brush_converter}">
+                                <Binding Path="Cell.IsClue"/>
+                                <Binding Source="{StaticResource clue_brush}" Path="Data"/>
+                                <Binding Source="{StaticResource digit_brush}" Path="Data"/>
+                            </MultiBinding>
+                        </TextBlock.Foreground>
+                    </TextBlock>
+                </Grid>
             </Border>
         </DataTemplate>
         

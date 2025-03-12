@@ -23,6 +23,9 @@ public partial class CellViewModel : ObservableObject
     [ObservableProperty]
     private ObservableCollection<CandidateViewModel> candidates;
 
+    [ObservableProperty]
+    private bool highlightNumber = false;
+
     public CellViewModel(Cell cell)
     {
         Cell = cell;
@@ -36,7 +39,7 @@ public partial class CellViewModel : ObservableObject
 
         Cell.Candidates.CollectionChanged += CandidatesChanged;
     }
-    
+
     private void CandidatesChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         logger.Debug($"Cell {Cell.Index} candidates changed: {e.Action}");

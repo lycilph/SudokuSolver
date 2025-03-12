@@ -10,6 +10,9 @@ public partial class CandidateViewModel : ObservableObject
     [ObservableProperty]
     private bool isVisible;
 
+    [ObservableProperty]
+    private bool highlightNumber = false;
+
     public CandidateViewModel(int value)
     {
         Value = value;

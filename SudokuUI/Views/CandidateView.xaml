@@ -6,8 +6,16 @@
              xmlns:vm="clr-namespace:SudokuUI.ViewModels" 
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=vm:CandidateViewModel, IsDesignTimeCreatable=False}">
-    <TextBlock Text="{Binding Value}"
-               Visibility="{Binding IsVisible, Converter={StaticResource bool_to_visibilty_converter}}"
-               HorizontalAlignment="Center"
-               VerticalAlignment="Center"/>
+    <Grid>
+        <Ellipse Fill="LightBlue"
+                 Opacity="0.5"
+                 HorizontalAlignment="Stretch"
+                 VerticalAlignment="Stretch"
+                 Visibility="{Binding HighlightNumber, Converter={StaticResource bool_to_visibilty_converter}}"/>
+        
+        <TextBlock Text="{Binding Value}"
+                   Visibility="{Binding IsVisible, Converter={StaticResource bool_to_visibilty_converter}}"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"/>
+    </Grid>
 </UserControl>
