@@ -11,7 +11,7 @@
                  Title="Sudoku UI" 
                  Height="700" 
                  WindowStartupLocation="CenterScreen"
-                 SizeToContent="Width"
+                 SizeToContent="WidthAndHeight"
                  ResizeMode="CanMinimize"
                  Dialog:DialogParticipation.Register="{Binding}"
                  d:DataContext="{d:DesignInstance Type=vm:MainViewModel}">
@@ -136,6 +136,27 @@
 
             <ContentControl Content="{Binding Selection}"
                             Margin="0 10 0 0"/>
+
+            <Expander Header="Solution"
+                      IsExpanded="True"
+                      Padding="8"
+                      Margin="0 20 0 0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <StackPanel Grid.Column="0">
+                        <Button Content="Back"/>
+                        <Button Content="Next"/>
+                        <Button Content="Finish"/>
+                    </StackPanel>
+
+                    <TextBox Grid.Column="1"
+                             Margin="8 0 0 0"/>
+                </Grid>
+            </Expander>
         </StackPanel>
 
         <!-- On overlay to catch mouse events, when the settings flyout is visible -->

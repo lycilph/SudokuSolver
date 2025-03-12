@@ -160,7 +160,15 @@ public partial class PuzzleService : ObservableObject
 
     public void SetValue(Cell cell, int value)
     {
-        AddPuzzleAction(new SetValuePuzzleAction(cell, value));
+        //AddPuzzleAction(new SetValuePuzzleAction(cell, value));
+
+        var action = new AggregatePuzzleAction();
+        action.Add(new SetValuePuzzleAction(cell, value));
+
+        var peers = cell.Peers.Where(c => c.IsEmpty && c.CandidatesCount() > 0);
+        action.Add(new EliminateCandidatesPuzzleAction(peers));
+
+        AddPuzzleAction(action);
     }
 
     public void ToggleCandidate(Cell cell, int value)
