@@ -105,19 +105,11 @@ public partial class PuzzleService : ObservableObject
         if (cells.Any())
         {
             var aggregate = new AggregatePuzzleAction();
+            
+            aggregate.Add(new AddAllCandidatesPuzzleAction(cells));
+            aggregate.Add(new EliminateCandidatesPuzzleAction(cells));
 
-            var a1 = new AddAllCandidatesPuzzleAction(cells);
-            a1.Do();
-            aggregate.Add(a1);
-
-            var a2 = BasicEliminationStrategy.Instance.Execute(Grid);
-            if (a2 != null)
-            {
-                a2.Do();
-                aggregate.Add(a2);
-            }
-
-            AddPuzzleAction(aggregate, false);
+            AddPuzzleAction(aggregate);
         }
     }
 
@@ -181,10 +173,9 @@ public partial class PuzzleService : ObservableObject
         AddPuzzleAction(new ClearCellPuzzleAction(cell));
     }
 
-    private void AddPuzzleAction(IPuzzleAction action, bool execute_action = true)
+    private void AddPuzzleAction(IPuzzleAction action)
     {
-        if (execute_action)
-            action.Do();
+        action.Do();
 
         undo_stack.Push(action);
         redo_stack.Clear();
