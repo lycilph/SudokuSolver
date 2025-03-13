@@ -27,6 +27,8 @@
         <KeyBinding Key="D9" Command="{Binding NumberKeyPressedCommand}" CommandParameter="9"/>
         <KeyBinding Key="Esc" Command="{Binding ClearSelectionCommand}"/>
         <KeyBinding Key="Space" Command="{Binding ToggleInputModeCommand}"/>
+        <KeyBinding Key="Tab" Command="{Binding NextDigitCommand}"/>
+        <KeyBinding Key="Tab" Modifiers="Shift" Command="{Binding PreviousDigitCommand}"/>
     </Window.InputBindings>
     
     <mah:MetroWindow.RightWindowCommands>

@@ -117,6 +117,18 @@ public partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void NextDigit()
+    {
+        selection_service.NextDigit();
+    }
+
+    [RelayCommand]
+    private void PreviousDigit()
+    {
+        selection_service.PreviousDigit();
+    }
+
+    [RelayCommand]
     private void ToggleInputMode()
     {
         selection_service.ToggleInputMode();
