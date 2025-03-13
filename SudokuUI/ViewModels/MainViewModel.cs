@@ -111,9 +111,12 @@ public partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void ClearSelection()
+    private void Escape()
     {
-        selection_service.ClearDigit();
+        if (Settings.IsOpen)
+            HideSettings();
+        else
+            selection_service.ClearDigit();
     }
 
     [RelayCommand]

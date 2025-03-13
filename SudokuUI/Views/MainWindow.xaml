@@ -25,10 +25,13 @@
         <KeyBinding Key="D7" Command="{Binding NumberKeyPressedCommand}" CommandParameter="7"/>
         <KeyBinding Key="D8" Command="{Binding NumberKeyPressedCommand}" CommandParameter="8"/>
         <KeyBinding Key="D9" Command="{Binding NumberKeyPressedCommand}" CommandParameter="9"/>
-        <KeyBinding Key="Esc" Command="{Binding ClearSelectionCommand}"/>
+        <KeyBinding Key="Esc" Command="{Binding EscapeCommand}"/>
         <KeyBinding Key="Space" Command="{Binding ToggleInputModeCommand}"/>
         <KeyBinding Key="Tab" Command="{Binding NextDigitCommand}"/>
         <KeyBinding Key="Tab" Modifiers="Shift" Command="{Binding PreviousDigitCommand}"/>
+        <KeyBinding Key="Z" Modifiers="Ctrl" Command="{Binding PuzzleService.UndoCommand}"/>
+        <KeyBinding Key="Y" Modifiers="Ctrl" Command="{Binding PuzzleService.RedoCommand}"/>
+        <KeyBinding Key="F1" Command="{Binding ShowSettingsCommand}"/>
     </Window.InputBindings>
     
     <mah:MetroWindow.RightWindowCommands>
