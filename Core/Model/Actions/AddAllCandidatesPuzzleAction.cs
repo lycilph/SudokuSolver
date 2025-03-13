@@ -33,4 +33,9 @@ public class AddAllCandidatesPuzzleAction : IPuzzleAction
             cell.Candidates.UnionWith(candidates[cell]);
         }
     }
+
+    public override string ToString()
+    {
+        return $"Adding all candidates to cells: {string.Join(',', cells.Select(c => c.Index))}";
+    }
 }

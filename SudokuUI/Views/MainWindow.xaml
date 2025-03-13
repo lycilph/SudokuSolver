@@ -114,7 +114,7 @@
                             Focusable="False"/>
 
                     <Button Content="{icon:Lucide Kind=Flag, Height=32, Width=32}"
-                            IsEnabled="False"
+                            Command="{Binding SolvePuzzleCommand}"
                             Margin="0,5,0,0"
                             ToolTip="Solve the puzzle"
                             Focusable="False"/>
@@ -155,13 +155,22 @@
                     </Grid.ColumnDefinitions>
                     
                     <StackPanel Grid.Column="0">
-                        <Button Content="Back" Focusable="False"/>
-                        <Button Content="Next" Focusable="False"/>
-                        <Button Content="Finish" Focusable="False"/>
+                        <Button Content="{icon:Lucide Kind=ArrowUp}"
+                                Command="{Binding PuzzleService.UndoCommand}"
+                                Focusable="False"/>
+                        <Button Content="{icon:Lucide Kind=ArrowDown}" 
+                                Command="{Binding PuzzleService.RedoCommand}"
+                                Margin="0 5 0 0"
+                                Focusable="False"/>
                     </StackPanel>
 
-                    <TextBox Grid.Column="1"
+                    <TextBox x:Name="solver_textbox"
+                             Grid.Column="1"
+                             Text="{Binding PuzzleService.LastActionDescription}"
+                             TextWrapping="Wrap"
                              Margin="8 0 0 0"
+                             Height="200"
+                             Width="450"
                              IsReadOnly="True"
                              Focusable="False"/>
                 </Grid>

@@ -1,4 +1,5 @@
 ﻿using Core.Infrastructure;
+using System.Text;
 
 namespace Core.Model.Actions;
 
@@ -20,5 +21,12 @@ public class AggregatePuzzleAction : IPuzzleAction
     public void Undo()
     {
         actions.AsEnumerable().Reverse().ForEach(a => a.Undo());
+    }
+
+    public override string ToString()
+    {
+        var sb = new StringBuilder();
+        actions.ForEach(a => sb.AppendLine(a.ToString()));
+        return sb.ToString();
     }
 }

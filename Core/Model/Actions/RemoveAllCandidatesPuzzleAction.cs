@@ -34,4 +34,9 @@ public class RemoveAllCandidatesPuzzleAction : IPuzzleAction
             cell.Candidates.UnionWith(candidates[cell]);
         }
     }
+
+    public override string ToString()
+    {
+        return $"Removing all candidates from cells {string.Join(',', cells.Select(c => c.Index))}";
+    }
 }

@@ -112,6 +112,12 @@ public partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void SolvePuzzle()
+    {
+        PuzzleService.SolvePuzzle();
+    }
+
+    [RelayCommand]
     private async Task ShowSolutionCount()
     {
         var temp = new Puzzle(PuzzleService.Grid.ToSimpleString()); // Create a copy of the puzzle

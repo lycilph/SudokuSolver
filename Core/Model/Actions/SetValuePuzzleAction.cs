@@ -28,4 +28,9 @@ public class SetValuePuzzleAction : IPuzzleAction
         cell.Value = 0;
         cell.Candidates.UnionWith(candidates);
     }
+
+    public override string ToString()
+    {
+        return $"Settings cell {cell.Index} to {value}";
+    }
 }

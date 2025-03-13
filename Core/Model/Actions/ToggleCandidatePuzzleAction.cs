@@ -30,4 +30,9 @@ public class ToggleCandidatePuzzleAction : IPuzzleAction
         else
             cell.Add(value);
     }
+
+    public override string ToString()
+    {
+        return $"Toggling the candidate {value} in cell {cell.Index}";
+    }
 }

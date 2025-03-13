@@ -1,8 +1,8 @@
 ﻿namespace Core.Model.Actions;
 
 /// <summary>
-/// This action is used multiple places, both when placing a value in a cell
-/// and when filling in candidates
+/// This action is used multiple places, both when placing a value in a cell and when filling in candidates.
+/// It takes a list of cells, and the removes the values of these cells from their peers
 /// </summary>
 public class EliminateCandidatesPuzzleAction : IPuzzleAction
 {
@@ -35,5 +35,10 @@ public class EliminateCandidatesPuzzleAction : IPuzzleAction
             cell.Candidates.Clear();
             cell.Candidates.UnionWith(candidates[cell]);
         }
+    }
+
+    public override string ToString()
+    {
+        return $"Peer cell eliminating candidates from cells {string.Join(',', cells.Select(c => c.Index))}";
     }
 }

@@ -21,7 +21,7 @@ public abstract class BaseSolveAction : IPuzzleAction
         var sb = new StringBuilder();
         sb.AppendLine(Description);
         foreach (var e in Elements)
-            sb.AppendLine(e.Description);
+            sb.AppendLine($" * {e.Description}");
         return sb.ToString();
     }
 }

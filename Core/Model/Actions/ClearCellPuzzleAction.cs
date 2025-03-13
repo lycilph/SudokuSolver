@@ -29,4 +29,9 @@ public class ClearCellPuzzleAction : IPuzzleAction
         cell.Value = value;
         cell.Candidates.UnionWith(candidates);
     }
+
+    public override string ToString()
+    {
+        return $"Clearing cell {cell.Index}";
+    }
 }

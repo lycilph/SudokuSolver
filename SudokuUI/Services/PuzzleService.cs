@@ -22,6 +22,9 @@ public partial class PuzzleService : ObservableObject
     private readonly Stack<IPuzzleAction> undo_stack = new();
     private readonly Stack<IPuzzleAction> redo_stack = new();
 
+    [ObservableProperty]
+    private string lastActionDescription = string.Empty;
+
     public PuzzleService()
     {
         source = ".................................................................................";
@@ -65,6 +68,8 @@ public partial class PuzzleService : ObservableObject
 
         undo_stack.Clear();
         redo_stack.Clear();
+
+        UpdateLastActionDescription(null);
 
         ResetCommand.NotifyCanExecuteChanged();
         UndoCommand.NotifyCanExecuteChanged();
@@ -148,6 +153,11 @@ public partial class PuzzleService : ObservableObject
 
         action.Undo();
 
+        if (undo_stack.Count > 0)
+            UpdateLastActionDescription(undo_stack.Peek());
+        else
+            UpdateLastActionDescription(null);
+
         ResetCommand.NotifyCanExecuteChanged(); 
         UndoCommand.NotifyCanExecuteChanged();
         RedoCommand.NotifyCanExecuteChanged();
@@ -162,6 +172,7 @@ public partial class PuzzleService : ObservableObject
         undo_stack.Push(action);
 
         action.Do();
+        UpdateLastActionDescription(action);
 
         ResetCommand.NotifyCanExecuteChanged(); 
         UndoCommand.NotifyCanExecuteChanged();
@@ -208,9 +219,26 @@ public partial class PuzzleService : ObservableObject
             AddPuzzleAction(elimination);
     }
 
+    public void SolvePuzzle()
+    {
+        var puzzle = new Puzzle(Grid);
+        Solver.Solve(puzzle);
+
+        foreach (var action in puzzle.Actions)
+            undo_stack.Push(action);
+
+        if (puzzle.Actions.Count > 0)
+            UpdateLastActionDescription(puzzle.Actions.Last());
+
+        ResetCommand.NotifyCanExecuteChanged();
+        UndoCommand.NotifyCanExecuteChanged();
+        RedoCommand.NotifyCanExecuteChanged();
+    }
+
     private void AddPuzzleAction(IPuzzleAction action)
     {
         action.Do();
+        UpdateLastActionDescription(action);
 
         undo_stack.Push(action);
         redo_stack.Clear();
@@ -218,5 +246,10 @@ public partial class PuzzleService : ObservableObject
         ResetCommand.NotifyCanExecuteChanged();
         UndoCommand.NotifyCanExecuteChanged();
         RedoCommand.NotifyCanExecuteChanged();
+    }
+
+    private void UpdateLastActionDescription(IPuzzleAction? action)
+    {
+        LastActionDescription = action?.ToString() ?? "N/A";
     }
 }

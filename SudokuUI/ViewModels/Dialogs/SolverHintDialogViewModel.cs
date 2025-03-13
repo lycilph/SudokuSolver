@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Core.Model.Actions;
-using System.Text;
 
 namespace SudokuUI.ViewModels.Dialogs;
 
@@ -25,18 +24,7 @@ public partial class SolverHintDialogViewModel : ObservableObject
 
     private void FormatDescription()
     {
-        if (_action == null)
-        {
-            Description = "No hints found...";
-        }
-        else
-        {
-            var sb = new StringBuilder();
-            sb.AppendLine(_action.Description);
-            foreach (var elem in _action.Elements)
-                sb.AppendLine($" * {elem.Description}");
-            Description = sb.ToString();
-        }
+        Description = _action?.ToString() ?? "No hints found...";
     }
 
     private bool CanApply() => _action != null;
