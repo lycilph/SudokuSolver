@@ -1,13 +1,13 @@
-﻿<UserControl x:Class="SudokuUI.Views.ExportDialogView"
+﻿<UserControl x:Class="SudokuUI.Views.Dialogs.ExportDialogView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:vm="clr-namespace:SudokuUI.ViewModels"
+             xmlns:dia="clr-namespace:SudokuUI.ViewModels.Dialogs"
              xmlns:icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
-             d:DataContext="{d:DesignInstance Type=vm:ExportDialogViewModel, IsDesignTimeCreatable=False}">
+             d:DataContext="{d:DesignInstance Type=dia:ExportDialogViewModel, IsDesignTimeCreatable=False}">
     <StackPanel Orientation="Vertical">
         <Label Content="Current puzzle:" />
 

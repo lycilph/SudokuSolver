@@ -19,7 +19,7 @@ public static class Solver
 
         while (!puzzle.IsSolved())
         {
-            IPuzzleAction? action = Step(puzzle);
+            IPuzzleAction? action = Step(puzzle.Grid);
             if (action == null)
                 break;
 
@@ -33,13 +33,13 @@ public static class Solver
         puzzle.Stats.ElapsedTime = stopwatch.ElapsedMilliseconds;
     }
 
-    private static IPuzzleAction? Step(Puzzle puzzle)
+    public static IPuzzleAction? Step(Grid grid)
     {
         IPuzzleAction? result = null;
 
         foreach (var strategy in strategies)
         {
-            result = strategy.Execute(puzzle.Grid);
+            result = strategy.Execute(grid);
             if (result != null)
                 return result;
         }

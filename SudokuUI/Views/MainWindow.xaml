@@ -49,7 +49,7 @@
                     Command="{Binding PuzzleService.RedoCommand}"/>
 
             <Button Content="{icon:Lucide Kind=Settings}"
-                    ToolTip="Settings"
+                    ToolTip="Settings (F1)"
                     Command="{Binding ShowSettingsCommand}"/>
         </mah:WindowCommands>
     </mah:MetroWindow.RightWindowCommands>
@@ -109,7 +109,7 @@
                             Orientation="Vertical"
                             Margin="5">
                     <Button Content="{icon:Lucide Kind=Lightbulb, Height=32, Width=32}"
-                            IsEnabled="False"
+                            Command="{Binding ShowHintCommand}"
                             ToolTip="Hint"
                             Focusable="False"/>
 

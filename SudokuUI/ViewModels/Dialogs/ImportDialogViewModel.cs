@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
-namespace SudokuUI.ViewModels;
+namespace SudokuUI.ViewModels.Dialogs;
 
 public partial class ImportDialogViewModel : ObservableObject
 {

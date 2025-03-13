@@ -1,7 +1,7 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace SudokuUI.Views;
+namespace SudokuUI.Views.Dialogs;
 
 public partial class ImportDialogView : UserControl
 {

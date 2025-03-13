@@ -4,14 +4,18 @@ using Core;
 using Core.DancingLinks;
 using Core.Model;
 using MahApps.Metro.Controls.Dialogs;
+using NLog;
 using SudokuUI.Services;
-using SudokuUI.Views;
+using SudokuUI.ViewModels.Dialogs;
+using SudokuUI.Views.Dialogs;
 using System.Text;
 
 namespace SudokuUI.ViewModels;
 
 public partial class MainViewModel : ObservableObject
 {
+    private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
     private readonly SelectionService selection_service;
 
     [ObservableProperty]
@@ -89,6 +93,22 @@ public partial class MainViewModel : ObservableObject
         await DialogCoordinator.Instance.ShowMetroDialogAsync(this, dialog);
         await vm.DialogResult;
         await DialogCoordinator.Instance.HideMetroDialogAsync(this, dialog);
+    }
+
+    [RelayCommand]
+    private async Task ShowHint()
+    {
+        var action = PuzzleService.GetHint();
+        var vm = new SolverHintDialogViewModel(action);
+        var view = new SolverHintDialogView { DataContext = vm };
+        var dialog = new CustomDialog { Title = "Hint", Content = view };
+
+        await DialogCoordinator.Instance.ShowMetroDialogAsync(this, dialog);
+        var result = await vm.DialogResult;
+        await DialogCoordinator.Instance.HideMetroDialogAsync(this, dialog);
+
+        if (result && action != null)
+            PuzzleService.ApplyHint(action);
     }
 
     [RelayCommand]

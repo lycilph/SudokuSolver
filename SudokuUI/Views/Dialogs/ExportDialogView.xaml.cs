@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace SudokuUI.Views;
+namespace SudokuUI.Views.Dialogs;
 
 public partial class ExportDialogView : UserControl
 {

@@ -2,7 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using System.Windows;
 
-namespace SudokuUI.ViewModels;
+namespace SudokuUI.ViewModels.Dialogs;
 
 public partial class ExportDialogViewModel : ObservableObject
 {

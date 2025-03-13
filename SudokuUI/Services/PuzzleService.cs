@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using Core.Model;
 using Core.Model.Actions;
+using Core.Strategy;
 using NLog;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -191,6 +192,20 @@ public partial class PuzzleService : ObservableObject
     public void ClearCell(Cell cell)
     {
         AddPuzzleAction(new ClearCellPuzzleAction(cell));
+    }
+
+    public BaseSolveAction? GetHint()
+    {
+        return Solver.Step(Grid) as BaseSolveAction;
+    }
+
+    public void ApplyHint(IPuzzleAction action)
+    {
+        AddPuzzleAction(action);
+
+        var elimination = BasicEliminationStrategy.Instance.Execute(Grid);
+        if (elimination != null)
+            AddPuzzleAction(elimination);
     }
 
     private void AddPuzzleAction(IPuzzleAction action)
