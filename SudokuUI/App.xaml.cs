@@ -36,6 +36,7 @@ public partial class App : Application
         services.AddTransient<MainViewModel>();
         services.AddTransient<SelectionViewModel>();
         services.AddTransient<SettingsViewModel>();
+        services.AddTransient<VictoryViewModel>();
 
         return services.BuildServiceProvider();
     }

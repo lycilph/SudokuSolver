@@ -30,7 +30,15 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     private SettingsViewModel _settings;
 
-    public MainViewModel(SelectionService selection_service, PuzzleService puzzle_service, GridViewModel grid, SelectionViewModel selection, SettingsViewModel settings)
+    [ObservableProperty]
+    private VictoryViewModel _victory;
+
+    public MainViewModel(SelectionService selection_service,
+                         PuzzleService puzzle_service,
+                         GridViewModel grid,
+                         SelectionViewModel selection,
+                         SettingsViewModel settings,
+                         VictoryViewModel victory)
     {
         this.selection_service = selection_service;
 
@@ -38,16 +46,14 @@ public partial class MainViewModel : ObservableObject
         Grid = grid;
         Selection = selection;
         Settings = settings;
+        Victory = victory;
     }
 
 
     [RelayCommand]
     private void NewPuzzle()
     {
-        var temp = Generator.Generate();
-        var str = temp.Grid.ToSimpleString();
-
-        PuzzleService.Import(str);
+        PuzzleService.NewGame();
     }
 
     [RelayCommand]
@@ -114,6 +120,7 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     private void SolvePuzzle()
     {
+        logger.Info("Solving the puzzle");
         PuzzleService.SolvePuzzle();
     }
 

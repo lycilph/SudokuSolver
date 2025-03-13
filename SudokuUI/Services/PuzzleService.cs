@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Core;
 using Core.Model;
 using Core.Model.Actions;
 using Core.Strategy;
@@ -18,6 +19,7 @@ public partial class PuzzleService : ObservableObject
 
     public event EventHandler GridValuesChanged = null!;
     public event EventHandler GridCandidatesChanged = null!;
+    public event EventHandler PuzzleSolved = null!;
 
     private readonly Stack<IPuzzleAction> undo_stack = new();
     private readonly Stack<IPuzzleAction> redo_stack = new();
@@ -53,6 +55,12 @@ public partial class PuzzleService : ObservableObject
     {
         logger.Trace("Grid values changed");
         GridValuesChanged?.Invoke(this, EventArgs.Empty);
+
+        if (Grid.IsSolved())
+        {
+            logger.Info("Puzzle solved");
+            PuzzleSolved?.Invoke(this, EventArgs.Empty);
+        }
     }
 
     private void OnGridCandidatesChanged()
@@ -74,6 +82,15 @@ public partial class PuzzleService : ObservableObject
         ResetCommand.NotifyCanExecuteChanged();
         UndoCommand.NotifyCanExecuteChanged();
         RedoCommand.NotifyCanExecuteChanged();
+    }
+
+    public void NewGame()
+    {
+        logger.Info("Generating a new puzzle");
+        var temp = Generator.Generate();
+        var str = temp.Grid.ToSimpleString();
+
+        Import(str);
     }
 
     public void Clear()
