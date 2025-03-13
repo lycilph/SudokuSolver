@@ -7,11 +7,12 @@
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=vm:CandidateViewModel, IsDesignTimeCreatable=False}">
     <Grid>
-        <Ellipse Fill="LightBlue"
+        <Ellipse Fill="{StaticResource value_highlight_brush}"
                  Opacity="0.5"
+                 Margin="-1"
                  HorizontalAlignment="Stretch"
                  VerticalAlignment="Stretch"
-                 Visibility="{Binding HighlightNumber, Converter={StaticResource bool_to_visibilty_converter}}"/>
+                 Visibility="{Binding Highlight, Converter={StaticResource bool_to_visibilty_converter}}"/>
         
         <TextBlock Text="{Binding Value}"
                    Visibility="{Binding IsVisible, Converter={StaticResource bool_to_visibilty_converter}}"

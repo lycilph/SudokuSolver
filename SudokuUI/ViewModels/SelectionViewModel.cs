@@ -10,7 +10,6 @@ public partial class SelectionViewModel : ObservableObject
 {
     private readonly PuzzleService puzzle_service;
     private readonly SelectionService selection_service;
-    private readonly HighlightService highlight_service;
 
     public ObservableCollection<DigitViewModel> Digits { get; private set; }
 
@@ -20,11 +19,10 @@ public partial class SelectionViewModel : ObservableObject
         set => selection_service.InputMode = (value ? SelectionService.Mode.Hints : SelectionService.Mode.Digits);
     }
 
-    public SelectionViewModel(PuzzleService puzzle_service, SelectionService selection_service, HighlightService highlight_service)
+    public SelectionViewModel(PuzzleService puzzle_service, SelectionService selection_service)
     {
         this.puzzle_service = puzzle_service;
         this.selection_service = selection_service;
-        this.highlight_service = highlight_service;
 
         Digits = Enumerable.Range(1, 9).Select(i => new DigitViewModel(i)).ToObservableCollection();
 
@@ -44,10 +42,6 @@ public partial class SelectionViewModel : ObservableObject
         if (e.PropertyName == nameof(SelectionService.InputMode))
         {
             OnPropertyChanged(nameof(IsHintMode));
-        }
-        else if (e.PropertyName == nameof(SelectionService.Digit))
-        {
-            highlight_service.HighlightNumber(selection_service.Digit);
         }
     }
 

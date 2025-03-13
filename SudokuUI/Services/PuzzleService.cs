@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using Core.Model;
 using Core.Model.Actions;
 using NLog;
+using System.Collections.Specialized;
 using System.ComponentModel;
 
 namespace SudokuUI.Services;
@@ -15,6 +16,7 @@ public partial class PuzzleService : ObservableObject
     public Grid Grid { get; private set; }
 
     public event EventHandler GridValuesChanged = null!;
+    public event EventHandler GridCandidatesChanged = null!;
 
     private readonly Stack<IPuzzleAction> undo_stack = new();
     private readonly Stack<IPuzzleAction> redo_stack = new();
@@ -26,7 +28,10 @@ public partial class PuzzleService : ObservableObject
         Grid.ClearCandidates();
 
         foreach (var cell in Grid.Cells)
+        {
             cell.PropertyChanged += CellChanged;
+            cell.Candidates.CollectionChanged += CandidatesChanged;
+        }
     }
 
     private void CellChanged(object? sender, PropertyChangedEventArgs e)
@@ -35,10 +40,21 @@ public partial class PuzzleService : ObservableObject
             OnGridValuesChanged();
     }
 
+    private void CandidatesChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        OnGridCandidatesChanged();
+    }
+
     private void OnGridValuesChanged()
     {
         logger.Debug("Grid values changed");
         GridValuesChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void OnGridCandidatesChanged()
+    {
+        logger.Debug("Grid candidates changed");
+        GridCandidatesChanged?.Invoke(this, EventArgs.Empty);
     }
 
     private void ResetPuzzle()

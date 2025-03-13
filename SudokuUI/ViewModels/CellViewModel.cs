@@ -24,7 +24,7 @@ public partial class CellViewModel : ObservableObject
     private ObservableCollection<CandidateViewModel> candidates;
 
     [ObservableProperty]
-    private bool highlightNumber = false;
+    private bool highlight = false;
 
     public CellViewModel(Cell cell)
     {
@@ -34,7 +34,7 @@ public partial class CellViewModel : ObservableObject
         selection_service = App.Current.Services.GetRequiredService<SelectionService>();
 
         Candidates = Grid.PossibleValues
-            .Select(i => new CandidateViewModel(i) { IsVisible = cell.Has(i) })
+            .Select(i => new CandidateViewModel(cell, i) { IsVisible = cell.Has(i) })
             .ToObservableCollection();
 
         Cell.Candidates.CollectionChanged += CandidatesChanged;

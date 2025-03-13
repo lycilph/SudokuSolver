@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NLog;
 using SudokuUI.Services;
 using System.ComponentModel;
+using System.Windows.Controls.Primitives;
 
 namespace SudokuUI.ViewModels;
 
@@ -42,7 +43,8 @@ public partial class DigitViewModel : ObservableObject
     [RelayCommand]
     private void Select()
     {
-        logger.Debug($"Digit {Digit} is now selected");
-        selection_service.Digit = Digit;
+        var selection_text = Selected ? "selected" : "deselected";
+        logger.Debug($"Digit {Digit} is now {selection_text}");
+        selection_service.Digit = Selected ? Digit : 0;
     }
 }

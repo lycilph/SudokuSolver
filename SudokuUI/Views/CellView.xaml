@@ -15,12 +15,12 @@
         <DataTemplate x:Key="value_cell_template">
             <Border Style="{StaticResource cell_border_style}">
                 <Grid>
-                    <Ellipse Fill="LightBlue"
+                    <Ellipse Fill="{StaticResource value_highlight_brush}"
                              Opacity="0.5"
                              Margin="5"
                              HorizontalAlignment="Stretch"
                              VerticalAlignment="Stretch"
-                             Visibility="{Binding HighlightNumber, Converter={StaticResource bool_to_visibilty_converter}}"/>
+                             Visibility="{Binding Highlight, Converter={StaticResource bool_to_visibilty_converter}}"/>
 
                     <TextBlock Text="{Binding Cell.Value}"
                                FontSize="24"

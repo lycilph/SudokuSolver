@@ -30,10 +30,10 @@ public partial class App : Application
         services.AddSingleton<PuzzleService>();
         services.AddSingleton<SelectionService>();
         services.AddSingleton<HighlightService>();
+        services.AddSingleton<GridViewModel>(); // This is needs to be a singleton as both the MainViewModel and the HighlightService needs this
 
         // Register view models
         services.AddTransient<MainViewModel>();
-        services.AddTransient<GridViewModel>();
         services.AddTransient<SelectionViewModel>();
         services.AddTransient<SettingsViewModel>();
 
@@ -42,6 +42,9 @@ public partial class App : Application
 
     private void Application_Startup(object sender, StartupEventArgs e)
     {
+        // This needs to be instantiated somewhere...
+        var highlighter = Services.GetService<HighlightService>();
+
         var vm = Services.GetService<MainViewModel>();
         var win = new MainWindow { DataContext = vm };
 

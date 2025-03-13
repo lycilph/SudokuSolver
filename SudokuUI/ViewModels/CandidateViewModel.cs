@@ -1,9 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Core.Model;
 
 namespace SudokuUI.ViewModels;
 
 public partial class CandidateViewModel : ObservableObject
 {
+    private readonly Cell cell;
+
     [ObservableProperty]
     private int value;
 
@@ -11,11 +14,15 @@ public partial class CandidateViewModel : ObservableObject
     private bool isVisible;
 
     [ObservableProperty]
-    private bool highlightNumber = false;
+    private bool highlight = false;
 
-    public CandidateViewModel(int value)
+    public CandidateViewModel(Cell cell, int value)
     {
+        this.cell = cell;
+
         Value = value;
         IsVisible = true;
     }
+
+    public bool CellHasCandidate() => cell.Has(Value);
 }

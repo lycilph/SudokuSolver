@@ -14,6 +14,7 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Steel.xaml" />
 
                 <!-- Styles -->
+                <ResourceDictionary Source="/Styles/CommonColors.xaml"/>
                 <ResourceDictionary Source="/Styles/CellBorderStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/NonFocusableExpander.xaml"/>
             </ResourceDictionary.MergedDictionaries>
