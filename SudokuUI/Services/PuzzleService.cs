@@ -47,13 +47,13 @@ public partial class PuzzleService : ObservableObject
 
     private void OnGridValuesChanged()
     {
-        logger.Debug("Grid values changed");
+        logger.Trace("Grid values changed");
         GridValuesChanged?.Invoke(this, EventArgs.Empty);
     }
 
     private void OnGridCandidatesChanged()
     {
-        logger.Debug("Grid candidates changed");
+        logger.Trace("Grid candidates changed");
         GridCandidatesChanged?.Invoke(this, EventArgs.Empty);
     }
 

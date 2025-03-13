@@ -42,7 +42,7 @@ public partial class CellViewModel : ObservableObject
 
     private void CandidatesChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        logger.Debug($"Cell {Cell.Index} candidates changed: {e.Action}");
+        logger.Trace("Cell {0} candidates changed: {1}", Cell.Index, e.Action);
         foreach (var candidate in Candidates)
         {
             candidate.IsVisible = Cell.Has(candidate.Value);

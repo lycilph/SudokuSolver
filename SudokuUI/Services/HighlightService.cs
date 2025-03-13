@@ -26,6 +26,7 @@ public class HighlightService
 
     private void GridChanged(object? sender, EventArgs e)
     {
+        logger.Trace("Grid values/candidates changed (updating highlighting {0})", selection_service.Digit);
         HighlightNumber(selection_service.Digit);
     }
 
@@ -33,14 +34,13 @@ public class HighlightService
     {
         if (e.PropertyName == nameof(SelectionService.Digit))
         {
+            logger.Trace("SelectionService.Digit changed (highlighting {0})", selection_service.Digit);
             HighlightNumber(selection_service.Digit);
         }
     }
 
     public void HighlightNumber(int number)
     {
-        logger.Debug($"Highlighting number {number}");
-
         var cell_vms = grid.Boxes.SelectMany(b => b.Cells);
         foreach (var vm in cell_vms)
             vm.Highlight = vm.Cell.Value == number;
