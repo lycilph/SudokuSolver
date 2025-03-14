@@ -7,9 +7,13 @@ namespace Core.Strategy;
 public static class Solver
 {
     private static readonly IStrategy[] strategies =
-        [new BasicEliminationStrategy(),
-        new NakedSinglesStrategy(),
-        new HiddenSinglesStrategy()];
+        [
+            new BasicEliminationStrategy(),
+            new NakedSinglesStrategy(),
+            new HiddenSinglesStrategy(),
+            new LockedCandidatesPointingStrategy(),
+            new LockedCandidatesClaimingStrategy()
+        ];
 
     public static void Solve(Puzzle puzzle)
     {

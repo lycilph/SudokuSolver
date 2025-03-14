@@ -123,6 +123,7 @@ public class Grid
             {
                 Cells[i].Value = puzzle[i] - '0';
                 Cells[i].IsClue = true;
+                Cells[i].ClearCandidates();
             }
         }
     }
