@@ -17,7 +17,7 @@ internal class Program
         foreach (var action in p.Actions.Cast<BaseSolveAction>())
         {
             Console.WriteLine(action.Description);
-            foreach (var element in action.Elements) 
+            foreach (var element in action.Elements)
                 Console.WriteLine($" * {element.Description}");
         }
         Console.WriteLine();

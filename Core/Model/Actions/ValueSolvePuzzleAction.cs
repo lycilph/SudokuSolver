@@ -10,7 +10,10 @@ public class ValueSolvePuzzleAction : BaseSolveAction
     {
         foreach (var element in Elements)
             foreach (var cell in element.Cells)
+            {
                 cell.Value = element.Number;
+                cell.Candidates.Clear();
+            }
     }
 
     public override void Undo()

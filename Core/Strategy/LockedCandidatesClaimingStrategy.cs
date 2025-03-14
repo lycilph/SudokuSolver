@@ -58,7 +58,7 @@ public class LockedCandidatesClaimingStrategy : BaseStrategy<LockedCandidatesCla
                 if (cells_to_update.Count > 0)
                     action.Add(new SolveActionElement()
                     {
-                        Description = $"A claiming candidate {value} in in {box.FullName} and {unit.FullName}, eliminates {value} in cells: {string.Join(',', cells_to_update.Select(c => c.Index))}",
+                        Description = $"A claiming candidate {value} in {box.FullName} and {unit.FullName}, eliminates {value} in cells: {string.Join(',', cells_to_update.Select(c => c.Index))}",
                         Number = value,
                         Cells = cells_to_update
                     });

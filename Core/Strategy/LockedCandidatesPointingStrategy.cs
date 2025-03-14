@@ -69,7 +69,7 @@ public class LockedCandidatesPointingStrategy : BaseStrategy<LockedCandidatesPoi
                 if (cells.Count > 0)
                     action.Add(new SolveActionElement()
                     {
-                        Description = $"A pointing candidate {value} in in {box.FullName} and {unit.FullName}, eliminates {value} in cells: {string.Join(',', cells.Select(c => c.Index))}",
+                        Description = $"A pointing candidate {value} in {box.FullName} and {unit.FullName}, eliminates {value} in cells: {string.Join(',', cells.Select(c => c.Index))}",
                         Number = value,
                         Cells = cells
                     });
