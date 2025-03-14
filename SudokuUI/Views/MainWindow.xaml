@@ -176,6 +176,9 @@
                 </Grid>
             </Expander>
         </StackPanel>
+        
+        <!-- Victory overlay -->
+        <ContentControl Content="{Binding Victory}"/>
 
         <!-- On overlay to catch mouse events, when the settings flyout is visible -->
         <Border Background="Gray" 
