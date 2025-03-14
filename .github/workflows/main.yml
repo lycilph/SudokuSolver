@@ -1,0 +1,46 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ BlazorTest ]
+  workflow_dispatch:
+
+jobs:
+  deploy-to-github-pages:
+    runs-on: ubuntu-latest
+    steps:
+    # Checkout the code
+    - uses: actions/checkout@v3
+
+    # Setup .NET Core SDK
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 8.0.x
+        
+    # Publish the app
+    - name: Publish .NET Core Project
+      run: dotnet publish SudokuBlazorUI.csproj -c Release -o release --nologo
+      
+    # Add .nojekyll file
+    - name: Add .nojekyll file
+      run: touch release/wwwroot/.nojekyll
+      
+    # Update base href
+    - name: Change base-tag in index.html
+      run: sed -i 's/<base href="\/" \/>/<base href="\/SudokuSolver\/" \/>/g' release/wwwroot/index.html
+      
+    # Fix service worker config
+    - name: Fix service-worker-assets.js
+      run: sed -i '/self.assetsManifest = JSON.parse/i self.assetsManifest.assets.forEach(asset => { asset.url = asset.url.replace(/^\//g, '\\/SudokuSolver\\/'); });' release/wwwroot/service-worker-assets.js
+      
+    # Copy index.html to 404.html for SPA routing
+    - name: copy index.html to 404.html
+      run: cp release/wwwroot/index.html release/wwwroot/404.html
+      
+    # Deploy to GitHub Pages
+    - name: Deploy to GitHub Pages
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        folder: release/wwwroot
+        branch: gh-pages
