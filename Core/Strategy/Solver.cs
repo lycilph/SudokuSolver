@@ -14,7 +14,8 @@ public static class Solver
             new LockedCandidatesPointingStrategy(),
             new LockedCandidatesClaimingStrategy(),
             new NakedPairsStrategy(),
-            new HiddenPairsStrategy()
+            new HiddenPairsStrategy(),
+            new NakedTriplesStrategy()
         ];
 
     public static void Solve(Puzzle puzzle)
