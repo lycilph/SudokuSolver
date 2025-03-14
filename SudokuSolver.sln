@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\Unit
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sandbox", "Sandbox\Sandbox.csproj", "{F6EE4C07-2B64-414E-A7BA-704EC9AD1AD4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SudokuBlazorUI", "SudokuBlazorUI\SudokuBlazorUI.csproj", "{1D0B339F-866E-447E-A195-93EA3E824272}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{F6EE4C07-2B64-414E-A7BA-704EC9AD1AD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6EE4C07-2B64-414E-A7BA-704EC9AD1AD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F6EE4C07-2B64-414E-A7BA-704EC9AD1AD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D0B339F-866E-447E-A195-93EA3E824272}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D0B339F-866E-447E-A195-93EA3E824272}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D0B339F-866E-447E-A195-93EA3E824272}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D0B339F-866E-447E-A195-93EA3E824272}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
