@@ -12,7 +12,9 @@ public static class Solver
             new NakedSinglesStrategy(),
             new HiddenSinglesStrategy(),
             new LockedCandidatesPointingStrategy(),
-            new LockedCandidatesClaimingStrategy()
+            new LockedCandidatesClaimingStrategy(),
+            new NakedPairsStrategy(),
+            new HiddenPairsStrategy()
         ];
 
     public static void Solve(Puzzle puzzle)
