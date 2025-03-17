@@ -23,6 +23,7 @@ public class BasicEliminationStrategy : IStrategy
                 });
         }
 
+        command.UpdateDescription(Name);
         return command.Elements.Count > 0 ? command : null;
     }
 }

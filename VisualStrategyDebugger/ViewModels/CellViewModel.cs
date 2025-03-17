@@ -41,7 +41,5 @@ public partial class CellViewModel : ObservableObject
                 }
             }
         }
-        else
-            throw new NotImplementedException();
     }
 }

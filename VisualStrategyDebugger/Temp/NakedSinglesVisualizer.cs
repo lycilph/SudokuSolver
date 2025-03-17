@@ -2,16 +2,17 @@
 
 namespace VisualStrategyDebugger.Temp;
 
-public class BasicEliminationVisualizer(BasicEliminationCommand command) : IVisualizer
+public class NakedSinglesVisualizer(NakedSinglesCommand command) : IVisualizer
 {
     public void Show(GridViewModel vm)
     {
         foreach (var element in command.Elements)
         {
-            foreach (var cells in element.Cells)
+            var index = element.Cells.FirstOrDefault()?.Index ?? -1;
+            if (index != -1)
             {
-                // Map cell to its vm
-                var cell_vm = vm.Cells[cells.Index];
+                // Map cell to its 
+                var cell_vm = vm.Cells[index];
                 cell_vm.Candidates[element.Number-1].Highlight = true;
             }
         }

@@ -8,7 +8,7 @@
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance Type=vm:CommandManagerViewModel, IsDesignTimeCreatable=False}">
     <StackPanel Orientation="Horizontal">
-        <TextBlock Text="{Binding Command.Description, Mode=OneWay}"/>
+        <TextBlock Text="{Binding Command.Name, Mode=OneWay}"/>
         <Button Content="Ok"
                 Command="{Binding ExecuteCommand}"/>
     </StackPanel>

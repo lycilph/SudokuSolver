@@ -1,8 +1,11 @@
-﻿namespace VisualStrategyDebugger.Temp;
+﻿using System.Text;
+
+namespace VisualStrategyDebugger.Temp;
 
 public class BasicEliminationCommand : IGridCommand
 {
-    public string Description => "Basic Elimination Command";
+    public string Name { get; private set; } = string.Empty;
+    public string Description { get; private set; } = string.Empty;
 
     public List<CommandElement> Elements { get; set; } = [];
 
@@ -23,5 +26,16 @@ public class BasicEliminationCommand : IGridCommand
     public IVisualizer GetVisualizer()
     {
         return new BasicEliminationVisualizer(this);
+    }
+
+    public void UpdateDescription(string name)
+    {
+        Name = name;
+
+        var sb = new StringBuilder();
+        sb.AppendLine(name);
+        foreach (var e in Elements)
+            sb.AppendLine($" * {e.Description}");
+        Description = sb.ToString();
     }
 }
