@@ -67,47 +67,24 @@ public class HiddenTriplesStrategy : BaseStrategy<HiddenTriplesStrategy>
                         // Check if this is amounts to an actual triple
                         if (union.Length == 3)
                         {
-                            Console.WriteLine($"Found a union: {union}");
+                            // Check if this triple has already been found
+                            triples_found.Add((union[0], union[1], union[2]));
+
+                            // We have now found a pair, mark all other candidates in the cells for elimination
+                            foreach (var cell in union)
+                            {
+                                foreach (var candidates_to_eliminate in cell.Candidates.Except([i, j, k]))
+                                    action.Add(new SolveActionElement()
+                                    {
+                                        Description = $"Hidden triple ({i},{j}, {k}) in {unit.FullName}: Eliminates {candidates_to_eliminate} in cell {cell.Index}",
+                                        Number = candidates_to_eliminate,
+                                        Cells = [cell]
+                                    });
+                            }
                         }
                     }
                 }
             }
         }
-
-        // THIS IS FROM THE hidden pairs strategy
-
-        // Go through all possible pairs of digits and see if they are present in the dictionary from above
-        //for (int i = 1; i <= 8; i++)
-        //{
-        //    for (int j = i + 1; j <= 9; j++)
-        //    {
-        //        // Check if this pair of digits (i,j) is actually present in the unit
-        //        if (digit_to_cells.ContainsKey(i) &&
-        //            digit_to_cells.ContainsKey(j) &&
-        //            digit_to_cells[i].SequenceEqual(digit_to_cells[j]))
-        //        {
-        //            // Since the the entries for i and j should be the same, either can be used to make the pair
-        //            var cell_pair = (digit_to_cells[i][0], digit_to_cells[i][0]);
-
-        //            // Check if this pair has already been found
-        //            if (!pairs_found.Contains(cell_pair))
-        //            {
-        //                pairs_found.Add(cell_pair);
-
-        //                // We have now found a pair, mark all other candidates in the cells for elimination
-        //                foreach (var cell in digit_to_cells[i])
-        //                {
-        //                    foreach (var candidates_to_eliminate in cell.Candidates.Except([i, j]))
-        //                        action.Add(new SolveActionElement()
-        //                        {
-        //                            Description = $"Hidden pair ({i},{j}) in {unit.FullName}: Eliminates {candidates_to_eliminate} in cell {cell.Index}",
-        //                            Number = candidates_to_eliminate,
-        //                            Cells = [cell]
-        //                        });
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
     }
 }

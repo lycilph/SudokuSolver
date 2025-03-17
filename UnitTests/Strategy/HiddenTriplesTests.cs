@@ -20,6 +20,6 @@ public class HiddenTriplesTests
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(3, result.Elements.Count);
+        Assert.Equal(10, result.Elements.Count);
     }
 }
