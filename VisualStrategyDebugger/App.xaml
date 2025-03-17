@@ -23,6 +23,10 @@
             <DataTemplate DataType="{x:Type vm:StrategyViewModel}">
                 <v:StrategyView/>
             </DataTemplate>
+            
+            <DataTemplate DataType="{x:Type vm:CommandManagerViewModel}">
+                <v:CommandManagerView/>
+            </DataTemplate>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

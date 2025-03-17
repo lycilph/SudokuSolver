@@ -19,4 +19,9 @@ public class BasicEliminationCommand : IGridCommand
             foreach (var cell in element.Cells)
                 cell.Candidates.Add(element.Number);
     }
+
+    public IVisualizer GetVisualizer()
+    {
+        return new BasicEliminationVisualizer(this);
+    }
 }

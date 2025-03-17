@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 using Microsoft.Extensions.DependencyInjection;
 using VisualStrategyDebugger.Service;
 using VisualStrategyDebugger.Temp;
@@ -23,6 +25,12 @@ public partial class StrategyViewModel : ObservableObject
     private void Execute()
     {
         var command = Strategy.Plan(grid_service.Grid);
-        command?.Do();
+        if (command != null)
+        {
+            WeakReferenceMessenger.Default.Send(new ValueChangedMessage<IGridCommand>(command));
+
+            var visualizer = command.GetVisualizer();
+            WeakReferenceMessenger.Default.Send(new ValueChangedMessage<IVisualizer>(visualizer));
+        }
     }
 }

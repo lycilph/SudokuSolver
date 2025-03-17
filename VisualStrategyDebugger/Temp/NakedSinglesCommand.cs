@@ -11,4 +11,9 @@ public class NakedSinglesCommand : IGridCommand
     public void Undo()
     {
     }
+
+    public IVisualizer GetVisualizer()
+    {
+        throw new NotImplementedException();
+    }
 }

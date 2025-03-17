@@ -4,7 +4,7 @@ namespace VisualStrategyDebugger.Temp;
 
 public interface IStrategy
 {
-    string Name { get; }
+    public string Name { get; }
 
-    IGridCommand? Plan(Grid grid);
+    public IGridCommand? Plan(Grid grid);
 }

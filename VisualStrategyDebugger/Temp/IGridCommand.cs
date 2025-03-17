@@ -6,4 +6,6 @@ public interface IGridCommand
 
     public void Do();
     public void Undo();
+
+    public IVisualizer GetVisualizer();
 }
