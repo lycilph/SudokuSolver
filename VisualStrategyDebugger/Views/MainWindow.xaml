@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Title="Visual Strategy Debugger"
         SizeToContent="WidthAndHeight"
+         d:DesignHeight="450" d:DesignWidth="800"
         d:DataContext="{d:DesignInstance Type=vm:MainViewModel, IsDesignTimeCreatable=False}">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -25,6 +26,9 @@
                 </ComboBox>
 
                 <Button Content="Import"/>
+                
+                <Button Content="Reset"
+                        Command="{Binding ResetCommand}"/>
             </StackPanel>
             
             <ContentControl Content="{Binding GridViewModel}"
@@ -44,13 +48,14 @@
             <Button Content="Toggle all"/>
 
             <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Center"
                         Margin="0 10 0 0">
-                <Button Content="Reset"/>
                 <Button Content="Prev"/>
                 <Button Content="Next"/>
             </StackPanel>
 
-            <ContentControl Content="{Binding CommandManagerViewModel}"/>
+            <ContentControl Content="{Binding CommandManagerViewModel}"
+                            Margin="0 10 0 0"/>
         </StackPanel>
     </Grid>
 </Window>

@@ -31,15 +31,7 @@ public partial class CellViewModel : ObservableObject
 
     private void CandidatesCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        if (e.Action == NotifyCollectionChangedAction.Remove)
-        {
-            if (e.OldItems != null) 
-            {
-                foreach (var candidate in e.OldItems.Cast<int>())
-                {
-                    Candidates[candidate-1].IsVisible = false;
-                }
-            }
-        }
+        foreach (var candidate in Candidates)
+            candidate.IsVisible = Cell.Has(candidate.Value);
     }
 }
