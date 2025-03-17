@@ -1,0 +1,67 @@
+﻿<Window x:Class="VisualStrategyDebugger.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:VisualStrategyDebugger.ViewModels"
+        mc:Ignorable="d"
+        Title="Visual Strategy Debugger"
+        SizeToContent="WidthAndHeight"
+        d:DataContext="{d:DesignInstance Type=vm:MainViewModel, IsDesignTimeCreatable=False}">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Column="0">
+            <StackPanel Orientation="Horizontal">
+                <ComboBox SelectedIndex="0">
+                    <TextBlock Text="Grid 1"/>
+                    <TextBlock Text="Grid 2"/>
+                    <TextBlock Text="Grid 3"/>
+                    <TextBlock Text="Grid 4"/>
+                    <TextBlock Text="Grid 5"/>
+                </ComboBox>
+
+                <Button Content="Import"/>
+            </StackPanel>
+            
+            <ContentControl Content="{Binding GridViewModel}"
+                            Margin="0 10 0 0"/>
+
+            <Button Content="Test" Command="{Binding TestCommand}"/>
+
+            <TextBox HorizontalAlignment="Stretch"
+                     Margin="0 10 0 0"
+                     Height="100"
+                     IsReadOnly="True"
+                     Text="{Binding ElementName=commands_listbox, Path=SelectedItem.Content}"/>
+        </StackPanel>
+
+        <StackPanel Grid.Column="1">
+            <Button Content="Next"/>
+
+            <ItemsControl ItemsSource="{Binding Strategies}"/>
+            <Button Content="Toggle all"/>
+
+            <StackPanel Orientation="Horizontal"
+                        Margin="0 10 0 0">
+                <Button Content="Reset"/>
+                <Button Content="Prev"/>
+                <Button Content="Next"/>
+            </StackPanel>
+
+            <ListBox x:Name="commands_listbox" 
+                     SelectedIndex="0"
+                     Margin="0 10 0 0"
+                     VerticalAlignment="Stretch">
+                <ListBoxItem Content="Basic Elimination"/>
+                <ListBoxItem Content="Naked Single"/>
+                <ListBoxItem Content="Basic Elimination"/>
+                <ListBoxItem Content="X-Wing"/>
+                <ListBoxItem Content="Basic Elimination"/>
+            </ListBox>
+        </StackPanel>
+    </Grid>
+</Window>

@@ -8,28 +8,32 @@ internal class Program
 {
     static void Main()
     {
-        var input = ".....1.3.231.9.....65..31..6789243..1.3.5...6...1367....936.57...6.198433........";
+        var input = ".5..83.17...1..4..3.4..56.8....3...9.9.8245....6....7...9....5...729..861.36.72.4";
         var p = new Puzzle(input);
 
-        Solver.Solve(p);
+        var temp = BasicEliminationStrategy.ExecuteAndApply(p.Grid);
+        Console.WriteLine(temp);
 
-        Console.WriteLine("Steps taken by solver:");
-        foreach (var action in p.Actions.Cast<BaseSolveAction>())
-        {
-            Console.WriteLine(action.Description);
-            foreach (var element in action.Elements)
-                Console.WriteLine($" * {element.Description}");
-        }
-        Console.WriteLine();
 
-        if (p.IsSolved())
-            Console.WriteLine($"Puzzle was solved in {p.Actions.Count} steps (in {p.Stats.ElapsedTime} ms)");
-        else
-            Console.WriteLine($"No solution found");
+        //Solver.Solve(p);
 
-        Console.WriteLine(p.Grid.ToString());
-        Console.WriteLine(input);
-        Console.WriteLine(p.Grid.ToSimpleString());
+        //Console.WriteLine("Steps taken by solver:");
+        //foreach (var action in p.Actions.Cast<BaseSolveAction>())
+        //{
+        //    Console.WriteLine(action.Description);
+        //    foreach (var element in action.Elements)
+        //        Console.WriteLine($" * {element.Description}");
+        //}
+        //Console.WriteLine();
+
+        //if (p.IsSolved())
+        //    Console.WriteLine($"Puzzle was solved in {p.Actions.Count} steps (in {p.Stats.ElapsedTime} ms)");
+        //else
+        //    Console.WriteLine($"No solution found");
+
+        //Console.WriteLine(p.Grid.ToString());
+        //Console.WriteLine(input);
+        //Console.WriteLine(p.Grid.ToSimpleString());
 
         Console.WriteLine("Press any key to continue...");
         Console.ReadKey();
