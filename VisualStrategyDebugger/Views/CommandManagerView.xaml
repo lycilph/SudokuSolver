@@ -3,13 +3,36 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:vm="clr-namespace:VisualStrategyDebugger.ViewModels"
+             xmlns:vm="clr-namespace:VisualStrategyDebugger.ViewModels" 
+             xmlns:temp="clr-namespace:VisualStrategyDebugger.Temp"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance Type=vm:CommandManagerViewModel, IsDesignTimeCreatable=False}">
-    <StackPanel Orientation="Horizontal">
-        <TextBlock Text="{Binding Command.Name, Mode=OneWay}"/>
-        <Button Content="Ok"
-                Command="{Binding ExecuteCommand}"/>
+    <StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="{Binding Command.Name, Mode=OneWay}"/>
+            <Button Content="Ok"
+                    Command="{Binding ExecuteCommand}"
+                    Margin="5 0 0 0"/>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    Margin="0 10 0 0">
+            <Button Content="Prev"
+                    Command="{Binding UndoCommand}"/>
+            <Button Content="Next"
+                    Command="{Binding RedoCommand}"
+                    Margin="5 0 0 0"/>
+        </StackPanel>
+        
+        <ItemsControl ItemsSource="{Binding UndoStack}"
+                      Margin="0 10 0 0">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type temp:IGridCommand}">
+                    <TextBlock Text="{Binding Name}"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
     </StackPanel>
 </UserControl>

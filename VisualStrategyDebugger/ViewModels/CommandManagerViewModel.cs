@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
+using System.Collections.ObjectModel;
 using VisualStrategyDebugger.Messages;
 using VisualStrategyDebugger.Temp;
 
@@ -17,9 +18,16 @@ public partial class CommandManagerViewModel :
     [NotifyCanExecuteChangedFor(nameof(ExecuteCommand))]
     private IGridCommand? command;
 
+    [ObservableProperty]
+    private ObservableCollection<IGridCommand> undoStack = [];
+    private ObservableCollection<IGridCommand> redoStack = [];
+
     public CommandManagerViewModel()
     {
         WeakReferenceMessenger.Default.RegisterAll(this);
+
+        UndoStack.CollectionChanged += (s, e) => UndoCommand.NotifyCanExecuteChanged();
+        redoStack.CollectionChanged += (s, e) => RedoCommand.NotifyCanExecuteChanged();
     }
 
     public void Receive(ValueChangedMessage<IGridCommand> message)
@@ -42,9 +50,43 @@ public partial class CommandManagerViewModel :
     [RelayCommand(CanExecute=nameof(CanExecute))]
     private void Execute()
     {
+        if (Command != null)
+        {
+            UndoStack.Add(Command);
+            redoStack.Clear();
+        }
+
         Command?.Do();
         Command = null;
 
         WeakReferenceMessenger.Default.Send(new CommandExecutedMessage());
+    }
+
+    private bool CanUndo => UndoStack.Count > 0;
+
+    [RelayCommand(CanExecute = nameof(CanUndo))]
+    private void Undo()
+    {
+        var cmd = UndoStack.Last();
+
+        UndoStack.Remove(cmd);
+        redoStack.Add(cmd);
+
+        cmd.Undo();
+        WeakReferenceMessenger.Default.Send(new ValueChangedMessage<IGridCommand>(cmd));
+    }
+
+    private bool CanRedo => redoStack.Count > 0;
+
+    [RelayCommand(CanExecute = nameof(CanRedo))]
+    private void Redo()
+    {
+        //var cmd = UndoStack.Last();
+
+        //UndoStack.Remove(cmd);
+        //redoStack.Add(cmd);
+
+        //cmd.Undo();
+        //WeakReferenceMessenger.Default.Send(new ValueChangedMessage<IGridCommand>(cmd));
     }
 }
