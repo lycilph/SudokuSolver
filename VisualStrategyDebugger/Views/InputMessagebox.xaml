@@ -18,10 +18,12 @@
         </Grid.RowDefinitions>
         
         <!-- Message -->
-        <TextBlock Text="{Binding Message}"/>
+        <TextBlock Grid.Row="0" 
+                   Text="{Binding Message}"/>
 
         <!-- Input -->
-        <TextBox Text="{Binding Input}"/>
+        <TextBox Grid.Row="1" 
+                 Text="{Binding Input}"/>
 
         <!-- Accept or Cancel -->
         <StackPanel Grid.Row="2" 
