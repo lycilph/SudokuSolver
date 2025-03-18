@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using VisualStrategyDebugger.Service;
+using VisualStrategyDebugger.Views;
 
 namespace VisualStrategyDebugger.ViewModels;
 
@@ -28,6 +29,23 @@ public partial class MainViewModel : ObservableObject
         GridViewModel = gridViewModel;
         CommandManagerViewModel = commandManagerViewModel;
         StrategyManagerViewModel = strategyManagerViewModel;
+    }
+
+    [RelayCommand]
+    private void Import()
+    {
+        var dialog = new InputMessagebox 
+        {
+            Title = "Import grid",
+            Message = "Paste grid here:"
+        };
+
+        var result = dialog.ShowDialog();
+
+        if (result == true)
+        {
+            grid_service.Import(dialog.Input);
+        }
     }
 
     [RelayCommand]

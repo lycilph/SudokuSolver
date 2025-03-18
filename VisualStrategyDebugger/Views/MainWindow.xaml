@@ -25,7 +25,8 @@
                     <TextBlock Text="Grid 5"/>
                 </ComboBox>
 
-                <Button Content="Import"/>
+                <Button Content="Import"
+                        Command="{Binding ImportCommand}"/>
                 
                 <Button Content="Reset"
                         Command="{Binding ResetCommand}"/>

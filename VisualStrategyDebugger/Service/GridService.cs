@@ -17,4 +17,10 @@ public class GridService
     {
         Grid.Set(source);
     }
+
+    public void Import(string input)
+    {
+        source = input;
+        Reset();
+    }
 }
