@@ -13,9 +13,11 @@
                   DisplayMemberPath="Item1"/>
 
         <Button Content="Import"
-                Command="{Binding ImportCommand}"/>
+                Command="{Binding ImportCommand}"
+                Margin="5 0 0 0"/>
     
         <Button Content="Reset"
-                Command="{Binding ResetCommand}"/>
+                Command="{Binding ResetCommand}"
+                Margin="5 0 0 0"/>
     </StackPanel>
 </UserControl>

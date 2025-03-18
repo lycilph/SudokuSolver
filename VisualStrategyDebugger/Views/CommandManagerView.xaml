@@ -5,13 +5,15 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:vm="clr-namespace:VisualStrategyDebugger.ViewModels" 
              xmlns:temp="clr-namespace:VisualStrategyDebugger.Temp"
+             xmlns:icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance Type=vm:CommandManagerViewModel, IsDesignTimeCreatable=False}">
     <StackPanel>
         <StackPanel Orientation="Horizontal">
-            <TextBlock Text="{Binding Command.Name, Mode=OneWay}"/>
-            <Button Content="Ok"
+            <TextBlock Text="{Binding Command.Name, Mode=OneWay}"
+                       VerticalAlignment="Center"/>
+            <Button Content="{icon:Lucide Kind=Check}"
                     Command="{Binding ExecuteCommand}"
                     Margin="5 0 0 0"/>
         </StackPanel>
