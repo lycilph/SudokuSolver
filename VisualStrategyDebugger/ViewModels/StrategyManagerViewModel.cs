@@ -30,7 +30,10 @@ public partial class StrategyManagerViewModel : ObservableObject
         WeakReferenceMessenger.Default.Send(new ExecuteCommandMessage());
 
         var strategy = PlanNextStrategy();
-        strategy?.Execute();
+        if (strategy == null)
+            WeakReferenceMessenger.Default.Send(new ShowNotificationMessage("No more strategies to execute"));
+        else
+            strategy.Execute();
     }
 
     [RelayCommand]
