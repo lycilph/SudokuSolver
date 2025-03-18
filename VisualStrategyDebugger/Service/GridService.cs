@@ -1,4 +1,6 @@
-﻿using Core.Model;
+﻿using CommunityToolkit.Mvvm.Messaging;
+using Core.Model;
+using VisualStrategyDebugger.Messages;
 
 namespace VisualStrategyDebugger.Service;
 
@@ -11,6 +13,7 @@ public class GridService
     public void Reset()
     {
         Grid.Set(source);
+        WeakReferenceMessenger.Default.Send(new ResetMessage());
     }
 
     public void Import(string input)

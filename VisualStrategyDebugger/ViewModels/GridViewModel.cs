@@ -11,7 +11,7 @@ namespace VisualStrategyDebugger.ViewModels;
 
 public partial class GridViewModel : 
     ObservableRecipient, 
-    IRecipient<ValueChangedMessage<IVisualizer>>, 
+    IRecipient<ValueChangedMessage<IGridCommand>>,
     IRecipient<CommandExecutedMessage>,
     IRecipient<ResetMessage>
 {
@@ -29,10 +29,14 @@ public partial class GridViewModel :
         WeakReferenceMessenger.Default.RegisterAll(this);
     }
 
-    public void Receive(ValueChangedMessage<IVisualizer> message)
+    public void Receive(ValueChangedMessage<IGridCommand> message)
     {
-        var visualizer = message.Value;
-        visualizer?.Show(this);
+        var command = message.Value;
+        if (command != null)
+        {
+            var visualizer = command.GetVisualizer();
+            visualizer?.Show(this);
+        }
     }
 
     public void Receive(CommandExecutedMessage message)

@@ -36,12 +36,6 @@ public partial class StrategyViewModel : ObservableObject
     {
         var command = Strategy.Plan(grid_service.Grid);
         if (command != null)
-        {
             WeakReferenceMessenger.Default.Send(new ValueChangedMessage<IGridCommand>(command));
-
-            // Move this to the gridviewmodel
-            var visualizer = command.GetVisualizer();
-            WeakReferenceMessenger.Default.Send(new ValueChangedMessage<IVisualizer>(visualizer));
-        }
     }
 }

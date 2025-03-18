@@ -57,6 +57,5 @@ public partial class GridManagerViewModel : ObservableObject
     private void Reset()
     {
         grid_service.Reset();
-        WeakReferenceMessenger.Default.Send(new ResetMessage());
     }
 }
