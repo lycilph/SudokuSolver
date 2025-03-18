@@ -9,7 +9,11 @@ using VisualStrategyDebugger.Temp;
 
 namespace VisualStrategyDebugger.ViewModels;
 
-public partial class GridViewModel : ObservableRecipient, IRecipient<ValueChangedMessage<IVisualizer>>, IRecipient<CommandExecutedMessage>
+public partial class GridViewModel : 
+    ObservableRecipient, 
+    IRecipient<ValueChangedMessage<IVisualizer>>, 
+    IRecipient<CommandExecutedMessage>,
+    IRecipient<ResetMessage>
 {
     private readonly GridService grid_service;
 
@@ -32,6 +36,16 @@ public partial class GridViewModel : ObservableRecipient, IRecipient<ValueChange
     }
 
     public void Receive(CommandExecutedMessage message)
+    {
+        ClearVisualization();
+    }
+
+    public void Receive(ResetMessage message)
+    {
+        ClearVisualization();
+    }
+
+    private void ClearVisualization()
     {
         foreach (var cell in Cells)
         {

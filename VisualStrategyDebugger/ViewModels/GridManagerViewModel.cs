@@ -1,6 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using System.Collections.ObjectModel;
+using VisualStrategyDebugger.Messages;
 using VisualStrategyDebugger.Service;
 using VisualStrategyDebugger.Views;
 
@@ -55,5 +57,6 @@ public partial class GridManagerViewModel : ObservableObject
     private void Reset()
     {
         grid_service.Reset();
+        WeakReferenceMessenger.Default.Send(new ResetMessage());
     }
 }

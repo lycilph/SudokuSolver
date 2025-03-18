@@ -7,7 +7,11 @@ using VisualStrategyDebugger.Temp;
 
 namespace VisualStrategyDebugger.ViewModels;
 
-public partial class CommandManagerViewModel : ObservableRecipient, IRecipient<ValueChangedMessage<IGridCommand>>, IRecipient<ExecuteCommandMessage>
+public partial class CommandManagerViewModel : 
+    ObservableRecipient, 
+    IRecipient<ValueChangedMessage<IGridCommand>>, 
+    IRecipient<ExecuteCommandMessage>,
+    IRecipient<ResetMessage>
 {
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(ExecuteCommand))]
@@ -26,6 +30,11 @@ public partial class CommandManagerViewModel : ObservableRecipient, IRecipient<V
     public void Receive(ExecuteCommandMessage message)
     {
         Execute();
+    }
+
+    public void Receive(ResetMessage message)
+    {
+        Command = null;
     }
 
     private bool CanExecute() => Command != null;
