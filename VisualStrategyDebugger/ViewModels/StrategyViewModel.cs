@@ -15,20 +15,31 @@ public partial class StrategyViewModel : ObservableObject
     [ObservableProperty]
     private IStrategy strategy;
 
+    [ObservableProperty]
+    private bool selected;
+
     public StrategyViewModel(IStrategy strategy)
     {
         Strategy = strategy;
+        selected = true;
+
         grid_service = App.Current.Services.GetRequiredService<GridService>();
     }
 
+    public bool IsValid()
+    {
+        return Strategy.Plan(grid_service.Grid) != null;
+    }
+
     [RelayCommand]
-    private void Execute()
+    public void Execute()
     {
         var command = Strategy.Plan(grid_service.Grid);
         if (command != null)
         {
             WeakReferenceMessenger.Default.Send(new ValueChangedMessage<IGridCommand>(command));
 
+            // Move this to the gridviewmodel
             var visualizer = command.GetVisualizer();
             WeakReferenceMessenger.Default.Send(new ValueChangedMessage<IVisualizer>(visualizer));
         }

@@ -1,9 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Core.Infrastructure;
-using System.Collections.ObjectModel;
 using VisualStrategyDebugger.Service;
-using VisualStrategyDebugger.Temp;
 
 namespace VisualStrategyDebugger.ViewModels;
 
@@ -18,21 +15,19 @@ public partial class MainViewModel : ObservableObject
     private CommandManagerViewModel commandManagerViewModel;
 
     [ObservableProperty]
-    private ObservableCollection<StrategyViewModel> strategies;
+    private StrategyManagerViewModel strategyManagerViewModel;
 
-    public MainViewModel(GridService grid_service, GridViewModel gridViewModel, CommandManagerViewModel commandManagerViewModel)
+
+    public MainViewModel(GridService grid_service,
+                         GridViewModel gridViewModel,
+                         CommandManagerViewModel commandManagerViewModel,
+                         StrategyManagerViewModel strategyManagerViewModel)
     {
         this.grid_service = grid_service;
+
         GridViewModel = gridViewModel;
         CommandManagerViewModel = commandManagerViewModel;
-
-        IStrategy[] strats =
-            [
-                new BasicEliminationStrategy(),
-                new NakedSinglesStrategy()
-            ];
-        Strategies = strats.Select(s => new StrategyViewModel(s)).ToObservableCollection();
-        this.grid_service = grid_service;
+        StrategyManagerViewModel = strategyManagerViewModel;
     }
 
     [RelayCommand]

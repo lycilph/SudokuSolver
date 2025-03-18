@@ -15,6 +15,7 @@
 
         <CheckBox Grid.Column="0"
                   Content="{Binding Strategy.Name}"
+                  IsChecked="{Binding Selected}"
                   VerticalAlignment="Center"/>
 
         <Button Grid.Column="1"
