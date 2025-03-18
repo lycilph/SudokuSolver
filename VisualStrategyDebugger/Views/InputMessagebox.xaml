@@ -9,6 +9,7 @@
         MinWidth="300"
         SizeToContent="WidthAndHeight"
         ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
         Title="Input Messagebox">
     <Grid Margin="10">
         <Grid.RowDefinitions>

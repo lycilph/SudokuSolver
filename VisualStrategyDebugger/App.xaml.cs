@@ -30,6 +30,7 @@ public partial class App : Application
         services.AddTransient<GridViewModel>();
         services.AddTransient<CommandManagerViewModel>();
         services.AddTransient<StrategyManagerViewModel>();
+        services.AddTransient<GridManagerViewModel>();
 
         return services.BuildServiceProvider();
     }

@@ -31,6 +31,10 @@
             <DataTemplate DataType="{x:Type vm:StrategyManagerViewModel}">
                 <v:StrategyManagerView/>
             </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:GridManagerViewModel}">
+                <v:GridManagerView/>
+            </DataTemplate>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
