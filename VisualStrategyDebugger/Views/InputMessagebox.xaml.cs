@@ -2,7 +2,7 @@
 
 namespace VisualStrategyDebugger.Views;
 
-public partial class InputMessagebox : Window
+public partial class InputMessagebox
 {
     public string Message
     {

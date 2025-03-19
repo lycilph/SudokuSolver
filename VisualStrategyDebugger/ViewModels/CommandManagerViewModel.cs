@@ -43,6 +43,12 @@ public partial class CommandManagerViewModel :
     public void Receive(ResetMessage message)
     {
         Command = null;
+
+        if (message.NewGrid)
+        {
+            UndoStack.Clear();
+            redoStack.Clear();
+        }
     }
 
     private bool CanExecute() => Command != null;
@@ -73,7 +79,7 @@ public partial class CommandManagerViewModel :
         redoStack.Add(cmd);
 
         cmd.Undo();
-        WeakReferenceMessenger.Default.Send(new ValueChangedMessage<IGridCommand>(cmd));
+        WeakReferenceMessenger.Default.Send(new ResetMessage());
     }
 
     private bool CanRedo => redoStack.Count > 0;
@@ -81,12 +87,12 @@ public partial class CommandManagerViewModel :
     [RelayCommand(CanExecute = nameof(CanRedo))]
     private void Redo()
     {
-        //var cmd = UndoStack.Last();
+        var cmd = redoStack.Last();
 
-        //UndoStack.Remove(cmd);
-        //redoStack.Add(cmd);
+        redoStack.Remove(cmd);
+        UndoStack.Add(cmd);
 
-        //cmd.Undo();
-        //WeakReferenceMessenger.Default.Send(new ValueChangedMessage<IGridCommand>(cmd));
+        cmd.Do();
+        WeakReferenceMessenger.Default.Send(new ResetMessage());
     }
 }

@@ -1,8 +1,6 @@
-﻿using System.Windows;
+﻿namespace VisualStrategyDebugger.Views;
 
-namespace VisualStrategyDebugger.Views;
-
-public partial class MainWindow : Window
+public partial class MainWindow
 {
     public MainWindow()
     {

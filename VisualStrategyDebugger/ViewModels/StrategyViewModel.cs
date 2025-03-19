@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using Microsoft.Extensions.DependencyInjection;
+using VisualStrategyDebugger.Messages;
 using VisualStrategyDebugger.Service;
 using VisualStrategyDebugger.Temp;
 
@@ -37,5 +38,7 @@ public partial class StrategyViewModel : ObservableObject
         var command = Strategy.Plan(grid_service.Grid);
         if (command != null)
             WeakReferenceMessenger.Default.Send(new ValueChangedMessage<IGridCommand>(command));
+        else
+            WeakReferenceMessenger.Default.Send(new ShowNotificationMessage($"Cannot execute strategy {Strategy.Name}"));
     }
 }

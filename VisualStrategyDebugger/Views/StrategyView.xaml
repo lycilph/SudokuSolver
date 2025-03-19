@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:vm="clr-namespace:VisualStrategyDebugger.ViewModels"
+             xmlns:icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance Type=vm:StrategyViewModel, IsDesignTimeCreatable=False}">
@@ -19,7 +20,8 @@
                   VerticalAlignment="Center"/>
 
         <Button Grid.Column="1"
-                Content="->"
-                Command="{Binding ExecuteCommand}"/>
+                Content="{icon:Lucide Kind=CirclePlay}"
+                Command="{Binding ExecuteCommand}"
+                Margin="5 0 0 0"/>
     </Grid>
 </UserControl>

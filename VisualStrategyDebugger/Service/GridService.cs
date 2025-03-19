@@ -13,7 +13,7 @@ public class GridService
     public void Reset()
     {
         Grid.Set(source);
-        WeakReferenceMessenger.Default.Send(new ResetMessage());
+        WeakReferenceMessenger.Default.Send(new ResetMessage(new_grid: true));
     }
 
     public void Import(string input)
