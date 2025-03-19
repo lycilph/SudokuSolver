@@ -45,9 +45,8 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<ShowNotific
     }
 
     [RelayCommand]
-    private void Test()
+    private void ToggleIndex()
     {
-        Notification = "Test notification";
-        ShowMessage = true;
+        GridViewModel.ToggleIndex();
     }
 }

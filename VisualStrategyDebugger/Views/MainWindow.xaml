@@ -31,10 +31,20 @@
 
         <StackPanel Grid.Column="0"
                     Margin="10">
-            <ContentControl Content="{Binding GridManagerViewModel}"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
 
-            <Button Content="temp"
-                    Command="{Binding TestCommand}"/>
+                <ContentControl Grid.Column="0"
+                    Content="{Binding GridManagerViewModel}"/>
+
+                <Button Grid.Column="1"
+                        Content="Toggle Index"
+                        Command="{Binding ToggleIndexCommand}"
+                        HorizontalAlignment="Right"/>
+            </Grid>
 
             <ContentControl x:Name="grid_control"
                             Content="{Binding GridViewModel}"

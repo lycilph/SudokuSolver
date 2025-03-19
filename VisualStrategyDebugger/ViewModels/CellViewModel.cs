@@ -3,6 +3,7 @@ using Core.Infrastructure;
 using Core.Model;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 
 namespace VisualStrategyDebugger.ViewModels;
 
@@ -20,7 +21,7 @@ public partial class CellViewModel : ObservableObject
     private bool highlight;
 
     [ObservableProperty]
-    private CellViewState cellViewState = CellViewState.cell;
+    private CellViewState viewState = CellViewState.cell;
 
     private bool show_index = false;
 
@@ -34,6 +35,18 @@ public partial class CellViewModel : ObservableObject
         Highlight = false;
 
         cell.Candidates.CollectionChanged += CandidatesCollectionChanged;
+        cell.PropertyChanged += CellChanged;
+
+        UpdateCellViewState();
+    }
+
+    private void CellChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (Cell.IsEmpty)
+            System.Diagnostics.Debug.WriteLine("TEST");
+
+        if (e.PropertyName == nameof(Cell.IsFilled))
+            UpdateCellViewState();
     }
 
     private void CandidatesCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -44,6 +57,19 @@ public partial class CellViewModel : ObservableObject
 
     public void ToggleIndex()
     {
+        show_index = !show_index;
+        UpdateCellViewState();
+    }
 
+    private void UpdateCellViewState()
+    {
+        if (show_index)
+        {
+            ViewState = CellViewState.index;
+        }
+        else
+        {
+            ViewState = Cell.IsFilled ? CellViewState.cell : CellViewState.candidate;
+        }
     }
 }

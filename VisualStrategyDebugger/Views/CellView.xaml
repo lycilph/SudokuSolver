@@ -49,16 +49,33 @@
             </Border>
         </DataTemplate>
 
+        <DataTemplate x:Key="index_cell_template">
+            <Border Style="{StaticResource cell_border_style}">
+                <TextBlock Text="{Binding Cell.Index}"
+                           FontSize="20"
+                           FontStyle="Italic"
+                           Margin="0 -2 0 0"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"/>
+            </Border>
+        </DataTemplate>
+
         <DataTemplate x:Key="base_cell_template">
             <ContentControl x:Name="base_cell"
                             Content="{Binding}"
                             ContentTemplate="{StaticResource value_cell_template}"/>
 
             <DataTemplate.Triggers>
-                <DataTrigger Binding="{Binding Cell.IsFilled}" Value="false">
+                <DataTrigger Binding="{Binding ViewState}" Value="{x:Static vm:CellViewState.candidate}">
                     <Setter TargetName="base_cell" 
                             Property="ContentTemplate" 
                             Value="{StaticResource candidates_cell_template}"/>
+                </DataTrigger>
+
+                <DataTrigger Binding="{Binding ViewState}" Value="{x:Static vm:CellViewState.index}">
+                    <Setter TargetName="base_cell" 
+                            Property="ContentTemplate" 
+                            Value="{StaticResource index_cell_template}"/>
                 </DataTrigger>
             </DataTemplate.Triggers>
         </DataTemplate>

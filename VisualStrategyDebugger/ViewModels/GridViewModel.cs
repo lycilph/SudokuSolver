@@ -29,6 +29,12 @@ public partial class GridViewModel :
         WeakReferenceMessenger.Default.RegisterAll(this);
     }
 
+    public void ToggleIndex()
+    {
+        foreach (var cell in Cells)
+            cell.ToggleIndex();
+    }
+
     public void Receive(ValueChangedMessage<IGridCommand> message)
     {
         var command = message.Value;
