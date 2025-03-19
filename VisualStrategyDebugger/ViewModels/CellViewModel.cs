@@ -42,9 +42,6 @@ public partial class CellViewModel : ObservableObject
 
     private void CellChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (Cell.IsEmpty)
-            System.Diagnostics.Debug.WriteLine("TEST");
-
         if (e.PropertyName == nameof(Cell.IsFilled))
             UpdateCellViewState();
     }

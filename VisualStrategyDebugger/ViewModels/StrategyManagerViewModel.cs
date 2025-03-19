@@ -18,7 +18,8 @@ public partial class StrategyManagerViewModel : ObservableObject
         IStrategy[] strats =
             [
                 new BasicEliminationStrategy(),
-                new NakedSinglesStrategy()
+                new NakedSinglesStrategy(),
+                new HiddenSinglesStrategy()
             ];
         Strategies = strats.Select(s => new StrategyViewModel(s)).ToObservableCollection();
     }

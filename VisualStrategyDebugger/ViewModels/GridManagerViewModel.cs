@@ -1,8 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
 using System.Collections.ObjectModel;
-using VisualStrategyDebugger.Messages;
 using VisualStrategyDebugger.Service;
 using VisualStrategyDebugger.Views;
 
@@ -25,7 +23,8 @@ public partial class GridManagerViewModel : ObservableObject
         PredefinedGrids.Add(Tuple.Create("Easy", ".5..83.17...1..4..3.4..56.8....3...9.9.8245....6....7...9....5...729..861.36.72.4"));
         PredefinedGrids.Add(Tuple.Create("Moderate", "4...3.......6..8..........1....5..9..8....6...7.2........1.27..5.3....4.9........"));
         PredefinedGrids.Add(Tuple.Create("Hard", "98.7..6..75..4......3..8.7.8....9.5..3.2..1.....4....6.7...4.3....8..4......1...2"));
-
+        PredefinedGrids.Add(Tuple.Create("Hidden Singles", ".6.8...4.....4...22.46....9..1..93...96...45...83.....1.7..32.59.2.5.....35..1.7."));
+        
         CurrentGrid = predefinedGrids.First();
     }
 
