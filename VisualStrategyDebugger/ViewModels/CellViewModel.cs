@@ -6,6 +6,8 @@ using System.Collections.Specialized;
 
 namespace VisualStrategyDebugger.ViewModels;
 
+public enum CellViewState { cell, candidate, index };
+
 public partial class CellViewModel : ObservableObject
 {
     [ObservableProperty]
@@ -16,6 +18,11 @@ public partial class CellViewModel : ObservableObject
 
     [ObservableProperty]
     private bool highlight;
+
+    [ObservableProperty]
+    private CellViewState cellViewState = CellViewState.cell;
+
+    private bool show_index = false;
 
     public CellViewModel(Cell cell)
     {
@@ -33,5 +40,10 @@ public partial class CellViewModel : ObservableObject
     {
         foreach (var candidate in Candidates)
             candidate.IsVisible = Cell.Has(candidate.Value);
+    }
+
+    public void ToggleIndex()
+    {
+
     }
 }
