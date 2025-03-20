@@ -8,7 +8,7 @@ internal class Program
 {
     static void Main()
     {
-        var input = "65..87.24...649.5..4..25...57.438.61...5.1...31.9.2.85...89..1....213...13.75..98";
+        var input = ".......9476.91..5..9...2.81.7..5..1....7.9....8..31.6724.1...7..1..9..459.....1..";
         var p = new Puzzle(input);
 
         //Console.WriteLine(p.Grid.ToString());
@@ -16,7 +16,7 @@ internal class Program
         //BasicEliminationStrategy.ExecuteAndApply(p.Grid);
         //Console.WriteLine(p.Grid.CandidatesToString());
 
-        //var action = HiddenQuadsStrategy.ExecuteAndApply(p.Grid);
+        //var action = XWingStrategy.ExecuteAndApply(p.Grid);
         //Console.WriteLine(action);
 
 

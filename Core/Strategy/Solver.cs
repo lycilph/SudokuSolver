@@ -18,7 +18,8 @@ public static class Solver
             new NakedTriplesStrategy(),
             new HiddenTriplesStrategy(),
             new NakedQuadsStrategy(),
-            new HiddenQuadsStrategy()
+            new HiddenQuadsStrategy(),
+            new XWingStrategy()
         ];
 
     public static void Solve(Puzzle puzzle)
