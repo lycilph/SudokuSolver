@@ -16,7 +16,9 @@ public static class Solver
             new NakedPairsStrategy(),
             new HiddenPairsStrategy(),
             new NakedTriplesStrategy(),
-            new HiddenTriplesStrategy()
+            new HiddenTriplesStrategy(),
+            new NakedQuadsStrategy(),
+            new HiddenQuadsStrategy()
         ];
 
     public static void Solve(Puzzle puzzle)

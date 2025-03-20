@@ -25,7 +25,7 @@ public class HiddenTriplesStrategy : BaseStrategy<HiddenTriplesStrategy>
         var triples_found = new HashSet<(Cell, Cell, Cell)>(); // This is used to find duplicates (ie. a triple found in a row, could also be found in a box)
 
         foreach (var unit in grid.AllUnits)
-            FindHiddenPairs(unit, action, triples_found);
+            FindHiddenTriples(unit, action, triples_found);
 
         if (action.HasElements())
             return action;
@@ -33,7 +33,7 @@ public class HiddenTriplesStrategy : BaseStrategy<HiddenTriplesStrategy>
             return null;
     }
 
-    private void FindHiddenPairs(Unit unit, EliminationSolvePuzzleAction action, HashSet<(Cell, Cell, Cell)> triples_found)
+    private void FindHiddenTriples(Unit unit, EliminationSolvePuzzleAction action, HashSet<(Cell, Cell, Cell)> triples_found)
     {
         // Make a dictionary of digit to cells that contain that digit (but only if there are exactly 2 or 3 cells with that value)
         var digit_to_cells = new Dictionary<int, Cell[]>();
@@ -43,8 +43,6 @@ public class HiddenTriplesStrategy : BaseStrategy<HiddenTriplesStrategy>
             if (cells_with_digit.Length >= 2)
                 digit_to_cells[digit] = cells_with_digit;
         }
-
-        // NOTE: Implement this from the v1 in the archive folder
 
         // Go through all possible triples of digits and see if they are present in the dictionary from above
         for (int i = 1; i <= 7; i++)
@@ -70,7 +68,7 @@ public class HiddenTriplesStrategy : BaseStrategy<HiddenTriplesStrategy>
                             // Check if this triple has already been found
                             triples_found.Add((union[0], union[1], union[2]));
 
-                            // We have now found a pair, mark all other candidates in the cells for elimination
+                            // We have now found a triple, mark all other candidates in the cells for elimination
                             foreach (var cell in union)
                             {
                                 foreach (var candidates_to_eliminate in cell.Candidates.Except([i, j, k]))
