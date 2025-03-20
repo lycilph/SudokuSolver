@@ -1,0 +1,22 @@
+﻿<UserControl x:Class="SudokuUI.Views.CandidateView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:vm="clr-namespace:SudokuUI.ViewModels" 
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=vm:CandidateViewModel, IsDesignTimeCreatable=False}">
+    <Grid>
+        <Ellipse Fill="{StaticResource value_highlight_brush}"
+                 Opacity="0.5"
+                 Margin="-1"
+                 HorizontalAlignment="Stretch"
+                 VerticalAlignment="Stretch"
+                 Visibility="{Binding Highlight, Converter={StaticResource bool_to_visibilty_converter}}"/>
+        
+        <TextBlock Text="{Binding Value}"
+                   Visibility="{Binding IsVisible, Converter={StaticResource bool_to_visibilty_converter}}"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"/>
+    </Grid>
+</UserControl>
