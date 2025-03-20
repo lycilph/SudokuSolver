@@ -2,7 +2,7 @@
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace SudokuUI.Converters;
+namespace SudokuUI.Infrastructure;
 
 public class BoolToBrushConverter : IMultiValueConverter
 {

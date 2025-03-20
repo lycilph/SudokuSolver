@@ -1,8 +1,6 @@
-﻿using MahApps.Metro.Controls;
+﻿namespace SudokuUI.Views;
 
-namespace SudokuUI.Views;
-
-public partial class MainWindow : MetroWindow
+public partial class MainWindow
 {
     public MainWindow()
     {

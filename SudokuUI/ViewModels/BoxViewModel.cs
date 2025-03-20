@@ -1,17 +1,17 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Core.Infrastructure;
-using Core.Model;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
+using Core.Extensions;
+using Core.Models;
 
 namespace SudokuUI.ViewModels;
 
 public partial class BoxViewModel : ObservableObject
 {
     [ObservableProperty]
-    private ObservableCollection<CellViewModel> _cells = null!;
-
+    private ObservableCollection<CellViewModel> cells = null!;
+    
     [ObservableProperty]
-    private int _index = 0;
+    private int index = 0;
 
     public BoxViewModel(Unit box)
     {

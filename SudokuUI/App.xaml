@@ -12,11 +12,9 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
                 <!-- Theme setting -->
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Steel.xaml" />
-
-                <!-- Styles -->
-                <ResourceDictionary Source="/Styles/CommonColors.xaml"/>
-                <ResourceDictionary Source="/Styles/CellBorderStyle.xaml"/>
-                <ResourceDictionary Source="/Styles/NonFocusableExpander.xaml"/>
+                
+                <!-- Project includes -->
+                <ResourceDictionary Source="/Styles/CommonStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <BooleanToVisibilityConverter x:Key="bool_to_visibilty_converter"/>
@@ -28,29 +26,13 @@
             <DataTemplate DataType="{x:Type vm:BoxViewModel}">
                 <v:BoxView/>
             </DataTemplate>
-            
+
             <DataTemplate DataType="{x:Type vm:CellViewModel}">
                 <v:CellView/>
             </DataTemplate>
-
+            
             <DataTemplate DataType="{x:Type vm:CandidateViewModel}">
                 <v:CandidateView/>
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type vm:SelectionViewModel}">
-                <v:SelectionView/>
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type vm:DigitViewModel}">
-                <v:DigitView/>
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type vm:SettingsViewModel}">
-                <v:SettingsView/>
-            </DataTemplate>
-            
-            <DataTemplate DataType="{x:Type vm:VictoryViewModel}">
-                <v:VictoryView/>
             </DataTemplate>
         </ResourceDictionary>
     </Application.Resources>

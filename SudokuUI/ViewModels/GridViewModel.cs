@@ -1,7 +1,7 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Core.Infrastructure;
-using SudokuUI.Services;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
+using Core.Extensions;
+using Core.Models;
 
 namespace SudokuUI.ViewModels;
 
@@ -10,10 +10,8 @@ public partial class GridViewModel : ObservableObject
     [ObservableProperty]
     private ObservableCollection<BoxViewModel> boxes = null!;
 
-    public GridViewModel(PuzzleService puzzle_service)
+    public GridViewModel(Grid grid)
     {
-        var grid = puzzle_service.Grid;
-
         Boxes = grid.Boxes.Select(b => new BoxViewModel(b)).ToObservableCollection();
     }
 }
