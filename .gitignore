@@ -365,3 +365,4 @@ FodyWeavers.xsd
 # Project ignores
 data
 *.bkp
+*.dtmp
