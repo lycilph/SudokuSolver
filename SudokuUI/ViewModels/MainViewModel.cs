@@ -18,11 +18,17 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     private DigitSelectionViewModel digitSelectionVM;
 
-    public MainViewModel(SelectionService selection_service, GridViewModel gridVM, DigitSelectionViewModel digitSelectionVM)
+    [ObservableProperty]
+    private SettingsViewModel settingsVM;
+    public MainViewModel(SelectionService selection_service,
+                         GridViewModel gridVM,
+                         DigitSelectionViewModel digitSelectionVM,
+                         SettingsViewModel settingsVM)
     {
         this.selection_service = selection_service;
         GridVM = gridVM;
         DigitSelectionVM = digitSelectionVM;
+        SettingsVM = settingsVM;
     }
 
     [RelayCommand]
@@ -35,9 +41,9 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     private void Escape()
     {
-        //if (Settings.IsOpen)
-        //    HideSettings();
-        //else
+        if (SettingsVM.IsOpen)
+            HideSettings();
+        else
             selection_service.Clear();
     }
 
@@ -57,6 +63,18 @@ public partial class MainViewModel : ObservableObject
     private void ToggleInputMode()
     {
         selection_service.ToggleInputMode();
+    }
+
+    [RelayCommand]
+    private void ShowSettings()
+    {
+        SettingsVM.IsOpen = true;
+    }
+
+    [RelayCommand]
+    private void HideSettings()
+    {
+        SettingsVM.IsOpen = false;
     }
 
     [RelayCommand]

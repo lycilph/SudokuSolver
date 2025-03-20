@@ -29,8 +29,41 @@
         <KeyBinding Key="Space" Command="{Binding ToggleInputModeCommand}"/>
         <KeyBinding Key="Tab" Command="{Binding NextDigitCommand}"/>
         <KeyBinding Key="Tab" Modifiers="Shift" Command="{Binding PreviousDigitCommand}"/>
+        <KeyBinding Key="F1" Command="{Binding ShowSettingsCommand}"/>
     </Window.InputBindings>
     
+    <mah:MetroWindow.RightWindowCommands>
+        <mah:WindowCommands ShowSeparators="False">
+            <Button Content="{icon:Lucide Kind=RotateCcw}"
+                    ToolTip="Reset"
+                    IsEnabled="False"/>
+
+            <Button Content="{icon:Lucide Kind=Undo}"
+                    ToolTip="Undo (ctrl+z)"
+                    IsEnabled="False"/>
+
+            <Button Content="{icon:Lucide Kind=Redo}"
+                    ToolTip="Redo (crtl+y)"
+                    IsEnabled="False"/>
+
+            <Button Content="{icon:Lucide Kind=Settings}"
+                    ToolTip="Settings (F1)"
+                    Command="{Binding ShowSettingsCommand}"/>
+        </mah:WindowCommands>
+    </mah:MetroWindow.RightWindowCommands>
+    
+    <mah:MetroWindow.Flyouts>
+        <mah:FlyoutsControl>
+            <mah:Flyout Header="Settings" 
+                        Theme="Adapt"
+                        Position="Right" 
+                        Width="250"
+                        IsOpen="{Binding SettingsVM.IsOpen}">
+                <ContentControl Content="{Binding SettingsVM}"/>
+            </mah:Flyout>
+        </mah:FlyoutsControl>
+    </mah:MetroWindow.Flyouts>
+
     <!-- Root grid to allow the different overlays (flyout, new game, hint and victory) -->
     <Grid>
         <StackPanel Orientation="Vertical"
