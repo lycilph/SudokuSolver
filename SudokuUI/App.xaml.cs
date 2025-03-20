@@ -31,7 +31,9 @@ public partial class App : Application
 
         // Register view models
         services.AddTransient<MainViewModel>();
-        
+        services.AddTransient<GridViewModel>();
+        services.AddTransient<DigitSelectionViewModel>();
+
         return services.BuildServiceProvider();
     }
 

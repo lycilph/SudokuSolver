@@ -92,15 +92,9 @@
             </Grid>
 
             <!-- Digit and input mode selection -->
-            <Border Grid.Column="1"
-                    Margin="0 5 0 0"
-                    Width="300"
-                    Height="50"
-                    Background="LightGray">
-                <TextBlock Text="Digit and input mode selection"
-                           HorizontalAlignment="Center"
-                           VerticalAlignment="Center"/>
-            </Border>
+            <ContentControl Content="{Binding DigitSelectionVM}"
+                            Margin="0 5 0 0"
+                            HorizontalAlignment="Center"/>
         </StackPanel>
     </Grid>
 </mah:MetroWindow>
