@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.DependencyInjection;
 using NLog;
 using SudokuUI.Services;
 
@@ -56,5 +57,15 @@ public partial class MainViewModel : ObservableObject
     private void ToggleInputMode()
     {
         selection_service.ToggleInputMode();
+    }
+
+    [RelayCommand]
+    private void Test()
+    {
+        var puzzle_service = App.Current.Services.GetRequiredService<PuzzleService>();
+        var grid = puzzle_service.Grid;
+        var cell = grid.Cells.Where(c => c.IsEmpty).First();
+        if (cell != null)
+            cell.Value = cell.Candidates.First();
     }
 }

@@ -46,7 +46,7 @@
                 <StackPanel Grid.Column="0" 
                             Orientation="Vertical">
                     <Button Content="{icon:Lucide Kind=SquarePlus, Height=24, Width=24}"
-                            IsEnabled="False"
+                            Command="{Binding TestCommand}"
                             ToolTip="New"
                             Focusable="False"/>
 

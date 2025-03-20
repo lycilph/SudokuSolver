@@ -24,12 +24,6 @@ public partial class DigitViewModel : ObservableObject
         this.selection_service = selection_service;
 
         Digit = digit;
-
-        selection_service.PropertyChanged += (s, e) =>
-        {
-            if (e.PropertyName == nameof(SelectionService.Digit))
-                Selected = selection_service.Digit == Digit;
-        };
     }
 
     [RelayCommand]
