@@ -22,6 +22,9 @@ public partial class CellViewModel : ObservableObject
     [ObservableProperty]
     private ObservableCollection<CandidateViewModel> candidates;
 
+    [ObservableProperty]
+    private bool highlight = false;
+
     public CellViewModel(Cell cell)
     {
         selection_service = App.Current.Services.GetRequiredService<SelectionService>();

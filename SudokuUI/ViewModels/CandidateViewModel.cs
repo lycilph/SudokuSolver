@@ -13,6 +13,9 @@ public partial class CandidateViewModel : ObservableObject
     [ObservableProperty]
     private bool isVisible;
 
+    [ObservableProperty]
+    private bool highlight = false;
+
     public CandidateViewModel(Cell cell, int value)
     {
         this.cell = cell;
@@ -20,4 +23,6 @@ public partial class CandidateViewModel : ObservableObject
         Value = value;
         IsVisible = true;
     }
+
+    public bool CellHasCandidate() => cell.Contains(Value);
 }

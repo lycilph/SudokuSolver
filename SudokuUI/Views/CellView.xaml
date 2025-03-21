@@ -16,6 +16,13 @@
         <DataTemplate x:Key="value_cell_template">
             <Border Style="{StaticResource cell_border_style}">
                 <Grid>
+                    <Ellipse Fill="CornflowerBlue"
+                             Opacity="0.5"
+                             Margin="5"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Stretch"
+                             Visibility="{Binding Highlight, Converter={StaticResource bool_to_visibilty_converter}}"/>
+                    
                     <TextBlock Text="{Binding WrappedObject.Value}"
                                FontSize="24"
                                FontWeight="Bold"
