@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.Extensions.DependencyInjection;
 using SudokuUI.Services;
 
 namespace SudokuUI.ViewModels;
@@ -9,6 +8,7 @@ public partial class MainViewModel : ObservableObject
 {
     private readonly SelectionService selection_service;
     private readonly SettingsService settings_service;
+    private readonly DebugService debug_service;
 
     [ObservableProperty]
     private bool isKeyboardDisabled = false;
@@ -27,6 +27,7 @@ public partial class MainViewModel : ObservableObject
 
     public MainViewModel(SelectionService selection_service,
                          SettingsService settings_service,
+                         DebugService debug_service,
                          GridViewModel gridVM,
                          DigitSelectionViewModel digitSelectionVM,
                          SettingsViewModel settingsVM,
@@ -34,6 +35,7 @@ public partial class MainViewModel : ObservableObject
     {
         this.selection_service = selection_service;
         this.settings_service = settings_service;
+        this.debug_service = debug_service;
 
         GridVM = gridVM;
         DigitSelectionVM = digitSelectionVM;
@@ -96,10 +98,6 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     private void Test()
     {
-        var puzzle_service = App.Current.Services.GetRequiredService<PuzzleService>();
-        var grid = puzzle_service.Grid;
-        var cell = grid.Cells.Where(c => c.IsEmpty).First();
-        if (cell != null)
-            cell.Value = cell.Candidates.First();
+        debug_service.ShowDebugWindow();
     }
 }

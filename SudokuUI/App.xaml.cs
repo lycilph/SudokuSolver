@@ -30,6 +30,7 @@ public partial class App : Application
         services.AddSingleton<PuzzleService>();
         services.AddSingleton<SelectionService>();
         services.AddSingleton<SettingsService>();
+        services.AddSingleton<DebugService>();
 
         // Register view models
         services.AddTransient<MainViewModel>();
