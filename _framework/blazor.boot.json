@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "SudokuBlazorUI",
   "resources": {
-    "hash": "sha256-WBZkoInEH5G69402FHc/oXl3ztnQDmzYgay8r2Tusc0=",
+    "hash": "sha256-Nq67W43zuDmA9Ndrs5XqmNRWYWajjBI/i0iqhd9PsuY=",
     "fingerprinting": {
       "Microsoft.AspNetCore.Components.1ch918594k.wasm": "Microsoft.AspNetCore.Components.wasm",
       "Microsoft.AspNetCore.Components.Web.horg9ede60.wasm": "Microsoft.AspNetCore.Components.Web.wasm",
@@ -17,7 +17,7 @@
       "Microsoft.Extensions.Primitives.b4jkd67mjk.wasm": "Microsoft.Extensions.Primitives.wasm",
       "Microsoft.JSInterop.ceii4uvike.wasm": "Microsoft.JSInterop.wasm",
       "Microsoft.JSInterop.WebAssembly.s0bw0921jm.wasm": "Microsoft.JSInterop.WebAssembly.wasm",
-      "SudokuBlazorUI.opak6xvppk.wasm": "SudokuBlazorUI.wasm",
+      "SudokuBlazorUI.xlth7ts3wp.wasm": "SudokuBlazorUI.wasm",
       "System.Collections.Concurrent.3ehu1bcyg6.wasm": "System.Collections.Concurrent.wasm",
       "System.Collections.Immutable.i5mojijpem.wasm": "System.Collections.Immutable.wasm",
       "System.Collections.h351ju0jme.wasm": "System.Collections.wasm",
@@ -78,7 +78,7 @@
       "Microsoft.Extensions.Primitives.b4jkd67mjk.wasm": "sha256-y5KhfFmWfdksjtbAoenM1JUiSJMqFX/OvU33Zgo3Hhk=",
       "Microsoft.JSInterop.ceii4uvike.wasm": "sha256-XKYdndgfChvRApHX9srcHDwFlU47PgUGEu6JdEwmajI=",
       "Microsoft.JSInterop.WebAssembly.s0bw0921jm.wasm": "sha256-NNwR0xu2wKvvEIZnSUwKht+/0RJ9ziHW01M66VViIkI=",
-      "SudokuBlazorUI.opak6xvppk.wasm": "sha256-xHKoXjpGYfvkqcumFcWbLCGIaU5RUq0r2haLhG1c72E=",
+      "SudokuBlazorUI.xlth7ts3wp.wasm": "sha256-29TmeEeURb+g1xnzP8do5SvN4PGGLjYD/cCBHxsNbkQ=",
       "System.Collections.Concurrent.3ehu1bcyg6.wasm": "sha256-dV96G/HF1YeoQHWb7qAz79rlxBOm2/Tq24EUOLmfEew=",
       "System.Collections.Immutable.i5mojijpem.wasm": "sha256-2o7/1luHPNvyJ3F18KOhwDGsQt+YpN+yd+WoIxuEvXo=",
       "System.Collections.h351ju0jme.wasm": "sha256-80T8X4pq9mebowrULraE5OiWQ/iqnNBW6MOhDixGs30=",
