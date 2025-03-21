@@ -1,37 +1,47 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using ControlzEx.Theming;
 using Core.Extensions;
+using SudokuUI.Services;
 using System.Collections.ObjectModel;
 
 namespace SudokuUI.ViewModels;
 
 public partial class SettingsViewModel : ObservableObject
 {
-    [ObservableProperty]
-    private bool _isOpen = false;
+    private readonly SettingsService settings_service;
+
+    public bool IsOpen
+    {
+        get => settings_service.IsShown;
+        set => settings_service.IsShown = value;
+    }
 
     [ObservableProperty]
-    private bool _isLight = true;
+    private bool isLight = true;
 
     [ObservableProperty]
-    private Theme _selectedApplicationColor;
+    private Theme selectedApplicationColor;
 
     public ObservableCollection<Theme> ApplicationColors { get; set; }
 
-    public SettingsViewModel()
+    public SettingsViewModel(SettingsService settings_service)
     {
-        ApplicationColors = ThemeManager.Current.Themes.Where(t => t.BaseColorScheme == "Light").ToObservableCollection();
+        this.settings_service = settings_service;
 
-        var current_base_color_scheme = ThemeManager.Current.DetectTheme()?.BaseColorScheme ?? "Light";
-        IsLight = current_base_color_scheme == "Light";
+        ApplicationColors = settings_service.Themes.ToObservableCollection();
+        IsLight = settings_service.GetBaseColorScheme() == SettingsService.Light;
+        SelectedApplicationColor = ApplicationColors.First(t => t.ColorScheme == settings_service.GetColorScheme());
 
-        var current_color_scheme = ThemeManager.Current.DetectTheme()?.ColorScheme ?? "Steel";
-        SelectedApplicationColor = ApplicationColors.First(t => t.ColorScheme == current_color_scheme);
+        settings_service.PropertyChanged += (s, e) =>
+        {
+            if (e.PropertyName == nameof(SettingsService.IsShown))
+                OnPropertyChanged(nameof(IsOpen));
+        };
     }
 
     partial void OnIsLightChanged(bool value)
     {
-        var base_color_scheme = IsLight ? "Light" : "Dark";
+        var base_color_scheme = IsLight ? SettingsService.Light : SettingsService.Dark;
         ThemeManager.Current.ChangeThemeBaseColor(App.Current, base_color_scheme);
     }
 

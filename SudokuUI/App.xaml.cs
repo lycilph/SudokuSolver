@@ -29,12 +29,14 @@ public partial class App : Application
         // Register singletons
         services.AddSingleton<PuzzleService>();
         services.AddSingleton<SelectionService>();
+        services.AddSingleton<SettingsService>();
 
         // Register view models
         services.AddTransient<MainViewModel>();
         services.AddTransient<GridViewModel>();
         services.AddTransient<DigitSelectionViewModel>();
         services.AddTransient<SettingsViewModel>();
+        services.AddTransient<SettingsOverlayViewModel>();
 
         return services.BuildServiceProvider();
     }

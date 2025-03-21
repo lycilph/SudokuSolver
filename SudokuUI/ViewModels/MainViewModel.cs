@@ -11,6 +11,7 @@ public partial class MainViewModel : ObservableObject
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
     
     private readonly SelectionService selection_service;
+    private readonly SettingsService settings_service;
 
     [ObservableProperty]
     private GridViewModel gridVM;
@@ -20,15 +21,23 @@ public partial class MainViewModel : ObservableObject
 
     [ObservableProperty]
     private SettingsViewModel settingsVM;
+
+    [ObservableProperty]
+    private SettingsOverlayViewModel settingsOverlayVM;
+
     public MainViewModel(SelectionService selection_service,
+                         SettingsService settings_service,
                          GridViewModel gridVM,
                          DigitSelectionViewModel digitSelectionVM,
-                         SettingsViewModel settingsVM)
+                         SettingsViewModel settingsVM,
+                         SettingsOverlayViewModel settingsOverlayVM)
     {
         this.selection_service = selection_service;
+        this.settings_service = settings_service;
         GridVM = gridVM;
         DigitSelectionVM = digitSelectionVM;
         SettingsVM = settingsVM;
+        SettingsOverlayVM = settingsOverlayVM;
     }
 
     [RelayCommand]
@@ -41,8 +50,8 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     private void Escape()
     {
-        if (SettingsVM.IsOpen)
-            HideSettings();
+        if (settings_service.IsShown)
+            settings_service.Hide();
         else
             selection_service.Clear();
     }
@@ -68,13 +77,13 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     private void ShowSettings()
     {
-        SettingsVM.IsOpen = true;
+        settings_service.Show();
     }
 
     [RelayCommand]
     private void HideSettings()
     {
-        SettingsVM.IsOpen = false;
+        settings_service.Hide();
     }
 
     [RelayCommand]

@@ -145,5 +145,7 @@
                             Margin="0 5 0 0"
                             HorizontalAlignment="Center"/>
         </StackPanel>
+
+        <ContentControl Content="{Binding SettingsOverlayVM}"/>
     </Grid>
 </mah:MetroWindow>
