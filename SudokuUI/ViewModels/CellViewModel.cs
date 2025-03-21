@@ -5,6 +5,7 @@ using Core.Extensions;
 using Core.Models;
 using Microsoft.Extensions.DependencyInjection;
 using NLog;
+using ObservableCollections;
 using SudokuUI.Services;
 
 namespace SudokuUI.ViewModels;
@@ -30,6 +31,14 @@ public partial class CellViewModel : ObservableObject
         Candidates = Grid.PossibleValues
             .Select(i => new CandidateViewModel(cell, i) { IsVisible = cell.Contains(i) })
             .ToObservableCollection();
+
+        WrappedObject.Candidates.CollectionChanged += CandidatesChanged;
+    }
+
+    private void CandidatesChanged(in NotifyCollectionChangedEventArgs<int> e)
+    {
+        foreach (var candidate in Candidates)
+            candidate.IsVisible = WrappedObject.Contains(candidate.Value);
     }
 
     [RelayCommand]

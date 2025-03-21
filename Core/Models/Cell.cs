@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
+using ObservableCollections;
 
 namespace Core.Models;
 
@@ -15,7 +16,7 @@ public partial class Cell(int index) : ObservableObject
     [NotifyPropertyChangedFor(nameof(IsFilled), nameof(IsEmpty))]
     private int value = 0;
 
-    public HashSet<int> Candidates { get; set; } = [];
+    public ObservableHashSet<int> Candidates { get; set; } = [];
 
     public Cell[] Peers { get; set; } = [];
 
@@ -32,7 +33,7 @@ public partial class Cell(int index) : ObservableObject
     public bool Contains(int value) => Candidates.Contains(value);
     public void Add(int value) => Candidates.Add(value);
     public void Remove(int value) => Candidates.Remove(value);
-    public void FillCandidates() => Candidates.UnionWith([.. Grid.PossibleValues]);
+    public void FillCandidates() => Candidates.AddRange(Grid.PossibleValues);
     public void Toggle(int value)
     {
         if (Contains(value))
