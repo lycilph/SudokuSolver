@@ -1,8 +1,8 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using ControlzEx.Theming;
 using Core.Extensions;
 using SudokuUI.Services;
-using System.Collections.ObjectModel;
 
 namespace SudokuUI.ViewModels;
 

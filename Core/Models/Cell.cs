@@ -10,13 +10,13 @@ public partial class Cell(int index) : ObservableObject
 
     [ObservableProperty]
     private bool isClue = false;
-    
+
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsFilled), nameof(IsEmpty))]
     private int value = 0;
 
     public HashSet<int> Candidates { get; set; } = [];
-    
+
     public Cell[] Peers { get; set; } = [];
 
     // Derived properties

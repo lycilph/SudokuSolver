@@ -33,7 +33,7 @@ public partial class DigitSelectionViewModel : ObservableObject
         // Listen to changes
         puzzle_service.ValuesChanged += (s, e) => UpdateMissingDigits(e.DigitCount);
 
-        selection_service.PropertyChanged += (s, e) => 
+        selection_service.PropertyChanged += (s, e) =>
         {
             if (e.PropertyName == nameof(SelectionService.InputMode))
                 OnPropertyChanged(nameof(IsHintMode));

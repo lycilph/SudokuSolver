@@ -18,7 +18,7 @@ public class DisableKeyboardInputBehavior : Behavior<Window>
         get => (bool)GetValue(IsDisabledProperty);
         set => SetValue(IsDisabledProperty, value);
     }
-    
+
     public static readonly DependencyProperty IgnoredKeysProperty =
         DependencyProperty.Register(
             nameof(IgnoredKeys),

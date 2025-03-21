@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using NLog;
 using SudokuUI.Services;
 
 namespace SudokuUI.ViewModels;

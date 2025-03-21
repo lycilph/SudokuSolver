@@ -9,7 +9,7 @@ public partial class BoxViewModel : ObservableObject
 {
     [ObservableProperty]
     private ObservableCollection<CellViewModel> cells = null!;
-    
+
     [ObservableProperty]
     private int index = 0;
 

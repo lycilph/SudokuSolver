@@ -11,7 +11,7 @@ public class PuzzleService
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
     public Grid Grid { get; private set; } = new Grid();
-    
+
     public event EventHandler<GridValuesChangedEventArgs> ValuesChanged = null!;
 
     public PuzzleService()

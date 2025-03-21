@@ -1,15 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
-using NLog;
 using SudokuUI.Services;
 
 namespace SudokuUI.ViewModels;
 
 public partial class MainViewModel : ObservableObject
 {
-    private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-    
     private readonly SelectionService selection_service;
     private readonly SettingsService settings_service;
 
@@ -37,6 +34,7 @@ public partial class MainViewModel : ObservableObject
     {
         this.selection_service = selection_service;
         this.settings_service = settings_service;
+
         GridVM = gridVM;
         DigitSelectionVM = digitSelectionVM;
         SettingsVM = settingsVM;

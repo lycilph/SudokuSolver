@@ -1,9 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Windows;
+using Microsoft.Extensions.DependencyInjection;
 using NLog;
 using SudokuUI.Services;
 using SudokuUI.ViewModels;
 using SudokuUI.Views;
-using System.Windows;
 
 namespace SudokuUI;
 
@@ -12,7 +12,7 @@ public partial class App : Application
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
     public new static App Current => (App)Application.Current;
     public IServiceProvider Services { get; }
-    
+
     public App()
     {
         logger.Info("Application starting...");
