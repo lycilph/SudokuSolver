@@ -140,13 +140,13 @@
                             Focusable="False"/>
 
                     <Button Content="{icon:Lucide Kind=Grid2x2, Height=24, Width=24}"
-                            IsEnabled="False"
+                            Command="{Binding FillCandidatesCommand}"
                             Margin="0 20 0 0"
                             ToolTip="Fill in all candidates"
                             Focusable="False"/>
 
                     <Button Content="{icon:Lucide Kind=Grid2x2X, Height=24, Width=24}"
-                            IsEnabled="False"
+                            Command="{Binding ClearCandidatesCommand}"
                             Margin="0 5 0 0"
                             ToolTip="Delete all candidates"
                             Focusable="False"/>

@@ -94,6 +94,18 @@ public partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void ClearCandidates()
+    {
+        puzzle_service.ClearCandidates();
+    }
+
+    [RelayCommand]
+    private void FillCandidates()
+    {
+        puzzle_service.FillCandidates();
+    }
+
+    [RelayCommand]
     private void NumberKeyPressed(string number)
     {
         if (int.TryParse(number, out int digit))

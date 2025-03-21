@@ -2,6 +2,7 @@
 using Core;
 using Core.Extensions;
 using Core.Models;
+using Core.Strategies;
 using NLog;
 using ObservableCollections;
 using SudokuUI.Infrastructure;
@@ -77,5 +78,17 @@ public class PuzzleService
     {
         logger.Info("Clearing the grid");
         Grid.Reset();
+    }
+
+    public void FillCandidates()
+    {
+        logger.Info("Filling in candidates");
+        Grid.FillCandidates();
+    }
+
+    public void ClearCandidates()
+    { 
+        logger.Info("Clearing candidates");
+        Grid.ClearCandidates();
     }
 }

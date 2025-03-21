@@ -55,7 +55,8 @@ public class Grid
     }
 
     public void Reset() => Cells.ForEach(c => c.Reset());
-    public void FillCandidates() => Cells.ForEach(c => c.FillCandidates());
+    public void FillCandidates() => EmptyCells().ForEach(c => c.FillCandidates());
+    public void ClearCandidates() => EmptyCells().ForEach(c => c.Clear());
     public IEnumerable<Cell> FilledCells() => Cells.Where(c => c.IsFilled);
     public IEnumerable<Cell> EmptyCells() => Cells.Where(c => c.IsEmpty);
     public int ClueCount() => Cells.Count(c => c.IsClue);
