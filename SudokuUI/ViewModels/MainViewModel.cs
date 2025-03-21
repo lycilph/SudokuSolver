@@ -96,8 +96,14 @@ public partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void Test()
+    private void ShowDebugWindow()
     {
         debug_service.ShowDebugWindow();
+    }
+
+    [RelayCommand]
+    private void Test()
+    {
+        ShowDebugWindow();
     }
 }

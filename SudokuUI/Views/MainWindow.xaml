@@ -32,6 +32,7 @@
         <KeyBinding Key="Tab" Command="{Binding NextDigitCommand}"/>
         <KeyBinding Key="Tab" Modifiers="Shift" Command="{Binding PreviousDigitCommand}"/>
         <KeyBinding Key="F1" Command="{Binding ShowSettingsCommand}"/>
+        <KeyBinding Key="D" Modifiers="Ctrl" Command="{Binding ShowDebugWindowCommand}"/>
     </Window.InputBindings>
 
     <i:Interaction.Behaviors>
