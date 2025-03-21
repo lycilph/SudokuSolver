@@ -30,7 +30,16 @@ public partial class Cell(int index) : ObservableObject
 
     // Candidate methods
     public bool Contains(int value) => Candidates.Contains(value);
+    public void Add(int value) => Candidates.Add(value);
+    public void Remove(int value) => Candidates.Remove(value);
     public void FillCandidates() => Candidates.UnionWith([.. Grid.PossibleValues]);
+    public void Toggle(int value)
+    {
+        if (Contains(value))
+            Remove(value);
+        else
+            Add(value);
+    }
 
     public string GetCandidatesAsString() => string.Join("", Grid.PossibleValues.Select(v => Candidates.Contains(v) ? v.ToString() : "."));
 

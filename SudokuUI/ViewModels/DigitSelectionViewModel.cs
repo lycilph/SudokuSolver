@@ -8,7 +8,6 @@ namespace SudokuUI.ViewModels;
 
 public partial class DigitSelectionViewModel : ObservableObject
 {
-    private readonly PuzzleService puzzle_service;
     private readonly SelectionService selection_service;
 
     public bool IsHintMode
@@ -21,7 +20,6 @@ public partial class DigitSelectionViewModel : ObservableObject
 
     public DigitSelectionViewModel(PuzzleService puzzle_service, SelectionService selection_service)
     {
-        this.puzzle_service = puzzle_service;
         this.selection_service = selection_service;
 
         Digits = Grid.PossibleValues.Select(i => new DigitViewModel(i, selection_service)).ToObservableCollection();
@@ -32,7 +30,6 @@ public partial class DigitSelectionViewModel : ObservableObject
 
         // Listen to changes
         puzzle_service.ValuesChanged += (s, e) => UpdateMissingDigits(e.DigitCount);
-
         selection_service.PropertyChanged += (s, e) =>
         {
             if (e.PropertyName == nameof(SelectionService.InputMode))
