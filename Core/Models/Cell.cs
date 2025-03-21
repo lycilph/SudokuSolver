@@ -19,6 +19,11 @@ public partial class Cell(int index) : ObservableObject
 
     public Cell[] Peers { get; set; } = [];
 
+    // Indices (ie. the cells index in a row or column)
+    public int Row => Index / 9;
+    public int Column => Index % 9;
+    public int GetIndexInUnit(UnitType type) => type == UnitType.Row ? Row : Column;
+
     // Derived properties
     public bool IsFilled => Value != 0;
     public bool IsEmpty => Value == 0;
