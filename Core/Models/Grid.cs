@@ -56,8 +56,10 @@ public class Grid
 
     public void Reset() => Cells.ForEach(c => c.Reset());
     public void FillCandidates() => Cells.ForEach(c => c.FillCandidates());
-    public IEnumerable<Cell> FilledCells() => Cells.Where(c => c.IsFilled); 
+    public IEnumerable<Cell> FilledCells() => Cells.Where(c => c.IsFilled);
+    public IEnumerable<Cell> EmptyCells() => Cells.Where(c => c.IsEmpty);
     public int ClueCount() => Cells.Count(c => c.IsClue);
+    public bool IsSolved() => Cells.All(c => c.IsFilled);
 
     private static int[] GetRowIndices(int row)
     {

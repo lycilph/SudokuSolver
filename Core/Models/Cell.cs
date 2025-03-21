@@ -30,10 +30,12 @@ public partial class Cell(int index) : ObservableObject
     public bool IsEmpty => Value == 0;
 
     // Candidate methods
+    public int Count() => Candidates.Count;
     public bool Contains(int value) => Candidates.Contains(value);
     public void Add(int value) => Candidates.Add(value);
     public void Remove(int value) => Candidates.Remove(value);
     public void FillCandidates() => Candidates.AddRange(Grid.PossibleValues);
+    public void Clear() => Candidates.Clear();
     public void Toggle(int value)
     {
         if (Contains(value))
