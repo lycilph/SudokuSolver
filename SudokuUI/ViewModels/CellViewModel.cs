@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Windows.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Core.Extensions;
@@ -24,6 +25,9 @@ public partial class CellViewModel : ObservableObject
 
     [ObservableProperty]
     private bool highlight = false;
+
+    [ObservableProperty]
+    private Brush highlightColor = Brushes.CornflowerBlue;
 
     public CellViewModel(Cell cell)
     {

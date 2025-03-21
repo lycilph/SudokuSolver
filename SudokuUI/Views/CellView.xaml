@@ -16,7 +16,7 @@
         <DataTemplate x:Key="value_cell_template">
             <Border Style="{StaticResource cell_border_style}">
                 <Grid>
-                    <Ellipse Fill="CornflowerBlue"
+                    <Ellipse Fill="{Binding HighlightColor}"
                              Opacity="0.5"
                              Margin="5"
                              HorizontalAlignment="Stretch"

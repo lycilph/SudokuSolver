@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Windows.Media;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Core.Models;
 
 namespace SudokuUI.ViewModels;
@@ -15,6 +16,9 @@ public partial class CandidateViewModel : ObservableObject
 
     [ObservableProperty]
     private bool highlight = false;
+
+    [ObservableProperty]
+    private Brush highlightColor = Brushes.CornflowerBlue;
 
     public CandidateViewModel(Cell cell, int value)
     {

@@ -8,7 +8,7 @@
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance Type=vm:CandidateViewModel, IsDesignTimeCreatable=False}">
     <Grid>
-        <Ellipse Fill="CornflowerBlue"
+        <Ellipse Fill="{Binding HighlightColor}"
                  Opacity="0.5"
                  Margin="-1"
                  HorizontalAlignment="Stretch"
