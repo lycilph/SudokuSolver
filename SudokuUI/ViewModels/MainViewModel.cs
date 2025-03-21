@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Core.DancingLinks;
@@ -30,13 +31,17 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     private SettingsOverlayViewModel settingsOverlayVM;
 
+    [ObservableProperty]
+    private WaitingOverlayViewModel waitingOverlayVM;
+
     public MainViewModel(PuzzleService puzzle_service,
                          SelectionService selection_service,
                          SettingsService settings_service,
                          DebugService debug_service,
                          DigitSelectionViewModel digitSelectionVM,
                          SettingsViewModel settingsVM,
-                         SettingsOverlayViewModel settingsOverlayVM)
+                         SettingsOverlayViewModel settingsOverlayVM,
+                         WaitingOverlayViewModel waitingOverlayVM)
     {
         this.puzzle_service = puzzle_service;
         this.selection_service = selection_service;
@@ -47,6 +52,7 @@ public partial class MainViewModel : ObservableObject
         DigitSelectionVM = digitSelectionVM;
         SettingsVM = settingsVM;
         SettingsOverlayVM = settingsOverlayVM;
+        WaitingOverlayVM = waitingOverlayVM;
 
         settings_service.PropertyChanged += (s, e) =>
         {
@@ -56,9 +62,21 @@ public partial class MainViewModel : ObservableObject
     }
     
     [RelayCommand]
-    private void NewPuzzle()
+    private async Task NewPuzzle()
     {
-        puzzle_service.NewPuzzle();
+        IsKeyboardDisabled = true;
+        WaitingOverlayVM.Show();
+
+        await puzzle_service.New();
+
+        IsKeyboardDisabled = false;
+        WaitingOverlayVM.Close();
+    }
+
+    [RelayCommand]
+    private void ClearPuzzle()
+    {
+        puzzle_service.Clear();
     }
 
     [RelayCommand]

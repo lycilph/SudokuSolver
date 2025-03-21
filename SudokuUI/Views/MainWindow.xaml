@@ -97,7 +97,7 @@
                             Focusable="False"/>
 
                     <Button Content="{icon:Lucide Kind=SquareX, Height=24, Width=24}"
-                            IsEnabled="False"
+                            Command="{Binding ClearPuzzleCommand}"
                             Margin="0 5 0 0"
                             ToolTip="Clear"
                             Focusable="False"/>
@@ -160,5 +160,7 @@
         </StackPanel>
 
         <ContentControl Content="{Binding SettingsOverlayVM}"/>
+
+        <ContentControl Content="{Binding WaitingOverlayVM}"/>
     </Grid>
 </mah:MetroWindow>

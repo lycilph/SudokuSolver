@@ -23,8 +23,6 @@ public class PuzzleService
     {
         GridVM = new GridViewModel(Grid);
 
-        // https://stackoverflow.com/questions/1611410/how-to-check-if-a-app-is-in-debug-or-release
-
         foreach (var cell in Grid.Cells)
         {
             cell.PropertyChanged += CellChanged;
@@ -56,12 +54,28 @@ public class PuzzleService
         return numbers;
     }
 
-    public void NewPuzzle()
+    public Task<string> New()
     {
         logger.Info("Generating a new puzzle");
-        (var temp, _) = Generator.Generate();
-        var str = temp.ToSimpleString();
+        
+        var task = Task.Run(() =>
+        {
+            (var temp, _) = Generator.Generate();
+            return temp.ToSimpleString();
+        });
 
-        Grid.Load(str);
+        task.ContinueWith(task =>
+        {
+            logger.Info("Generated puzzle: {0}", task.Result);
+            Grid.Load(task.Result);
+        }, TaskScheduler.FromCurrentSynchronizationContext());
+
+        return task;
+    }
+
+    public void Clear()
+    {
+        logger.Info("Clearing the grid");
+        Grid.Reset();
     }
 }

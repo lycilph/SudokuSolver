@@ -39,6 +39,7 @@ public partial class App : Application
         services.AddTransient<DigitSelectionViewModel>();
         services.AddTransient<SettingsViewModel>();
         services.AddTransient<SettingsOverlayViewModel>();
+        services.AddTransient<WaitingOverlayViewModel>();
 
         return services.BuildServiceProvider();
     }

@@ -35,8 +35,6 @@ public class HighlightService
 
     public void HighlightNumber(int number)
     {
-        logger.Debug("Highlighting {0}", selection_service.Digit);
-
         var grid_vm = puzzle_service.GridVM;
 
         var cell_vms = grid_vm.Boxes.SelectMany(b => b.Cells);
