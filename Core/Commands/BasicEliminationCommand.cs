@@ -1,5 +1,9 @@
 ﻿namespace Core.Commands;
 
+/// <summary>
+/// See BasicEliminationStrategy for more information
+/// </summary>
+
 public class BasicEliminationCommand(string name) : BaseCommand(name)
 {
     public override void Do()

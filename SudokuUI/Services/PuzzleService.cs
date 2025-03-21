@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
 using Core;
+using Core.Commands;
 using Core.Extensions;
 using Core.Models;
-using Core.Strategies;
 using NLog;
 using ObservableCollections;
 using SudokuUI.Infrastructure;
@@ -83,7 +83,14 @@ public class PuzzleService
     public void FillCandidates()
     {
         logger.Info("Filling in candidates");
-        Grid.FillCandidates();
+
+        var cells = Grid.EmptyCells().Where(c => c.Count() == 0).ToList();
+        if (cells.Count > 0)
+        {
+            cells.ForEach(c => c.FillCandidates());
+            var command = new EliminateCandidatesCommand(cells);
+            command.Do();
+        }
     }
 
     public void ClearCandidates()
