@@ -1,11 +1,16 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Text;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Core.DancingLinks;
+using Core.Extensions;
+using MahApps.Metro.Controls.Dialogs;
 using SudokuUI.Services;
 
 namespace SudokuUI.ViewModels;
 
 public partial class MainViewModel : ObservableObject
 {
+    private readonly PuzzleService puzzle_service;
     private readonly SelectionService selection_service;
     private readonly SettingsService settings_service;
     private readonly DebugService debug_service;
@@ -25,7 +30,8 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     private SettingsOverlayViewModel settingsOverlayVM;
 
-    public MainViewModel(SelectionService selection_service,
+    public MainViewModel(PuzzleService puzzle_service,
+                         SelectionService selection_service,
                          SettingsService settings_service,
                          DebugService debug_service,
                          GridViewModel gridVM,
@@ -33,6 +39,7 @@ public partial class MainViewModel : ObservableObject
                          SettingsViewModel settingsVM,
                          SettingsOverlayViewModel settingsOverlayVM)
     {
+        this.puzzle_service = puzzle_service;
         this.selection_service = selection_service;
         this.settings_service = settings_service;
         this.debug_service = debug_service;
@@ -47,6 +54,20 @@ public partial class MainViewModel : ObservableObject
             if (e.PropertyName == nameof(SettingsService.IsShown))
                 IsKeyboardDisabled = settings_service.IsShown;
         };
+    }
+
+    [RelayCommand]
+    private async Task ShowSolutionCount()
+    {
+        var copy = puzzle_service.Grid.Copy();
+        copy.FillCandidates();
+
+        (var solutions, var stats) = DancingLinksSolver.Solve(copy, true);
+
+        var sb = new StringBuilder();
+        sb.AppendLine($"The puzzle has {solutions.Count} solutions");
+        sb.AppendLine($"Execution Time: {stats.ElapsedTime} ms");
+        await DialogCoordinator.Instance.ShowMessageAsync(this, "Solution Count", sb.ToString());
     }
 
     [RelayCommand]

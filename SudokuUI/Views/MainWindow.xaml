@@ -134,7 +134,7 @@
                             Focusable="False"/>
 
                     <Button Content="{icon:Lucide Kind=Hash, Height=24, Width=24}"
-                            IsEnabled="False"
+                            Command="{Binding ShowSolutionCountCommand}"
                             Margin="0 5 0 0"
                             ToolTip="Count # of solutions"
                             Focusable="False"/>

@@ -26,4 +26,10 @@ public static class GridExtensions
 
         return grid;
     }
+
+    public static Grid Copy(this Grid grid)
+    {
+        var str = grid.ToSimpleString();
+        return new Grid().Load(str);
+    }
 }
