@@ -14,6 +14,9 @@ public partial class MainViewModel : ObservableObject
     private readonly SettingsService settings_service;
 
     [ObservableProperty]
+    private bool isKeyboardDisabled = false;
+
+    [ObservableProperty]
     private GridViewModel gridVM;
 
     [ObservableProperty]
@@ -38,6 +41,12 @@ public partial class MainViewModel : ObservableObject
         DigitSelectionVM = digitSelectionVM;
         SettingsVM = settingsVM;
         SettingsOverlayVM = settingsOverlayVM;
+
+        settings_service.PropertyChanged += (s, e) =>
+        {
+            if (e.PropertyName == nameof(SettingsService.IsShown))
+                IsKeyboardDisabled = settings_service.IsShown;
+        };
     }
 
     [RelayCommand]

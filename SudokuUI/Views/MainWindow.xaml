@@ -3,10 +3,12 @@
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
                  xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" 
                  xmlns:icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
                  xmlns:dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
                  xmlns:vm="clr-namespace:SudokuUI.ViewModels" 
+                 xmlns:infra="clr-namespace:SudokuUI.Infrastructure"
                  mc:Ignorable="d"
                  Title="Sudoku" 
                  Height="700" 
@@ -31,6 +33,16 @@
         <KeyBinding Key="Tab" Modifiers="Shift" Command="{Binding PreviousDigitCommand}"/>
         <KeyBinding Key="F1" Command="{Binding ShowSettingsCommand}"/>
     </Window.InputBindings>
+
+    <i:Interaction.Behaviors>
+        <infra:DisableKeyboardInputBehavior IsDisabled="{Binding IsKeyboardDisabled}">
+            <infra:DisableKeyboardInputBehavior.IgnoredKeys>
+                <infra:KeyCollection>
+                    <Key>Escape</Key>
+                </infra:KeyCollection>
+            </infra:DisableKeyboardInputBehavior.IgnoredKeys>
+        </infra:DisableKeyboardInputBehavior>
+    </i:Interaction.Behaviors>
     
     <mah:MetroWindow.RightWindowCommands>
         <mah:WindowCommands ShowSeparators="False">
