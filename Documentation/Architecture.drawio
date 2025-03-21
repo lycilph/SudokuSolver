@@ -1,6 +1,6 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/26.1.1 Chrome/132.0.6834.210 Electron/34.3.3 Safari/537.36" version="26.1.1">
   <diagram name="Page-1" id="V7CSt6iJTu72ckD1klMw">
-    <mxGraphModel dx="727" dy="591" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3300" pageHeight="4681" math="0" shadow="0">
+    <mxGraphModel dx="1245" dy="941" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3300" pageHeight="4681" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -22,7 +22,10 @@
         <mxCell id="tc8X1xjHQRMR5KrgHFPp-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="tc8X1xjHQRMR5KrgHFPp-1" target="tc8X1xjHQRMR5KrgHFPp-25" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="tc8X1xjHQRMR5KrgHFPp-28" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="tc8X1xjHQRMR5KrgHFPp-1" target="tc8X1xjHQRMR5KrgHFPp-27" edge="1">
+        <mxCell id="tc8X1xjHQRMR5KrgHFPp-28" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="tc8X1xjHQRMR5KrgHFPp-1" target="tc8X1xjHQRMR5KrgHFPp-27" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="EhqOBwEypHj74D2iuaD1-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="tc8X1xjHQRMR5KrgHFPp-1" target="EhqOBwEypHj74D2iuaD1-4">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="tc8X1xjHQRMR5KrgHFPp-1" value="MainViewModel" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
@@ -76,14 +79,14 @@
         <mxCell id="tc8X1xjHQRMR5KrgHFPp-17" value="PuzzleService&lt;div&gt;(incl. solver&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;)&lt;/span&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="1140" y="600" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="tc8X1xjHQRMR5KrgHFPp-19" value="HighlightService" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="tc8X1xjHQRMR5KrgHFPp-19" value="SelectionService" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="1140" y="680" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="tc8X1xjHQRMR5KrgHFPp-20" value="SettingsViewModel" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="1070" y="470" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="tc8X1xjHQRMR5KrgHFPp-22" value="HintViewModel" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="910" y="280" width="120" height="60" as="geometry" />
+          <mxGeometry x="900" y="230" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="tc8X1xjHQRMR5KrgHFPp-25" value="VictoryViewModel" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="750" y="280" width="120" height="60" as="geometry" />
@@ -92,31 +95,43 @@
           <mxGeometry x="1070" y="400" width="150" height="60" as="geometry" />
         </mxCell>
         <mxCell id="tc8X1xjHQRMR5KrgHFPp-29" value="Strategy" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="1490" y="200" width="120" height="60" as="geometry" />
+          <mxGeometry x="1350" y="130" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="tc8X1xjHQRMR5KrgHFPp-30" value="GridCommand" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="1410" y="310" width="120" height="60" as="geometry" />
+          <mxGeometry x="1270" y="240" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="tc8X1xjHQRMR5KrgHFPp-31" value="Visualizer" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="1590" y="310" width="120" height="60" as="geometry" />
+          <mxGeometry x="1450" y="240" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="tc8X1xjHQRMR5KrgHFPp-32" value="WrappeViewModel" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="510" y="760" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="pFPgR2dTFFiZAramCR3M-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" edge="1" parent="1" source="pFPgR2dTFFiZAramCR3M-1" target="tc8X1xjHQRMR5KrgHFPp-1">
+        <mxCell id="pFPgR2dTFFiZAramCR3M-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" parent="1" source="pFPgR2dTFFiZAramCR3M-1" target="tc8X1xjHQRMR5KrgHFPp-1" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="pFPgR2dTFFiZAramCR3M-1" value="NewGameViewModel" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="pFPgR2dTFFiZAramCR3M-1" value="NewGameViewModel" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="555" y="390" width="160" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="pFPgR2dTFFiZAramCR3M-3" value="Overlay with square in the middle (like sudoku.coach) fades in. A vertical list of buttons animates in from bottom. Difficulties (easy, moderate, hard, fiendish, diabolic). and a cancel button" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+        <mxCell id="pFPgR2dTFFiZAramCR3M-3" value="Overlay with square in the middle (like sudoku.coach) fades in. A vertical list of buttons animates in from bottom. Difficulties (easy, moderate, hard, fiendish, diabolic). and a cancel button" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
           <mxGeometry x="220" y="280" width="190" height="190" as="geometry" />
         </mxCell>
-        <mxCell id="pFPgR2dTFFiZAramCR3M-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0.15;entryY=-0.017;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="pFPgR2dTFFiZAramCR3M-3" target="pFPgR2dTFFiZAramCR3M-1">
+        <mxCell id="pFPgR2dTFFiZAramCR3M-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0.15;entryY=-0.017;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="pFPgR2dTFFiZAramCR3M-3" target="pFPgR2dTFFiZAramCR3M-1" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="pFPgR2dTFFiZAramCR3M-5" value="Overlay with square in the middle (like sudoku.coach) fades in. A small version of solver puzzle is show, difficulty, time, # of hints used, # of validations used. etc.&lt;div&gt;Button to start a new game or clear&lt;/div&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+        <mxCell id="EhqOBwEypHj74D2iuaD1-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="pFPgR2dTFFiZAramCR3M-5" target="tc8X1xjHQRMR5KrgHFPp-25">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="pFPgR2dTFFiZAramCR3M-5" value="Overlay with square in the middle (like sudoku.coach) fades in. A small version of solver puzzle is show, difficulty, time, # of hints used, # of validations used. etc.&lt;div&gt;Button to start a new game or clear&lt;/div&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
           <mxGeometry x="555" y="70" width="190" height="190" as="geometry" />
+        </mxCell>
+        <mxCell id="EhqOBwEypHj74D2iuaD1-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="EhqOBwEypHj74D2iuaD1-2" target="tc8X1xjHQRMR5KrgHFPp-22">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="EhqOBwEypHj74D2iuaD1-2" value="Transparent overlay, with ok/cancel buttons, a textbox with a description and a visualization of the hint on the grid" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="1020" y="40" width="160" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="EhqOBwEypHj74D2iuaD1-4" value="SettingsViewModel" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1030" y="320" width="140" height="60" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
