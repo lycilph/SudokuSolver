@@ -92,7 +92,7 @@
                 <StackPanel Grid.Column="0" 
                             Orientation="Vertical">
                     <Button Content="{icon:Lucide Kind=SquarePlus, Height=24, Width=24}"
-                            Command="{Binding TestCommand}"
+                            Command="{Binding NewPuzzleCommand}"
                             ToolTip="New"
                             Focusable="False"/>
 

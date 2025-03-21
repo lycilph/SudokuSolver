@@ -54,6 +54,12 @@ public partial class MainViewModel : ObservableObject
                 IsKeyboardDisabled = settings_service.IsShown;
         };
     }
+    
+    [RelayCommand]
+    private void NewPuzzle()
+    {
+        puzzle_service.NewPuzzle();
+    }
 
     [RelayCommand]
     private async Task ShowSolutionCount()
@@ -119,11 +125,5 @@ public partial class MainViewModel : ObservableObject
     private void ShowDebugWindow()
     {
         debug_service.ShowDebugWindow();
-    }
-
-    [RelayCommand]
-    private void Test()
-    {
-        ShowDebugWindow();
     }
 }

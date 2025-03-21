@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using Core;
 using Core.Extensions;
 using Core.Models;
 using NLog;
@@ -20,9 +21,9 @@ public class PuzzleService
 
     public PuzzleService()
     {
-        // DEBUG
-        Grid.Load(".5..83.17...1..4..3.4..56.8....3...9.9.8245....6....7...9....5...729..861.36.72.4", true); // These numbers should show as clues
         GridVM = new GridViewModel(Grid);
+
+        // https://stackoverflow.com/questions/1611410/how-to-check-if-a-app-is-in-debug-or-release
 
         foreach (var cell in Grid.Cells)
         {
@@ -53,5 +54,14 @@ public class PuzzleService
         foreach (var cell in Grid.Cells.Where(c => c.IsFilled))
             numbers[cell.Value - 1]++;
         return numbers;
+    }
+
+    public void NewPuzzle()
+    {
+        logger.Info("Generating a new puzzle");
+        (var temp, _) = Generator.Generate();
+        var str = temp.ToSimpleString();
+
+        Grid.Load(str);
     }
 }
