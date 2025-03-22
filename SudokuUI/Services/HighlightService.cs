@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using NLog;
+using SudokuUI.ViewModels;
 
 namespace SudokuUI.Services;
 
@@ -7,13 +8,13 @@ public class HighlightService
 {
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-    private readonly PuzzleService puzzle_service;
     private readonly SelectionService selection_service;
+    private readonly GridViewModel grid_vm;
 
-    public HighlightService(PuzzleService puzzle_service, SelectionService selection_service)
+    public HighlightService(PuzzleService puzzle_service, SelectionService selection_service, GridViewModel grid_vm)
     {
-        this.puzzle_service = puzzle_service;
         this.selection_service = selection_service;
+        this.grid_vm = grid_vm;
 
         selection_service.PropertyChanged += SelectionChanged;
         puzzle_service.GridChanged += GridChanged;
@@ -35,8 +36,6 @@ public class HighlightService
 
     public void HighlightNumber(int number)
     {
-        var grid_vm = puzzle_service.GridVM;
-
         var cell_vms = grid_vm.Boxes.SelectMany(b => b.Cells);
         foreach (var vm in cell_vms)
             vm.Highlight = vm.WrappedObject.Value == number;

@@ -15,6 +15,7 @@ public partial class CellViewModel : ObservableObject
 {
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
+    private readonly PuzzleService puzzle_service;
     private readonly SelectionService selection_service;
 
     [ObservableProperty]
@@ -31,6 +32,7 @@ public partial class CellViewModel : ObservableObject
 
     public CellViewModel(Cell cell)
     {
+        puzzle_service = App.Current.Services.GetRequiredService<PuzzleService>();
         selection_service = App.Current.Services.GetRequiredService<SelectionService>();
 
         WrappedObject = cell;
@@ -51,7 +53,6 @@ public partial class CellViewModel : ObservableObject
     [RelayCommand]
     private void Set()
     {
-
         if (WrappedObject.IsClue)
         {
             selection_service.Digit = WrappedObject.Value;
@@ -67,7 +68,7 @@ public partial class CellViewModel : ObservableObject
         var digit = selection_service.Digit;
 
         if (selection_service.InputMode == SelectionService.Mode.Digits)
-            WrappedObject.Value = digit;
+            puzzle_service.SetCellValue(WrappedObject, digit);
 
         if (selection_service.InputMode == SelectionService.Mode.Hints && WrappedObject.IsEmpty)
             WrappedObject.Toggle(digit);

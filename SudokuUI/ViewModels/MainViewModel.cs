@@ -41,6 +41,7 @@ public partial class MainViewModel : ObservableObject
                          SelectionService selection_service,
                          SettingsService settings_service,
                          DebugService debug_service,
+                         GridViewModel gridVM,
                          DigitSelectionViewModel digitSelectionVM,
                          SettingsViewModel settingsVM,
                          SettingsOverlayViewModel settingsOverlayVM,
@@ -51,7 +52,7 @@ public partial class MainViewModel : ObservableObject
         this.settings_service = settings_service;
         this.debug_service = debug_service;
 
-        GridVM = puzzle_service.GridVM;
+        GridVM = gridVM;
         DigitSelectionVM = digitSelectionVM;
         SettingsVM = settingsVM;
         SettingsOverlayVM = settingsOverlayVM;

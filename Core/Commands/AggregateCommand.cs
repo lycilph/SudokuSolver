@@ -10,7 +10,7 @@ namespace Core.Commands;
 
 public class AggregateCommand : ICommand
 {
-    public string Name { get; } = "Aggregate Command";
+    public string Name { get; } = "Aggregate";
     public string Description => ToString();
 
     private readonly List<ICommand> commands = [];

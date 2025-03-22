@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using Core;
+﻿using Core;
 using Core.Commands;
 using Core.Extensions;
 using Core.Models;
@@ -7,6 +6,7 @@ using NLog;
 using ObservableCollections;
 using SudokuUI.Infrastructure;
 using SudokuUI.ViewModels;
+using System.ComponentModel;
 
 namespace SudokuUI.Services;
 
@@ -17,7 +17,6 @@ public class PuzzleService
     private readonly UndoRedoService undo_service;
 
     public Grid Grid { get; private set; } = new Grid();
-    public GridViewModel GridVM { get; private set; }
 
     public event EventHandler<GridValuesChangedEventArgs> ValuesChanged = null!;
     public event EventHandler GridChanged = null!;
@@ -25,8 +24,6 @@ public class PuzzleService
     public PuzzleService(UndoRedoService undo_service)
     {
         this.undo_service = undo_service;
-
-        GridVM = new GridViewModel(Grid);
 
         foreach (var cell in Grid.Cells)
         {
@@ -82,6 +79,20 @@ public class PuzzleService
     {
         logger.Info("Clearing the grid");
         Grid.Reset();
+    }
+
+    public void SetCellValue(Cell cell, int value)
+    {
+        logger.Info($"Setting cell {cell.Index} to {value}");
+
+        var aggregate = new AggregateCommand();
+
+        aggregate.Add(new SetCellValueCommand(cell, value));
+
+        var peers = cell.Peers.Where(c => c.IsEmpty && c.Count() > 0);
+        aggregate.Add(new EliminateCandidatesCommand(peers));
+
+        undo_service.Execute(aggregate);
     }
 
     public void FillCandidates()

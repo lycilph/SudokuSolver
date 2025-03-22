@@ -8,7 +8,7 @@ namespace Core.Commands;
 
 public class FillCandidatesCommand : ICommand
 {
-    public string Name { get; } = "Fill Candidates Command";
+    public string Name { get; } = "Fill Candidates";
     public string Description => ToString();
 
     private readonly List<Cell> cells;
@@ -41,9 +41,5 @@ public class FillCandidatesCommand : ICommand
     }
 
     public bool IsValid() => true;
-
-    public override string ToString()
-    {
-        return $"Adding all candidates to cells: {string.Join(',', cells.Select(c => c.Index))}";
-    }
+    public override string ToString() =>  $"Adding all candidates to cells: {string.Join(',', cells.Select(c => c.Index))}";
 }

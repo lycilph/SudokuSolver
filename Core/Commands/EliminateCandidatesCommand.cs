@@ -44,9 +44,5 @@ public class EliminateCandidatesCommand : ICommand
     }
 
     public bool IsValid() => true;
-
-    public override string ToString()
-    {
-        return $"Peer cell eliminating candidates from cells {string.Join(',', cells.Select(c => c.Index))}";
-    }
+    public override string ToString() =>  $"Peer cell eliminating candidates from cells {string.Join(',', cells.Select(c => c.Index))}";
 }
