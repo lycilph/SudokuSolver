@@ -14,14 +14,18 @@ public class PuzzleService
 {
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
+    private readonly UndoRedoService undo_service;
+
     public Grid Grid { get; private set; } = new Grid();
     public GridViewModel GridVM { get; private set; }
 
     public event EventHandler<GridValuesChangedEventArgs> ValuesChanged = null!;
     public event EventHandler GridChanged = null!;
 
-    public PuzzleService()
+    public PuzzleService(UndoRedoService undo_service)
     {
+        this.undo_service = undo_service;
+
         GridVM = new GridViewModel(Grid);
 
         foreach (var cell in Grid.Cells)
@@ -87,9 +91,12 @@ public class PuzzleService
         var cells = Grid.EmptyCells().Where(c => c.Count() == 0).ToList();
         if (cells.Count > 0)
         {
-            cells.ForEach(c => c.FillCandidates());
-            var command = new EliminateCandidatesCommand(cells);
-            command.Do();
+            var aggregate = new AggregateCommand();
+
+            aggregate.Add(new FillCandidatesCommand(cells));
+            aggregate.Add(new EliminateCandidatesCommand(cells));
+
+            undo_service.Execute(aggregate);
         }
     }
 

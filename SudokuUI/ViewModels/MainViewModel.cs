@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Core.DancingLinks;
@@ -34,7 +33,11 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     private WaitingOverlayViewModel waitingOverlayVM;
 
+    [ObservableProperty]
+    private UndoRedoService undoService;
+
     public MainViewModel(PuzzleService puzzle_service,
+                         UndoRedoService undo_service,
                          SelectionService selection_service,
                          SettingsService settings_service,
                          DebugService debug_service,
@@ -53,6 +56,7 @@ public partial class MainViewModel : ObservableObject
         SettingsVM = settingsVM;
         SettingsOverlayVM = settingsOverlayVM;
         WaitingOverlayVM = waitingOverlayVM;
+        UndoService = undo_service;
 
         settings_service.PropertyChanged += (s, e) =>
         {

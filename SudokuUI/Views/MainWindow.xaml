@@ -33,6 +33,8 @@
         <KeyBinding Key="Tab" Modifiers="Shift" Command="{Binding PreviousDigitCommand}"/>
         <KeyBinding Key="F1" Command="{Binding ShowSettingsCommand}"/>
         <KeyBinding Key="D" Modifiers="Ctrl" Command="{Binding ShowDebugWindowCommand}"/>
+        <KeyBinding Key="Z" Modifiers="Ctrl" Command="{Binding UndoService.UndoCommand}"/>
+        <KeyBinding Key="Y" Modifiers="Ctrl" Command="{Binding UndoService.RedoCommand}"/>
     </Window.InputBindings>
 
     <i:Interaction.Behaviors>
@@ -48,16 +50,16 @@
     <mah:MetroWindow.RightWindowCommands>
         <mah:WindowCommands ShowSeparators="False">
             <Button Content="{icon:Lucide Kind=RotateCcw}"
-                    ToolTip="Reset"
-                    IsEnabled="False"/>
+                    Command="{Binding UndoService.ResetCommand}"
+                    ToolTip="Reset"/>
 
             <Button Content="{icon:Lucide Kind=Undo}"
-                    ToolTip="Undo (ctrl+z)"
-                    IsEnabled="False"/>
+                    Command="{Binding UndoService.UndoCommand}"
+                    ToolTip="Undo (ctrl+z)"/>
 
             <Button Content="{icon:Lucide Kind=Redo}"
-                    ToolTip="Redo (crtl+y)"
-                    IsEnabled="False"/>
+                    Command="{Binding UndoService.RedoCommand}"
+                    ToolTip="Redo (crtl+y)"/>
 
             <Button Content="{icon:Lucide Kind=Settings}"
                     ToolTip="Settings (F1)"
