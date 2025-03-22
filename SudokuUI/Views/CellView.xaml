@@ -73,6 +73,8 @@
         <ContentControl.InputBindings>
             <MouseBinding MouseAction="LeftClick"
                           Command="{Binding SetCommand}"/>
+            <MouseBinding MouseAction="RightClick"
+                          Command="{Binding ClearCommand}"/>
         </ContentControl.InputBindings>
     </ContentControl>
 </UserControl>

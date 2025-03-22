@@ -58,7 +58,7 @@ public partial class CellViewModel : ObservableObject
             selection_service.Digit = WrappedObject.Value;
             return;
         }
-        
+
         if (selection_service.Digit == 0)
         {
             logger.Info("Nothing to set");
@@ -72,5 +72,14 @@ public partial class CellViewModel : ObservableObject
 
         if (selection_service.InputMode == SelectionService.Mode.Hints && WrappedObject.IsEmpty)
             puzzle_service.ToggleCellCandidate(WrappedObject, digit);
+    }
+
+    [RelayCommand]
+    private void Clear()
+    {
+        if (WrappedObject.IsClue)
+            return;
+
+        puzzle_service.ClearCell(WrappedObject);
     }
 }

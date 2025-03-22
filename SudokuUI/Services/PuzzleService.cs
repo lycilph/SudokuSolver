@@ -95,6 +95,13 @@ public class PuzzleService
         undo_service.Execute(aggregate);
     }
 
+    public void ClearCell(Cell cell)
+    {
+        logger.Info($"Clearing cell {cell.Index}");
+
+        undo_service.Execute(new ClearCellCommand(cell));
+    }
+
     public void ToggleCellCandidate(Cell cell, int value)
     {
         logger.Info($"Toggling candidate {value} for cell {cell.Index}");
