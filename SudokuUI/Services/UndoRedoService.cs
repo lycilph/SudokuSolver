@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using Core.Commands;
 using NLog;
 using ObservableCollections;
+using System.Collections.ObjectModel;
 
 namespace SudokuUI.Services;
 
@@ -10,21 +11,21 @@ public partial class UndoRedoService : ObservableObject
 {
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-    private readonly ObservableStack<ICommand> undo = new();
-    private readonly ObservableStack<ICommand> redo = new();
+    public ObservableStack<ICommand> UndoStack { get; private set; } = new();
+    public ObservableStack<ICommand> RedoStack { get; private set; } = new();
 
-    private bool CanUndo => undo.Count > 0;
-    private bool CanRedo => redo.Count > 0;
+    private bool CanUndo => UndoStack.Count > 0;
+    private bool CanRedo => RedoStack.Count > 0;
     private bool CanReset => CanUndo || CanRedo;
 
     public UndoRedoService()
     {
-        undo.CollectionChanged += (in NotifyCollectionChangedEventArgs<ICommand> e) =>
+        UndoStack.CollectionChanged += (in NotifyCollectionChangedEventArgs<ICommand> e) =>
         { 
             UndoCommand.NotifyCanExecuteChanged();
             ResetCommand.NotifyCanExecuteChanged();
         };
-        redo.CollectionChanged += (in NotifyCollectionChangedEventArgs<ICommand> e) =>
+        RedoStack.CollectionChanged += (in NotifyCollectionChangedEventArgs<ICommand> e) =>
         {
             RedoCommand.NotifyCanExecuteChanged();
             ResetCommand.NotifyCanExecuteChanged();
@@ -36,9 +37,9 @@ public partial class UndoRedoService : ObservableObject
         logger.Info("Executing command");
 
         command.Do();
-        
-        undo.Push(command);
-        redo.Clear();
+
+        UndoStack.Push(command);
+        RedoStack.Clear();
     }
 
     [RelayCommand(CanExecute = nameof(CanUndo))]
@@ -46,8 +47,8 @@ public partial class UndoRedoService : ObservableObject
     {
         logger.Info("Undoing command");
 
-        var command = undo.Pop();
-        redo.Push(command);
+        var command = UndoStack.Pop();
+        RedoStack.Push(command);
 
         command.Undo();
     }
@@ -57,8 +58,8 @@ public partial class UndoRedoService : ObservableObject
     {
         logger.Info("Redoing command");
 
-        var command = redo.Pop();
-        undo.Push(command);
+        var command = RedoStack.Pop();
+        UndoStack.Push(command);
 
         command.Do();
     }

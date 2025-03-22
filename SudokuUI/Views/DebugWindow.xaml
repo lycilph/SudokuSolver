@@ -8,12 +8,39 @@
                  mc:Ignorable="d"
                  Title="Debug" 
                  Height="450" 
-                 Width="250"
+                 Width="350"
                  ResizeMode="NoResize"
                  d:DataContext="{d:DesignInstance Type=vm:DebugViewModel}">
-    <TextBlock Text="Debug stuff"
-               TextWrapping="Wrap"
-               FontSize="60"
-               HorizontalAlignment="Center"
-               VerticalAlignment="Center"/>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        
+        <TextBlock Grid.Row="0"
+                   Grid.Column="0"
+                   Text="Undo stack"/>
+        <ScrollViewer Grid.Row="1"
+                      Grid.Column="0"
+                      VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding UndoStack}"
+                          DisplayMemberPath="Name"/>
+        </ScrollViewer>
+
+        <TextBlock Grid.Row="0"
+                   Grid.Column="1"
+                   Text="Redo stack"/>
+        <ScrollViewer Grid.Row="1"
+                      Grid.Column="1"
+                      VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding RedoStack}"
+                          DisplayMemberPath="Name"/>
+        </ScrollViewer>
+    </Grid>
 </mah:MetroWindow>

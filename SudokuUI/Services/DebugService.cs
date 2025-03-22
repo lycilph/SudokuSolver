@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using Microsoft.Extensions.DependencyInjection;
 using SudokuUI.ViewModels;
 using SudokuUI.Views;
 
@@ -15,7 +16,7 @@ public class DebugService
 
         var main_win = App.Current.MainWindow;
 
-        var vm = new DebugViewModel();
+        var vm = App.Current.Services.GetRequiredService<DebugViewModel>();
         debug_window = new DebugWindow { DataContext = vm, Owner = main_win };
 
         PositionDebugWindow(main_win);
