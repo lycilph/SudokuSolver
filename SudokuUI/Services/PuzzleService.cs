@@ -95,6 +95,13 @@ public class PuzzleService
         undo_service.Execute(aggregate);
     }
 
+    public void ToggleCellCandidate(Cell cell, int value)
+    {
+        logger.Info($"Toggling candidate {value} for cell {cell.Index}");
+
+        undo_service.Execute(new ToggleCellCandidateCommand(cell, value));
+    }
+
     public void FillCandidates()
     {
         logger.Info("Filling in candidates");
@@ -114,6 +121,8 @@ public class PuzzleService
     public void ClearCandidates()
     { 
         logger.Info("Clearing candidates");
-        Grid.ClearCandidates();
+
+        var cells = Grid.EmptyCells().Where(c => c.Count() > 0);
+        undo_service.Execute(new ClearCandidatesCommand(cells));
     }
 }

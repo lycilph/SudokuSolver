@@ -71,6 +71,6 @@ public partial class CellViewModel : ObservableObject
             puzzle_service.SetCellValue(WrappedObject, digit);
 
         if (selection_service.InputMode == SelectionService.Mode.Hints && WrappedObject.IsEmpty)
-            WrappedObject.Toggle(digit);
+            puzzle_service.ToggleCellCandidate(WrappedObject, digit);
     }
 }
