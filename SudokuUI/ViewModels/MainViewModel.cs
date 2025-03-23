@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using Core.DancingLinks;
 using Core.Extensions;
 using MahApps.Metro.Controls.Dialogs;
+using SudokuUI.Dialogs;
 using SudokuUI.Services;
 
 namespace SudokuUI.ViewModels;
@@ -82,6 +83,35 @@ public partial class MainViewModel : ObservableObject
     private void ClearPuzzle()
     {
         puzzle_service.Clear();
+    }
+
+    [RelayCommand]
+    private async Task Import()
+    {
+        var vm = new ImportDialogViewModel();
+        var view = new ImportDialogView { DataContext = vm };
+        var dialog = new CustomDialog { Title = "Import Puzzle", Content = view };
+
+        await DialogCoordinator.Instance.ShowMetroDialogAsync(this, dialog);
+        var result = await vm.DialogResult;
+        await DialogCoordinator.Instance.HideMetroDialogAsync(this, dialog);
+
+        if (!string.IsNullOrWhiteSpace(result))
+            puzzle_service.Import(result);
+    }
+
+    [RelayCommand]
+    private async Task Export()
+    {
+        var vm = new ExportDialogViewModel { Puzzle = puzzle_service.Export() };
+        var view = new ExportDialogView { DataContext = vm };
+        var dialog = new CustomDialog { Title = "Export Puzzle", Content = view };
+
+        IsKeyboardDisabled = true;
+
+        await DialogCoordinator.Instance.ShowMetroDialogAsync(this, dialog);
+        await vm.DialogResult;
+        await DialogCoordinator.Instance.HideMetroDialogAsync(this, dialog);
     }
 
     [RelayCommand]

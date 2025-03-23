@@ -90,6 +90,23 @@ public class PuzzleService : ObservableRecipient, IRecipient<ResetMessage>
         WeakReferenceMessenger.Default.Send(new ResetMessage());
     }
 
+    public void Import(string puzzle)
+    {
+        logger.Info($"Importing the puzzle: {puzzle}");
+
+        source = puzzle;
+        WeakReferenceMessenger.Default.Send(new ResetMessage());
+    }
+
+    public string Export()
+    {
+        var str = Grid.ToSimpleString();
+
+        logger.Info($"Importing the puzzle: {str}");
+
+        return str;
+    }
+
     public void SetCellValue(Cell cell, int value)
     {
         logger.Info($"Setting cell {cell.Index} to {value}");
