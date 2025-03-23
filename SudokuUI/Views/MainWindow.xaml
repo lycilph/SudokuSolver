@@ -35,6 +35,7 @@
         <KeyBinding Key="D" Modifiers="Ctrl" Command="{Binding ShowDebugWindowCommand}"/>
         <KeyBinding Key="Z" Modifiers="Ctrl" Command="{Binding UndoService.UndoCommand}"/>
         <KeyBinding Key="Y" Modifiers="Ctrl" Command="{Binding UndoService.RedoCommand}"/>
+        <KeyBinding Key="N" Modifiers="Ctrl" Command="{Binding NewPuzzleCommand}"/>
     </Window.InputBindings>
 
     <i:Interaction.Behaviors>

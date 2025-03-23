@@ -10,7 +10,7 @@ namespace Core.Commands;
 
 public class AggregateCommand : ICommand
 {
-    public string Name { get; } = "Aggregate";
+    public string Name => $"({string.Join(',', commands.Select(c => c.Name))})";
     public string Description => ToString();
 
     private readonly List<ICommand> commands = [];

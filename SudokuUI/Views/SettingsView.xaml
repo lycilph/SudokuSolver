@@ -64,6 +64,7 @@
                     <TextBlock Text="Space"/>
                     <TextBlock Text="Ctrl+z"/>
                     <TextBlock Text="Ctrl+y"/>
+                    <TextBlock Text="Ctrl+n"/>
                     <TextBlock Text="F1"/>
                 </StackPanel>
 
@@ -77,6 +78,7 @@
                     <TextBlock Text="Toggle input mode"/>
                     <TextBlock Text="Undo"/>
                     <TextBlock Text="Redo"/>
+                    <TextBlock Text="New Puzzle"/>
                     <TextBlock Text="This settings"/>
                 </StackPanel>
             </Grid>

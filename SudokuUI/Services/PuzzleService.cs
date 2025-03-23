@@ -1,20 +1,25 @@
-﻿using Core;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
+using Core;
 using Core.Commands;
 using Core.Extensions;
 using Core.Models;
 using NLog;
 using ObservableCollections;
 using SudokuUI.Infrastructure;
-using SudokuUI.ViewModels;
+using SudokuUI.Messages;
 using System.ComponentModel;
 
 namespace SudokuUI.Services;
 
-public class PuzzleService
+public class PuzzleService : ObservableRecipient, IRecipient<ResetMessage>
 {
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
     private readonly UndoRedoService undo_service;
+
+    private readonly string empty_source = ".................................................................................";
+    private string source = string.Empty;
 
     public Grid Grid { get; private set; } = new Grid();
 
@@ -30,6 +35,8 @@ public class PuzzleService
             cell.PropertyChanged += CellChanged;
             cell.Candidates.CollectionChanged += CandidatesChanged;
         }
+
+        IsActive = true;
     }
 
     private void CandidatesChanged(in NotifyCollectionChangedEventArgs<int> e)
@@ -69,7 +76,8 @@ public class PuzzleService
         task.ContinueWith(task =>
         {
             logger.Info("Generated puzzle: {0}", task.Result);
-            Grid.Load(task.Result);
+            source = task.Result;
+            WeakReferenceMessenger.Default.Send(new ResetMessage());
         }, TaskScheduler.FromCurrentSynchronizationContext());
 
         return task;
@@ -78,7 +86,8 @@ public class PuzzleService
     public void Clear()
     {
         logger.Info("Clearing the grid");
-        Grid.Reset();
+        source = empty_source;
+        WeakReferenceMessenger.Default.Send(new ResetMessage());
     }
 
     public void SetCellValue(Cell cell, int value)
@@ -131,5 +140,11 @@ public class PuzzleService
 
         var cells = Grid.EmptyCells().Where(c => c.Count() > 0);
         undo_service.Execute(new ClearCandidatesCommand(cells));
+    }
+
+    public void Receive(ResetMessage message)
+    {
+        logger.Info("Received a reset message");
+        Grid.Load(source);
     }
 }

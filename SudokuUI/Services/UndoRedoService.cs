@@ -1,13 +1,14 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Core.Commands;
 using NLog;
 using ObservableCollections;
-using System.Collections.ObjectModel;
+using SudokuUI.Messages;
 
 namespace SudokuUI.Services;
 
-public partial class UndoRedoService : ObservableObject
+public partial class UndoRedoService : ObservableRecipient, IRecipient<ResetMessage>
 {
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
@@ -30,6 +31,8 @@ public partial class UndoRedoService : ObservableObject
             RedoCommand.NotifyCanExecuteChanged();
             ResetCommand.NotifyCanExecuteChanged();
         };
+
+        IsActive = true;
     }
 
     public void Execute(ICommand command)
@@ -68,5 +71,13 @@ public partial class UndoRedoService : ObservableObject
     private void Reset()
     {
         logger.Info("Resetting undo/redo stack");
+
+        WeakReferenceMessenger.Default.Send(new ResetMessage());
+    }
+
+    public void Receive(ResetMessage message)
+    {
+        UndoStack.Clear();
+        RedoStack.Clear();
     }
 }

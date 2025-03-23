@@ -1,9 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
 using NLog;
+using SudokuUI.Messages;
 
 namespace SudokuUI.Services;
 
-public partial class SelectionService : ObservableObject
+public partial class SelectionService : ObservableRecipient, IRecipient<ResetMessage>
 {
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
@@ -14,6 +16,11 @@ public partial class SelectionService : ObservableObject
 
     [ObservableProperty]
     private int digit = 0; // 0 is empty
+
+    public SelectionService()
+    {
+        IsActive = true;
+    }
 
     public void ToggleInputMode() => InputMode = (InputMode == Mode.Digits ? Mode.Hints : Mode.Digits);
 
@@ -43,5 +50,12 @@ public partial class SelectionService : ObservableObject
     partial void OnDigitChanged(int value)
     {
         logger.Debug($"Selected digit is now {value}");
+    }
+
+    public void Receive(ResetMessage message)
+    {
+        logger.Info("Received a reset message");
+        Clear();
+        InputMode = Mode.Digits;
     }
 }
