@@ -19,28 +19,33 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition/>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="2*"/>
         </Grid.RowDefinitions>
 
         
         <TextBlock Grid.Row="0"
                    Grid.Column="0"
                    Text="Undo stack"/>
-        <ScrollViewer Grid.Row="1"
-                      Grid.Column="0"
-                      VerticalScrollBarVisibility="Auto">
-            <ItemsControl ItemsSource="{Binding UndoStack}"
-                          DisplayMemberPath="Description"/>
-        </ScrollViewer>
+        <ListBox Grid.Row="1"
+                 Grid.Column="0" 
+                 ItemsSource="{Binding UndoStack}"
+                 DisplayMemberPath="Name"
+                 SelectedItem="{Binding Selected}"/>
 
         <TextBlock Grid.Row="0"
                    Grid.Column="1"
                    Text="Redo stack"/>
-        <ScrollViewer Grid.Row="1"
-                      Grid.Column="1"
-                      VerticalScrollBarVisibility="Auto">
-            <ItemsControl ItemsSource="{Binding RedoStack}"
-                          DisplayMemberPath="Description"/>
-        </ScrollViewer>
+        <ListBox Grid.Row="1"
+                 Grid.Column="1" 
+                 ItemsSource="{Binding RedoStack}"
+                 DisplayMemberPath="Name"
+                 SelectedItem="{Binding Selected}"/>
+
+        <TextBox Grid.Row="2"
+                 Grid.Column="0"
+                 Grid.ColumnSpan="2"
+                 IsReadOnly="True"
+                 Text="{Binding Selected.Description, Mode=OneWay}"/>
     </Grid>
 </mah:MetroWindow>
