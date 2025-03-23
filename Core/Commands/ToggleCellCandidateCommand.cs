@@ -9,7 +9,7 @@ namespace Core.Commands;
 
 public class ToggleCellCandidateCommand(Cell cell, int value) : ICommand
 {
-    public string Name { get; } = "Toglle Cell Candidate";
+    public string Name { get; } = "Toggle Cell Candidate";
     public string Description => ToString();
 
     private readonly Cell cell = cell;

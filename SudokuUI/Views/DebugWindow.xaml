@@ -12,40 +12,32 @@
                  ResizeMode="NoResize"
                  d:DataContext="{d:DesignInstance Type=vm:DebugViewModel}">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="3*"/>
-            <RowDefinition Height="2*"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
 
         
         <TextBlock Grid.Row="0"
-                   Grid.Column="0"
                    Text="Undo stack"/>
         <ListBox Grid.Row="1"
-                 Grid.Column="0" 
                  ItemsSource="{Binding UndoStack}"
                  DisplayMemberPath="Name"
                  SelectedItem="{Binding Selected}"/>
 
-        <TextBlock Grid.Row="0"
-                   Grid.Column="1"
+        <TextBlock Grid.Row="2"
                    Text="Redo stack"/>
-        <ListBox Grid.Row="1"
-                 Grid.Column="1" 
+        <ListBox Grid.Row="3"
                  ItemsSource="{Binding RedoStack}"
                  DisplayMemberPath="Name"
                  SelectedItem="{Binding Selected}"/>
 
-        <TextBox Grid.Row="2"
-                 Grid.Column="0"
-                 Grid.ColumnSpan="2"
+        <TextBox Grid.Row="4"
                  IsReadOnly="True"
-                 Text="{Binding Selected.Description, Mode=OneWay}"/>
+                 Text="{Binding Selected.Description, Mode=OneWay}"
+                 TextWrapping="Wrap"/>
     </Grid>
 </mah:MetroWindow>
