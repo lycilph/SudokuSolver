@@ -10,6 +10,6 @@ public class CommandElement
     public List<int> Numbers { get; set; } = [];
     public List<Cell> Cells { get; set; } = [];
 
-    public int Number => Numbers.First();
-    public Cell Cell => Cells.First();
+    public int Number => Numbers.Single();
+    public Cell Cell => Cells.Single();
 }

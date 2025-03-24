@@ -18,7 +18,6 @@ public class AggregateCommand : ICommand
     public void Add(ICommand command) => commands.Add(command);
     public void Do() => commands.ForEach(c => c.Do());
     public void Undo() => commands.AsEnumerable().Reverse().ForEach(c => c.Undo());
-    public bool IsValid() => true;
 
     public override string ToString()
     {

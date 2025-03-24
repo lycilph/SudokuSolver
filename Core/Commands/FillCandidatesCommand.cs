@@ -40,6 +40,5 @@ public class FillCandidatesCommand : ICommand
         }
     }
 
-    public bool IsValid() => true;
     public override string ToString() =>  $"Adding all candidates to cells: {string.Join(',', cells.Select(c => c.Index))}";
 }

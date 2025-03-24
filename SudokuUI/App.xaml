@@ -58,6 +58,10 @@
             <DataTemplate DataType="{x:Type vm:VictoryOverlayViewModel}">
                 <v:VictoryOverlayView/>
             </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:StrategyViewModel}">
+                <v:StrategyView/>
+            </DataTemplate>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

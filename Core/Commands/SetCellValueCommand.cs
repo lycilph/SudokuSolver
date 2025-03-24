@@ -29,6 +29,5 @@ public class SetCellValueCommand(Cell cell, int value) : ICommand
         cell.Candidates.AddRange(candidates);
     }
 
-    public bool IsValid() => true;
     public override string ToString() => $"Settings cell {cell.Index} to {value}";
 }

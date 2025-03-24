@@ -7,17 +7,20 @@
                  xmlns:vm="clr-namespace:SudokuUI.ViewModels"
                  mc:Ignorable="d"
                  Title="Debug" 
-                 Height="450" 
+                 Height="650" 
                  Width="350"
                  ResizeMode="NoResize"
                  d:DataContext="{d:DesignInstance Type=vm:DebugViewModel}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition/>
+            <RowDefinition Height="1*"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition/>
-            <RowDefinition/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="2*"/>
         </Grid.RowDefinitions>
 
         
@@ -34,10 +37,18 @@
                  ItemsSource="{Binding RedoStack}"
                  DisplayMemberPath="Name"
                  SelectedItem="{Binding Selected}"/>
-
-        <TextBox Grid.Row="4"
+        
+        <TextBlock Grid.Row="4"
+                   Text="Command description"/>
+        <TextBox Grid.Row="5"
                  IsReadOnly="True"
                  Text="{Binding Selected.Description, Mode=OneWay}"
                  TextWrapping="Wrap"/>
+
+        <TextBlock Grid.Row="6"
+                   Text="Strategies"/>
+        <ItemsControl Grid.Row="7"
+                      ItemsSource="{Binding Strategies}"
+                      Grid.IsSharedSizeScope="True"/>
     </Grid>
 </mah:MetroWindow>

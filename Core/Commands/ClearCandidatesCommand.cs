@@ -36,6 +36,5 @@ public class ClearCandidatesCommand(IEnumerable<Cell> cells) : ICommand
         }
     }
 
-    public bool IsValid() => true;
     public override string ToString() => $"Removing all candidates from cells {string.Join(',', cells.Select(c => c.Index))}";
 }

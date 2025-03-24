@@ -31,6 +31,5 @@ public class ClearCellCommand(Cell cell) : ICommand
         cell.Candidates.AddRange(candidates);
     }
 
-    public bool IsValid() => true;
     public override string ToString() => $"Clearing cell {cell.Index}";
 }

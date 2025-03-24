@@ -28,6 +28,5 @@ public class ToggleCellCandidateCommand(Cell cell, int value) : ICommand
         Do();
     }
 
-    public bool IsValid() => true;
     public override string ToString() => $"Toggling the candidate {value} in cell {cell.Index}";
 }
