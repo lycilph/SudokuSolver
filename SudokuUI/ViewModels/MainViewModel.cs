@@ -39,6 +39,9 @@ public partial class MainViewModel : ObservableObject
     private VictoryOverlayViewModel victoryOverlayVM;
 
     [ObservableProperty]
+    private SolverOverlayViewModel solverOverlayVM;
+
+    [ObservableProperty]
     private UndoRedoService undoService;
 
     [ObservableProperty]
@@ -54,7 +57,8 @@ public partial class MainViewModel : ObservableObject
                          SettingsViewModel settingsVM,
                          SettingsOverlayViewModel settingsOverlayVM,
                          WaitingOverlayViewModel waitingOverlayVM,
-                         VictoryOverlayViewModel victoryOverlayVM)
+                         VictoryOverlayViewModel victoryOverlayVM,
+                         SolverOverlayViewModel solverOverlayVM)
     {
         this.puzzle_service = puzzle_service;
         this.selection_service = selection_service;
@@ -67,6 +71,8 @@ public partial class MainViewModel : ObservableObject
         SettingsOverlayVM = settingsOverlayVM;
         WaitingOverlayVM = waitingOverlayVM;
         VictoryOverlayVM = victoryOverlayVM;
+        SolverOverlayVM = solverOverlayVM;
+
         UndoService = undo_service;
 
         // Disable keyboard if settings, waiting overlay or victory overlay is showing
@@ -84,6 +90,11 @@ public partial class MainViewModel : ObservableObject
         {
             if (e.PropertyName == nameof(VictoryOverlayViewModel.IsOpen))
                 IsKeyboardDisabled = VictoryOverlayVM.IsOpen;
+        };
+        SolverOverlayVM.PropertyChanged += (s, e) =>
+        {
+            if (e.PropertyName == nameof(SolverOverlayViewModel.IsOpen))
+                IsKeyboardDisabled = SolverOverlayVM.IsOpen;
         };
 
         var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(100) };
@@ -173,9 +184,18 @@ public partial class MainViewModel : ObservableObject
     private void Escape()
     {
         if (settings_service.IsShown)
+        {
             settings_service.Hide();
-        else
-            selection_service.Clear();
+            return;
+        }
+
+        if (SolverOverlayVM.IsOpen)
+        {
+            SolverOverlayVM.Close();
+            return;
+        }
+
+        selection_service.Clear();
     }
 
     [RelayCommand]
@@ -212,5 +232,12 @@ public partial class MainViewModel : ObservableObject
     private void ShowDebugWindow()
     {
         debug_service.ShowDebugWindow();
+    }
+
+    [RelayCommand]
+    private void ShowHint()
+    {
+        selection_service.Clear();
+        SolverOverlayVM.Show();
     }
 }

@@ -49,7 +49,7 @@
     </i:Interaction.Behaviors>
     
     <mah:MetroWindow.RightWindowCommands>
-        <mah:WindowCommands ShowSeparators="False">
+        <mah:WindowCommands ShowSeparators="False" IsEnabled="{Binding IsKeyboardDisabled, Converter={StaticResource invert_bool_converter}}">
             <Button Content="{icon:Lucide Kind=RotateCcw}"
                     Command="{Binding UndoService.ResetCommand}"
                     ToolTip="Reset"/>
@@ -134,7 +134,7 @@
                     <StackPanel Grid.Column="2"
                                 Orientation="Vertical">
                         <Button Content="{icon:Lucide Kind=Lightbulb, Height=24, Width=24}"
-                                IsEnabled="False"
+                                Command="{Binding ShowHintCommand}"
                                 ToolTip="Hint"
                                 Focusable="False"/>
 
@@ -176,5 +176,7 @@
         <ContentControl Content="{Binding WaitingOverlayVM}"/>
 
         <ContentControl Content="{Binding VictoryOverlayVM}"/>
+        
+        <ContentControl Content="{Binding SolverOverlayVM}"/>
     </Grid>
 </mah:MetroWindow>

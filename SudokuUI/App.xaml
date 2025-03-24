@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
              xmlns:vm="clr-namespace:SudokuUI.ViewModels" 
              xmlns:v="clr-namespace:SudokuUI.Views"
+             xmlns:infra="clr-namespace:SudokuUI.Infrastructure"
              Startup="Application_Startup">
     <Application.Resources>
         <ResourceDictionary>
@@ -18,6 +19,7 @@
             </ResourceDictionary.MergedDictionaries>
 
             <BooleanToVisibilityConverter x:Key="bool_to_visibilty_converter"/>
+            <infra:InvertBoolConverter x:Key="invert_bool_converter"/>
 
             <DataTemplate DataType="{x:Type vm:GridViewModel}">
                 <v:GridView/>
@@ -58,7 +60,11 @@
             <DataTemplate DataType="{x:Type vm:VictoryOverlayViewModel}">
                 <v:VictoryOverlayView/>
             </DataTemplate>
-
+            
+            <DataTemplate DataType="{x:Type vm:SolverOverlayViewModel}">
+                <v:SolverOverlayView/>
+            </DataTemplate>
+            
             <DataTemplate DataType="{x:Type vm:StrategyViewModel}">
                 <v:StrategyView/>
             </DataTemplate>
