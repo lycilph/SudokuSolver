@@ -43,6 +43,7 @@ public partial class App : Application
         services.AddTransient<SettingsViewModel>();
         services.AddTransient<SettingsOverlayViewModel>();
         services.AddTransient<WaitingOverlayViewModel>();
+        services.AddTransient<VictoryOverlayViewModel>();
         services.AddTransient<DebugViewModel>();
 
         return services.BuildServiceProvider();

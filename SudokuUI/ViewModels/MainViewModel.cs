@@ -35,6 +35,9 @@ public partial class MainViewModel : ObservableObject
     private WaitingOverlayViewModel waitingOverlayVM;
 
     [ObservableProperty]
+    private VictoryOverlayViewModel victoryOverlayVM;
+
+    [ObservableProperty]
     private UndoRedoService undoService;
 
     public MainViewModel(PuzzleService puzzle_service,
@@ -46,7 +49,8 @@ public partial class MainViewModel : ObservableObject
                          DigitSelectionViewModel digitSelectionVM,
                          SettingsViewModel settingsVM,
                          SettingsOverlayViewModel settingsOverlayVM,
-                         WaitingOverlayViewModel waitingOverlayVM)
+                         WaitingOverlayViewModel waitingOverlayVM,
+                         VictoryOverlayViewModel victoryOverlayVM)
     {
         this.puzzle_service = puzzle_service;
         this.selection_service = selection_service;
@@ -58,24 +62,34 @@ public partial class MainViewModel : ObservableObject
         SettingsVM = settingsVM;
         SettingsOverlayVM = settingsOverlayVM;
         WaitingOverlayVM = waitingOverlayVM;
+        VictoryOverlayVM = victoryOverlayVM;
         UndoService = undo_service;
 
+        // Disable keyboard if settings, waiting overlay or victory overlay is showing
         settings_service.PropertyChanged += (s, e) =>
         {
             if (e.PropertyName == nameof(SettingsService.IsShown))
                 IsKeyboardDisabled = settings_service.IsShown;
+        };
+        WaitingOverlayVM.PropertyChanged += (s, e) =>
+        {
+            if (e.PropertyName == nameof(WaitingOverlayViewModel.IsOpen))
+                IsKeyboardDisabled = WaitingOverlayVM.IsOpen;
+        };
+        VictoryOverlayVM.PropertyChanged += (s, e) =>
+        {
+            if (e.PropertyName == nameof(VictoryOverlayViewModel.IsOpen))
+                IsKeyboardDisabled = VictoryOverlayVM.IsOpen;
         };
     }
     
     [RelayCommand]
     private async Task NewPuzzle()
     {
-        IsKeyboardDisabled = true;
         WaitingOverlayVM.Show();
 
         await puzzle_service.New();
 
-        IsKeyboardDisabled = false;
         WaitingOverlayVM.Close();
     }
 

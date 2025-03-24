@@ -54,6 +54,10 @@
             <DataTemplate DataType="{x:Type vm:WaitingOverlayViewModel}">
                 <v:WaitingOverlayView/>
             </DataTemplate>
+            
+            <DataTemplate DataType="{x:Type vm:VictoryOverlayViewModel}">
+                <v:VictoryOverlayView/>
+            </DataTemplate>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

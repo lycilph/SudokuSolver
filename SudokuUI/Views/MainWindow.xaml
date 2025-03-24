@@ -165,5 +165,7 @@
         <ContentControl Content="{Binding SettingsOverlayVM}"/>
 
         <ContentControl Content="{Binding WaitingOverlayVM}"/>
+        
+        <ContentControl Content="{Binding VictoryOverlayVM}"/>
     </Grid>
 </mah:MetroWindow>

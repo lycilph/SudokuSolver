@@ -10,7 +10,6 @@ using SudokuUI.Infrastructure;
 using SudokuUI.Messages;
 using System.ComponentModel;
 using System.Reflection;
-using System.Threading.Tasks;
 
 namespace SudokuUI.Services;
 
@@ -27,6 +26,7 @@ public class PuzzleService : ObservableRecipient, IRecipient<ResetMessage>, IRec
 
     public event EventHandler<GridValuesChangedEventArgs> ValuesChanged = null!;
     public event EventHandler GridChanged = null!;
+    public event EventHandler PuzzleSolved = null!;
 
     public PuzzleService(UndoRedoService undo_service)
     {
@@ -54,6 +54,12 @@ public class PuzzleService : ObservableRecipient, IRecipient<ResetMessage>, IRec
             logger.Trace("Grid values changed");
             ValuesChanged?.Invoke(this, new GridValuesChangedEventArgs(DigitCount()));
             GridChanged?.Invoke(this, EventArgs.Empty);
+
+            if (Grid.IsSolved())
+            {
+                logger.Info("Puzzle solved");
+                PuzzleSolved?.Invoke(this, EventArgs.Empty);
+            }
         }
     }
 
@@ -175,6 +181,6 @@ public class PuzzleService : ObservableRecipient, IRecipient<ResetMessage>, IRec
         var mode = BuildModeDetector.GetBuildMode(assembly);
 
         if (mode == BuildModeDetector.BuildMode.Debug)
-            New();
+            Grid.Load("413256897689317425257894163976148352825963741341572986594631278.32485619168729534");
     }
 }
