@@ -188,6 +188,6 @@ public class PuzzleService : ObservableRecipient, IRecipient<ResetMessage>, IRec
         var mode = BuildModeDetector.GetBuildMode(assembly);
 
         if (mode == BuildModeDetector.BuildMode.Debug)
-            Grid.Load("413256897689317425257894163976148352825963741341572986594631278.32485619168729534");
+            New();
     }
 }

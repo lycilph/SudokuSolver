@@ -4,7 +4,7 @@ namespace Core.Commands;
 
 /// <summary>
 /// This action is used multiple places, both when placing a value in a cell and when filling in candidates.
-/// It takes a list of cells, and the removes the values of these cells from their peers
+/// It takes a list of cells, and then for each cell, gets all peers with values set, then removes these candidates
 /// </summary>
 
 public class EliminateCandidatesCommand : ICommand
@@ -27,10 +27,12 @@ public class EliminateCandidatesCommand : ICommand
 
         foreach (var cell in cells)
         {
+            // Save old state
             candidates.Add(cell, cell.Candidates.ToArray());
 
-            foreach (var peer in cell.Peers.Where(p => p.IsFilled))
-                cell.Remove(peer.Value);
+            // Get the values of all peer cells and remove these from the list of candidates of the current cell
+            var peer_values = cell.Peers.Where(p => p.IsFilled).Select(p => p.Value).Distinct();
+            cell.Candidates.RemoveRange(peer_values);
         }
     }
 
