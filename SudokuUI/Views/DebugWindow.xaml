@@ -21,6 +21,7 @@
             <RowDefinition Height="1*"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="2*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         
@@ -50,5 +51,12 @@
         <ItemsControl Grid.Row="7"
                       ItemsSource="{Binding Strategies}"
                       Grid.IsSharedSizeScope="True"/>
+        <StackPanel Grid.Row="8"
+                    Orientation="Horizontal">
+            <Button Content="Toggle"
+                    Command="{Binding ToggleCommand}"/>
+            <Button Content="Next"
+                    Margin="10 0 0 0"/>
+        </StackPanel>
     </Grid>
 </mah:MetroWindow>

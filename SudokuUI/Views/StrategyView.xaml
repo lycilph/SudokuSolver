@@ -16,10 +16,12 @@
         </Grid.ColumnDefinitions>
         
         <CheckBox Grid.Column="0"
-                  Content="{Binding WrappedObject.Name}"/>
+                  Content="{Binding WrappedObject.Name}"
+                  IsChecked="{Binding Selected}"/>
         
         <Button Grid.Column="1"
                 Content="{icon:Lucide Kind=CirclePlay}"
+                Command="{Binding ExecuteCommand}"
                 Style="{DynamicResource MahApps.Styles.Button.Circle}"
                 Margin="10 0 0 0"/>
     </Grid>
