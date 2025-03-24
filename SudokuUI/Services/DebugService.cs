@@ -1,13 +1,26 @@
-﻿using System.Windows;
+﻿using System.Reflection;
+using System.Windows;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.DependencyInjection;
+using NLog;
+using SudokuUI.Infrastructure;
+using SudokuUI.Messages;
 using SudokuUI.ViewModels;
 using SudokuUI.Views;
 
 namespace SudokuUI.Services;
 
-public class DebugService
+public partial class DebugService : ObservableRecipient, IRecipient<MainWindowLoadedMessage>
 {
+    private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
     private DebugWindow? debug_window = null;
+
+    public DebugService()
+    {
+        IsActive = true;
+    }
 
     public void ShowDebugWindow()
     {
@@ -48,5 +61,16 @@ public class DebugService
     private void MainWindowLocationChanged(object? sender, EventArgs e)
     {
         PositionDebugWindow(sender as Window);
+    }
+
+    public void Receive(MainWindowLoadedMessage message)
+    {
+        logger.Info("Received the main window loaded message");
+
+        var assembly = Assembly.GetExecutingAssembly();
+        var mode = BuildModeDetector.GetBuildMode(assembly);
+
+        if (mode == BuildModeDetector.BuildMode.Debug)
+            ShowDebugWindow();
     }
 }

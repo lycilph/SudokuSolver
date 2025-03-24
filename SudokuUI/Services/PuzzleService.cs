@@ -9,10 +9,12 @@ using ObservableCollections;
 using SudokuUI.Infrastructure;
 using SudokuUI.Messages;
 using System.ComponentModel;
+using System.Reflection;
+using System.Threading.Tasks;
 
 namespace SudokuUI.Services;
 
-public class PuzzleService : ObservableRecipient, IRecipient<ResetMessage>
+public class PuzzleService : ObservableRecipient, IRecipient<ResetMessage>, IRecipient<MainWindowLoadedMessage>
 {
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
@@ -163,5 +165,16 @@ public class PuzzleService : ObservableRecipient, IRecipient<ResetMessage>
     {
         logger.Info("Received a reset message");
         Grid.Load(source);
+    }
+
+    public void Receive(MainWindowLoadedMessage message)
+    {
+        logger.Info("Received the main window loaded message");
+
+        var assembly = Assembly.GetExecutingAssembly();
+        var mode = BuildModeDetector.GetBuildMode(assembly);
+
+        if (mode == BuildModeDetector.BuildMode.Debug)
+            New();
     }
 }
