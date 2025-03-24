@@ -82,90 +82,99 @@
 
     <!-- Root grid to allow the different overlays (flyout, new game, hint and victory) -->
     <Grid>
-        <StackPanel Orientation="Vertical"
+        <DockPanel LastChildFill="True">
+            <StatusBar DockPanel.Dock="Bottom"
+                       VerticalAlignment="Bottom">
+                <StatusBarItem Content="Time:"/>
+                <Separator/>
+                <StatusBarItem Content="{Binding Elapsed}"/>
+            </StatusBar>
+
+            <StackPanel Orientation="Vertical"
                     Margin="10">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
 
-                <!-- Left side buttons -->
-                <StackPanel Grid.Column="0" 
-                            Orientation="Vertical">
-                    <Button Content="{icon:Lucide Kind=SquarePlus, Height=24, Width=24}"
-                            Command="{Binding NewPuzzleCommand}"
-                            ToolTip="New"
-                            Focusable="False"/>
+                    <!-- Left side buttons -->
+                    <StackPanel Grid.Column="0" 
+                                Orientation="Vertical">
+                        <Button Content="{icon:Lucide Kind=SquarePlus, Height=24, Width=24}"
+                                Command="{Binding NewPuzzleCommand}"
+                                ToolTip="New"
+                                Focusable="False"/>
 
-                    <Button Content="{icon:Lucide Kind=SquareX, Height=24, Width=24}"
-                            Command="{Binding ClearPuzzleCommand}"
-                            Margin="0 5 0 0"
-                            ToolTip="Clear"
-                            Focusable="False"/>
+                        <Button Content="{icon:Lucide Kind=SquareX, Height=24, Width=24}"
+                                Command="{Binding ClearPuzzleCommand}"
+                                Margin="0 5 0 0"
+                                ToolTip="Clear"
+                                Focusable="False"/>
 
-                    <Button Content="{icon:Lucide Kind=ArrowDownToLine, Height=24, Width=24}"
-                            Command="{Binding ImportCommand}"
-                            Margin="0 20 0 0"
-                            ToolTip="Import"
-                            Focusable="False"/>
+                        <Button Content="{icon:Lucide Kind=ArrowDownToLine, Height=24, Width=24}"
+                                Command="{Binding ImportCommand}"
+                                Margin="0 20 0 0"
+                                ToolTip="Import"
+                                Focusable="False"/>
 
-                    <Button Content="{icon:Lucide Kind=ArrowUpFromLine, Height=24, Width=24}"
-                            Command="{Binding ExportCommand}"
-                            Margin="0 5 0 0"
-                            ToolTip="Export"
-                            Focusable="False"/>
-                </StackPanel>
+                        <Button Content="{icon:Lucide Kind=ArrowUpFromLine, Height=24, Width=24}"
+                                Command="{Binding ExportCommand}"
+                                Margin="0 5 0 0"
+                                ToolTip="Export"
+                                Focusable="False"/>
+                    </StackPanel>
 
-                <ContentControl Grid.Column="1"
-                                Content="{Binding GridVM}"
-                                Margin="5 0"/>
+                    <ContentControl Grid.Column="1"
+                                    Content="{Binding GridVM}"
+                                    Margin="5 0"/>
 
-                <!-- Right side buttons -->
-                <StackPanel Grid.Column="2"
-                            Orientation="Vertical">
-                    <Button Content="{icon:Lucide Kind=Lightbulb, Height=24, Width=24}"
-                            IsEnabled="False"
-                            ToolTip="Hint"
-                            Focusable="False"/>
+                    <!-- Right side buttons -->
+                    <StackPanel Grid.Column="2"
+                                Orientation="Vertical">
+                        <Button Content="{icon:Lucide Kind=Lightbulb, Height=24, Width=24}"
+                                IsEnabled="False"
+                                ToolTip="Hint"
+                                Focusable="False"/>
 
-                    <Button Content="{icon:Lucide Kind=Flag, Height=24, Width=24}"
-                            IsEnabled="False"
-                            Margin="0 5 0 0"
-                            ToolTip="Solve the puzzle"
-                            Focusable="False"/>
+                        <Button Content="{icon:Lucide Kind=Flag, Height=24, Width=24}"
+                                IsEnabled="False"
+                                Margin="0 5 0 0"
+                                ToolTip="Solve the puzzle"
+                                Focusable="False"/>
 
-                    <Button Content="{icon:Lucide Kind=Hash, Height=24, Width=24}"
-                            Command="{Binding ShowSolutionCountCommand}"
-                            Margin="0 5 0 0"
-                            ToolTip="Count # of solutions"
-                            Focusable="False"/>
+                        <Button Content="{icon:Lucide Kind=Hash, Height=24, Width=24}"
+                                Command="{Binding ShowSolutionCountCommand}"
+                                Margin="0 5 0 0"
+                                ToolTip="Count # of solutions"
+                                Focusable="False"/>
 
-                    <Button Content="{icon:Lucide Kind=Grid2x2, Height=24, Width=24}"
-                            Command="{Binding FillCandidatesCommand}"
-                            Margin="0 20 0 0"
-                            ToolTip="Fill in all candidates"
-                            Focusable="False"/>
+                        <Button Content="{icon:Lucide Kind=Grid2x2, Height=24, Width=24}"
+                                Command="{Binding FillCandidatesCommand}"
+                                Margin="0 20 0 0"
+                                ToolTip="Fill in all candidates"
+                                Focusable="False"/>
 
-                    <Button Content="{icon:Lucide Kind=Grid2x2X, Height=24, Width=24}"
-                            Command="{Binding ClearCandidatesCommand}"
-                            Margin="0 5 0 0"
-                            ToolTip="Delete all candidates"
-                            Focusable="False"/>
-                </StackPanel>
-            </Grid>
+                        <Button Content="{icon:Lucide Kind=Grid2x2X, Height=24, Width=24}"
+                                Command="{Binding ClearCandidatesCommand}"
+                                Margin="0 5 0 0"
+                                ToolTip="Delete all candidates"
+                                Focusable="False"/>
+                    </StackPanel>
+                </Grid>
 
-            <!-- Digit and input mode selection -->
-            <ContentControl Content="{Binding DigitSelectionVM}"
-                            Margin="0 5 0 0"
-                            HorizontalAlignment="Center"/>
-        </StackPanel>
+                <!-- Digit and input mode selection -->
+                <ContentControl Content="{Binding DigitSelectionVM}"
+                                Margin="0 5 0 0"
+                                HorizontalAlignment="Center"/>
+            </StackPanel>
+        </DockPanel>
 
         <ContentControl Content="{Binding SettingsOverlayVM}"/>
 
         <ContentControl Content="{Binding WaitingOverlayVM}"/>
-        
+
         <ContentControl Content="{Binding VictoryOverlayVM}"/>
     </Grid>
 </mah:MetroWindow>

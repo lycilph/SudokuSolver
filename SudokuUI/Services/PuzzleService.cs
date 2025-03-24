@@ -9,6 +9,7 @@ using ObservableCollections;
 using SudokuUI.Infrastructure;
 using SudokuUI.Messages;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Reflection;
 
 namespace SudokuUI.Services;
@@ -18,6 +19,7 @@ public class PuzzleService : ObservableRecipient, IRecipient<ResetMessage>, IRec
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
     private readonly UndoRedoService undo_service;
+    private readonly Stopwatch stopwatch;
 
     private readonly string empty_source = ".................................................................................";
     private string source = string.Empty;
@@ -31,6 +33,7 @@ public class PuzzleService : ObservableRecipient, IRecipient<ResetMessage>, IRec
     public PuzzleService(UndoRedoService undo_service)
     {
         this.undo_service = undo_service;
+        stopwatch = Stopwatch.StartNew();
 
         foreach (var cell in Grid.Cells)
         {
@@ -58,10 +61,13 @@ public class PuzzleService : ObservableRecipient, IRecipient<ResetMessage>, IRec
             if (Grid.IsSolved())
             {
                 logger.Info("Puzzle solved");
+                stopwatch.Stop();
                 PuzzleSolved?.Invoke(this, EventArgs.Empty);
             }
         }
     }
+
+    public TimeSpan GetElapsedTime() => stopwatch.Elapsed;
 
     public List<int> DigitCount()
     {
@@ -171,6 +177,7 @@ public class PuzzleService : ObservableRecipient, IRecipient<ResetMessage>, IRec
     {
         logger.Info("Received a reset message");
         Grid.Load(source);
+        stopwatch.Restart();
     }
 
     public void Receive(MainWindowLoadedMessage message)

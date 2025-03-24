@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Windows.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Core.DancingLinks;
@@ -39,6 +40,9 @@ public partial class MainViewModel : ObservableObject
 
     [ObservableProperty]
     private UndoRedoService undoService;
+
+    [ObservableProperty]
+    private TimeSpan elapsed;
 
     public MainViewModel(PuzzleService puzzle_service,
                          UndoRedoService undo_service,
@@ -81,6 +85,10 @@ public partial class MainViewModel : ObservableObject
             if (e.PropertyName == nameof(VictoryOverlayViewModel.IsOpen))
                 IsKeyboardDisabled = VictoryOverlayVM.IsOpen;
         };
+
+        var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(100) };
+        timer.Tick += (s, e) => Elapsed = puzzle_service.GetElapsedTime();
+        timer.Start();
     }
     
     [RelayCommand]
