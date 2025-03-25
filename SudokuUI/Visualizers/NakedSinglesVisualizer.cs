@@ -4,7 +4,7 @@ using SudokuUI.ViewModels;
 
 namespace SudokuUI.Visualizers;
 
-public class NakedSinglesVisualizer : IStrategyVisualizer
+public class NakedSinglesVisualizer : IStrategyVisualizer<NakedSinglesCommand>
 {
     private readonly Brush color;
 
@@ -13,7 +13,7 @@ public class NakedSinglesVisualizer : IStrategyVisualizer
         color = App.Current.Resources["cell_positive_color"] as Brush ?? Brushes.Black;
     }
 
-    public void Show(GridViewModel vm, BaseCommand command)
+    public void Show(GridViewModel vm, NakedSinglesCommand command)
     {
         foreach (var element in command.Elements)
         {

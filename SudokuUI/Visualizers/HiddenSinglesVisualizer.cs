@@ -4,7 +4,7 @@ using SudokuUI.ViewModels;
 
 namespace SudokuUI.Visualizers;
 
-public class HiddenSinglesVisualizer : IStrategyVisualizer
+public class HiddenSinglesVisualizer : IStrategyVisualizer<HiddenSinglesCommand>
 {
     private readonly Brush hidden_single_color;
     private readonly Brush eliminated_candidates_color;
@@ -16,7 +16,7 @@ public class HiddenSinglesVisualizer : IStrategyVisualizer
 
     }
 
-    public void Show(GridViewModel vm, BaseCommand command)
+    public void Show(GridViewModel vm, HiddenSinglesCommand command)
     {
         foreach (var element in command.Elements)
         {

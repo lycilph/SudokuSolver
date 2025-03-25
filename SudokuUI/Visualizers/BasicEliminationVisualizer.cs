@@ -4,7 +4,7 @@ using SudokuUI.ViewModels;
 
 namespace SudokuUI.Visualizers;
 
-public class BasicEliminationVisualizer : IStrategyVisualizer
+public class BasicEliminationVisualizer : IStrategyVisualizer<BasicEliminationCommand>
 {
     private readonly Brush candidate_color;
     private readonly Brush cell_color;
@@ -15,8 +15,17 @@ public class BasicEliminationVisualizer : IStrategyVisualizer
         cell_color = App.Current.Resources["cell_information_color"] as Brush ?? Brushes.Black;
     }
 
-    public void Show(GridViewModel vm, BaseCommand command)
+    public void Show(GridViewModel vm, BasicEliminationCommand command)
     {
+        // These cells are eliminating candidates in its peers
+        foreach (var cell in command.CellsToVisualize)
+        {
+            var cell_vm = vm.Map(cell);
+            cell_vm.HighlightColor = cell_color;
+            cell_vm.Highlight = true;
+        }
+
+        // These are the candidates eliminated by the cells above
         foreach (var element in command.Elements)
         {
             foreach (var cell in element.Cells)
@@ -26,16 +35,6 @@ public class BasicEliminationVisualizer : IStrategyVisualizer
 
                 candidate_vm.HighlightColor = candidate_color;
                 candidate_vm.Highlight = true;
-            }
-        }
-
-        if (command is BasicEliminationCommand cmd)
-        {
-            foreach (var cell in cmd.CellsToVisualize)
-            {
-                var cell_vm = vm.Map(cell);
-                cell_vm.HighlightColor = cell_color;
-                cell_vm.Highlight = true;
             }
         }
     }

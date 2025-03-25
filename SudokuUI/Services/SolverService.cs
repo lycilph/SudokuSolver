@@ -4,6 +4,7 @@ using Core;
 using Core.Commands;
 using Core.Extensions;
 using Core.Strategies;
+using SudokuUI.Infrastructure;
 using SudokuUI.ViewModels;
 using SudokuUI.Visualizers;
 
@@ -33,10 +34,7 @@ public partial class SolverService : ObservableObject
         this.gridVM = gridVM;
 
         Strategies = Solver.KnownStrategies.ToObservableCollection();
-
-        Visualizers.Add(typeof(BasicEliminationCommand), new BasicEliminationVisualizer());
-        Visualizers.Add(typeof(NakedSinglesCommand), new NakedSinglesVisualizer());
-        Visualizers.Add(typeof(HiddenSinglesCommand), new HiddenSinglesVisualizer());
+        Visualizers = StrategyMapper.GetVisualizerMap(Strategies);
     }
 
     public void Show() => IsShown = true;
