@@ -28,12 +28,14 @@ public partial class CellViewModel : ObservableObject
     private bool highlight = false;
 
     [ObservableProperty]
-    private Brush highlightColor = Brushes.CornflowerBlue;
+    private Brush highlightColor = Brushes.Black;
 
     public CellViewModel(Cell cell)
     {
         puzzle_service = App.Current.Services.GetRequiredService<PuzzleService>();
         selection_service = App.Current.Services.GetRequiredService<SelectionService>();
+
+        HighlightColor = App.Current.Resources["cell_highlight_color"] as Brush ?? Brushes.Black;
 
         WrappedObject = cell;
 

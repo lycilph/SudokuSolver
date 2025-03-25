@@ -8,4 +8,9 @@
         <Setter Property="Width" Value="50"/>
         <Setter Property="Height" Value="50"/>
     </Style>
+
+    <SolidColorBrush x:Key="cell_highlight_color" Color="CornflowerBlue"/>
+    <SolidColorBrush x:Key="cell_positive_color" Color="ForestGreen"/>
+    <SolidColorBrush x:Key="cell_negative_color" Color="IndianRed"/>
+    <SolidColorBrush x:Key="cell_information_color" Color="Yellow"/>
 </ResourceDictionary>

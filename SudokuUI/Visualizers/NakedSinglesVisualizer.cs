@@ -6,6 +6,13 @@ namespace SudokuUI.Visualizers;
 
 public class NakedSinglesVisualizer : IStrategyVisualizer
 {
+    private readonly Brush color;
+
+    public NakedSinglesVisualizer()
+    {
+        color = App.Current.Resources["cell_positive_color"] as Brush ?? Brushes.Black;
+    }
+
     public void Show(GridViewModel vm, BaseCommand command)
     {
         foreach (var element in command.Elements)
@@ -13,7 +20,7 @@ public class NakedSinglesVisualizer : IStrategyVisualizer
             var cell_vm = vm.Map(element.Cell);
             var candidate_vm = cell_vm.Candidates[element.Number - 1];
 
-            candidate_vm.HighlightColor = Brushes.ForestGreen;
+            candidate_vm.HighlightColor = color;
             candidate_vm.Highlight = true;
         }
     }

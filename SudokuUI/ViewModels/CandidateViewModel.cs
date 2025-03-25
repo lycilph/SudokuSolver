@@ -26,6 +26,8 @@ public partial class CandidateViewModel : ObservableObject
 
         Value = value;
         IsVisible = true;
+
+        HighlightColor = App.Current.Resources["cell_highlight_color"] as Brush ?? Brushes.Black;
     }
 
     public bool CellHasCandidate() => cell.Contains(Value);
