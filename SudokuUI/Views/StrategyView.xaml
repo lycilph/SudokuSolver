@@ -12,6 +12,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition SharedSizeGroup="name" Width="Auto"/>
             <ColumnDefinition SharedSizeGroup="execute" Width="Auto"/>
+            <ColumnDefinition SharedSizeGroup="visualize" Width="Auto"/>
             <ColumnDefinition SharedSizeGroup="leftover"/>
         </Grid.ColumnDefinitions>
         
@@ -22,6 +23,12 @@
         <Button Grid.Column="1"
                 Content="{icon:Lucide Kind=CirclePlay}"
                 Command="{Binding ExecuteCommand}"
+                Style="{DynamicResource MahApps.Styles.Button.Circle}"
+                Margin="10 0 0 0"/>
+
+        <Button Grid.Column="2"
+                Content="{icon:Lucide Kind=CircleHelp}"
+                Command="{Binding VisualizeCommand}"
                 Style="{DynamicResource MahApps.Styles.Button.Circle}"
                 Margin="10 0 0 0"/>
     </Grid>

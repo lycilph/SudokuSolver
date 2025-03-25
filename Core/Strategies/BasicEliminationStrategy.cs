@@ -22,12 +22,15 @@ public class BasicEliminationStrategy : BaseStrategy<BasicEliminationStrategy>
             var peers = cell.Peers.Where(p => p.IsEmpty && p.Candidates.Contains(cell.Value)).ToList();
 
             if (peers.Count > 0)
+            {
+                command.CellsToVisualize.Add(cell);
                 command.Add(new CommandElement
                 {
                     Description = $"Cell {cell.Index} eliminates candidate {cell.Value} from cell(s): {string.Join(',', peers.Select(c => c.Index))}",
                     Numbers = [cell.Value],
                     Cells = peers
                 });
+            }
         }
 
         return command.IsValid() ? command : null;

@@ -6,11 +6,13 @@ namespace SudokuUI.Visualizers;
 
 public class BasicEliminationVisualizer : IStrategyVisualizer
 {
-    private readonly Brush color;
+    private readonly Brush candidate_color;
+    private readonly Brush cell_color;
 
     public BasicEliminationVisualizer()
     {
-        color = App.Current.Resources["cell_negative_color"] as Brush ?? Brushes.Black;
+        candidate_color = App.Current.Resources["cell_negative_color"] as Brush ?? Brushes.Black;
+        cell_color = App.Current.Resources["cell_information_color"] as Brush ?? Brushes.Black;
     }
 
     public void Show(GridViewModel vm, BaseCommand command)
@@ -22,8 +24,18 @@ public class BasicEliminationVisualizer : IStrategyVisualizer
                 var cell_vm = vm.Map(cell);
                 var candidate_vm = cell_vm.Candidates[element.Number - 1];
 
-                candidate_vm.HighlightColor = color;
+                candidate_vm.HighlightColor = candidate_color;
                 candidate_vm.Highlight = true;
+            }
+        }
+
+        if (command is BasicEliminationCommand cmd)
+        {
+            foreach (var cell in cmd.CellsToVisualize)
+            {
+                var cell_vm = vm.Map(cell);
+                cell_vm.HighlightColor = cell_color;
+                cell_vm.Highlight = true;
             }
         }
     }

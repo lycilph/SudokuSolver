@@ -17,6 +17,7 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<ShowNotific
     private readonly PuzzleService puzzle_service;
     private readonly SelectionService selection_service;
     private readonly SettingsService settings_service;
+    private readonly SolverService solver_service;
     private readonly DebugService debug_service;
 
     [ObservableProperty]
@@ -59,6 +60,7 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<ShowNotific
                          UndoRedoService undo_service,
                          SelectionService selection_service,
                          SettingsService settings_service,
+                         SolverService solver_service,
                          DebugService debug_service,
                          GridViewModel gridVM,
                          DigitSelectionViewModel digitSelectionVM,
@@ -71,6 +73,7 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<ShowNotific
         this.puzzle_service = puzzle_service;
         this.selection_service = selection_service;
         this.settings_service = settings_service;
+        this.solver_service = solver_service;
         this.debug_service = debug_service;
 
         GridVM = gridVM;
@@ -99,10 +102,10 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<ShowNotific
             if (e.PropertyName == nameof(VictoryOverlayViewModel.IsOpen))
                 IsKeyboardDisabled = VictoryOverlayVM.IsOpen;
         };
-        SolverOverlayVM.PropertyChanged += (s, e) =>
+        solver_service.PropertyChanged += (s, e) =>
         {
-            if (e.PropertyName == nameof(SolverOverlayViewModel.IsOpen))
-                IsKeyboardDisabled = SolverOverlayVM.IsOpen;
+            if (e.PropertyName == nameof(SolverService.IsShown))
+                IsKeyboardDisabled = solver_service.IsShown;
         };
 
         var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(100) };
@@ -199,9 +202,9 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<ShowNotific
             return;
         }
 
-        if (SolverOverlayVM.IsOpen)
+        if (solver_service.IsShown)
         {
-            SolverOverlayVM.Close();
+            solver_service.Hide();
             return;
         }
 
@@ -247,12 +250,12 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<ShowNotific
     [RelayCommand]
     private void ShowHint()
     {
-        var has_hint = SolverOverlayVM.NextHint();
+        var has_hint = solver_service.NextHint();
 
         if (has_hint)
         {
             selection_service.Clear();
-            SolverOverlayVM.Show();
+            solver_service.Show();
         }
         else
         {

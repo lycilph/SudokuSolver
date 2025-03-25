@@ -9,7 +9,8 @@ public static class Solver
     public static readonly IStrategy[] KnownStrategies =
         [
             new BasicEliminationStrategy(),
-            new NakedSinglesStrategy()
+            new NakedSinglesStrategy(),
+            new HiddenSinglesStrategy()
         ];
 
     public static ICommand? Step(Grid grid)
