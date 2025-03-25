@@ -52,13 +52,6 @@ public partial class SolverOverlayViewModel : ObservableObject
             solver_service.ClearVisualization();
     }
 
-    //public void SetHint(ICommand cmd)
-    //{
-    //    Command = cmd;
-    //    Description = Command?.Description ?? "No more hints found";
-    //    ShowVisualization();
-    //}
-
     [RelayCommand(CanExecute = nameof(CanApply))]
     private void Apply()
     {

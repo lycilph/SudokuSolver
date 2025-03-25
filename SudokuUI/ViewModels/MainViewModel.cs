@@ -108,6 +108,19 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<ShowNotific
                 IsKeyboardDisabled = solver_service.IsShown;
         };
 
+        // Handle the puzzle solved event
+        puzzle_service.PuzzleSolved += (s, e) =>
+        {
+            SolverOverlayVM.Close();
+
+            VictoryOverlayVM.Elapsed = puzzle_service.GetElapsedTime();
+            VictoryOverlayVM.Show();
+        };
+
+        // Handle events from the victory overlay
+        VictoryOverlayVM.RequestNewGame += async (s, e) => await NewPuzzle();
+        VictoryOverlayVM.RequestClearGame += (s, e) => ClearPuzzle();
+
         var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(100) };
         timer.Tick += (s, e) => Elapsed = puzzle_service.GetElapsedTime();
         timer.Start();
