@@ -46,8 +46,10 @@
                    VerticalAlignment="Bottom">
             <StackPanel DockPanel.Dock="Right"
                         Margin="5 0 0 0">
-                <Button Content="{icon:Lucide Kind=Play}"/>
+                <Button Content="{icon:Lucide Kind=Play}"
+                        Command="{Binding ApplyCommand}"/>
                 <Button Content="{icon:Lucide Kind=FastForward}"
+                        Command="{Binding ApplyAndNextCommand}"
                         Margin="0 5 0 0"/>
                 <Button Content="{icon:Lucide Kind=Pause}"
                         Command="{Binding CloseCommand}"

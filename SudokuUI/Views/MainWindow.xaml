@@ -77,6 +77,13 @@
                         IsOpen="{Binding SettingsVM.IsOpen}">
                 <ContentControl Content="{Binding SettingsVM}"/>
             </mah:Flyout>
+
+            <mah:Flyout Header="{Binding Notification}" 
+                        Position="Bottom" 
+                        IsOpen="{Binding ShowMessage}" 
+                        CloseButtonVisibility="Collapsed"
+                        AutoCloseInterval="2000"
+                        IsAutoCloseEnabled="True"/>
         </mah:FlyoutsControl>
     </mah:MetroWindow.Flyouts>
 

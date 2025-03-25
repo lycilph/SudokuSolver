@@ -1,9 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Core.Commands;
 using Core.Strategies;
 using Microsoft.Extensions.DependencyInjection;
 using NLog;
+using SudokuUI.Messages;
 using SudokuUI.Services;
 
 namespace SudokuUI.ViewModels;
@@ -13,6 +15,7 @@ public partial class StrategyViewModel : ObservableObject
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
     private readonly PuzzleService puzzle_service;
+    private readonly UndoRedoService undo_service;
 
     [ObservableProperty]
     private IStrategy wrappedObject;
@@ -23,6 +26,7 @@ public partial class StrategyViewModel : ObservableObject
     public StrategyViewModel(IStrategy strategy)
     {
         puzzle_service = App.Current.Services.GetRequiredService<PuzzleService>();
+        undo_service = App.Current.Services.GetRequiredService<UndoRedoService>();
 
         WrappedObject = strategy;
     }
@@ -33,11 +37,8 @@ public partial class StrategyViewModel : ObservableObject
         logger.Info($"Executing strategy {WrappedObject.Name}");
 
         if (WrappedObject.Plan(puzzle_service.Grid) is BaseCommand command)
-        {
-            logger.Info($"{command.Name} is {command.IsValid()}");
-            command.Do();
-        }
+            undo_service.Execute(command);
         else
-            logger.Info("Strategy invalid");
+            WeakReferenceMessenger.Default.Send(new ShowNotificationMessage($"Cannot execute strategy {WrappedObject.Name}"));
     }
 }

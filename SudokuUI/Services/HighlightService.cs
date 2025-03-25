@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel;
+using System.Windows.Media;
+using Core.Extensions;
 using NLog;
 using SudokuUI.ViewModels;
 
@@ -43,5 +45,19 @@ public class HighlightService
         var candidate_vms = grid_vm.Boxes.SelectMany(b => b.Cells).SelectMany(c => c.Candidates);
         foreach (var vm in candidate_vms)
             vm.Highlight = vm.Value == number && vm.CellHasCandidate();
+    }
+
+    public void Clear()
+    {
+        grid_vm.Boxes.SelectMany(b => b.Cells).ForEach(c => 
+        {
+            c.Highlight = false;
+            c.HighlightColor = Brushes.CornflowerBlue;
+        });
+        grid_vm.Boxes.SelectMany(b => b.Cells).SelectMany(c => c.Candidates).ForEach(c => 
+        {
+            c.Highlight = false;
+            c.HighlightColor = Brushes.CornflowerBlue;
+        });
     }
 }

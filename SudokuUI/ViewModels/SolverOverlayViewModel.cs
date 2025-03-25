@@ -1,13 +1,25 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Core;
+using Core.Commands;
 using SudokuUI.Services;
+using SudokuUI.Visualizers;
 
 namespace SudokuUI.ViewModels;
 
 public partial class SolverOverlayViewModel : ObservableObject
 {
     private readonly PuzzleService puzzle_service;
+    private readonly HighlightService highlight_service;
+    private readonly UndoRedoService undo_service;
+    private readonly GridViewModel gridVM;
+
+    private readonly Dictionary<Type, IStrategyVisualizer> visualizers = [];
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(ApplyCommand))]
+    [NotifyCanExecuteChangedFor(nameof(ApplyAndNextCommand))]
+    private ICommand? command = null;
 
     [ObservableProperty]
     private bool isOpen = false;
@@ -15,18 +27,64 @@ public partial class SolverOverlayViewModel : ObservableObject
     [ObservableProperty]
     private string description = string.Empty;
 
-    public SolverOverlayViewModel(PuzzleService puzzle_service)
+    private bool CanApply => Command != null;
+    private bool CanApplyAndNext => Command != null;
+
+    public SolverOverlayViewModel(PuzzleService puzzle_service, HighlightService highlight_service, UndoRedoService undo_service, GridViewModel gridVM)
     {
         this.puzzle_service = puzzle_service;
+        this.highlight_service = highlight_service;
+        this.undo_service = undo_service;
+        this.gridVM = gridVM;
+
+        visualizers.Add(typeof(BasicEliminationCommand), new BasicEliminationVisualizer());
+        visualizers.Add(typeof(NakedSinglesCommand), new NakedSinglesVisualizer());
     }
 
     partial void OnIsOpenChanged(bool value)
     {
-        if (IsOpen)
+        if (isOpen)
+            ShowVisualization();
+        else
+            // Clear visualization here
+            highlight_service.Clear();
+    }
+
+    public void ShowVisualization()
+    {
+        if (Command != null && Command is BaseCommand base_command)
         {
-            var cmd = Solver.Step(puzzle_service.Grid);
-            Description = cmd?.Description ?? "No more steps to take";
+            var type = Command.GetType();
+            var visualizer = visualizers[type];
+
+            // Show visualization here
+            visualizer.Show(gridVM, base_command);
         }
+    }
+
+    public bool NextHint()
+    {
+        Command = Solver.Step(puzzle_service.Grid);
+        Description = Command?.Description ?? "No more hints found";
+
+        return Command != null;
+    }
+    
+    [RelayCommand(CanExecute = nameof(CanApply))]
+    private void Apply()
+    {
+        if (Command != null)
+            undo_service.Execute(Command);
+        Close();
+    }
+
+    [RelayCommand(CanExecute = nameof(CanApplyAndNext))]
+    private void ApplyAndNext()
+    {
+        if (Command != null)
+            undo_service.Execute(Command);
+        NextHint();
+        ShowVisualization();
     }
 
     [RelayCommand]

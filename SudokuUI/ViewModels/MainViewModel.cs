@@ -2,15 +2,17 @@
 using System.Windows.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Core.DancingLinks;
 using Core.Extensions;
 using MahApps.Metro.Controls.Dialogs;
 using SudokuUI.Dialogs;
+using SudokuUI.Messages;
 using SudokuUI.Services;
 
 namespace SudokuUI.ViewModels;
 
-public partial class MainViewModel : ObservableObject
+public partial class MainViewModel : ObservableRecipient, IRecipient<ShowNotificationMessage>
 {
     private readonly PuzzleService puzzle_service;
     private readonly SelectionService selection_service;
@@ -46,6 +48,12 @@ public partial class MainViewModel : ObservableObject
 
     [ObservableProperty]
     private TimeSpan elapsed;
+    
+    [ObservableProperty]
+    private bool showMessage = false;
+
+    [ObservableProperty]
+    private string notification = string.Empty;
 
     public MainViewModel(PuzzleService puzzle_service,
                          UndoRedoService undo_service,
@@ -100,6 +108,8 @@ public partial class MainViewModel : ObservableObject
         var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(100) };
         timer.Tick += (s, e) => Elapsed = puzzle_service.GetElapsedTime();
         timer.Start();
+
+        WeakReferenceMessenger.Default.RegisterAll(this);
     }
     
     [RelayCommand]
@@ -237,7 +247,23 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     private void ShowHint()
     {
-        selection_service.Clear();
-        SolverOverlayVM.Show();
+        var has_hint = SolverOverlayVM.NextHint();
+
+        if (has_hint)
+        {
+            selection_service.Clear();
+            SolverOverlayVM.Show();
+        }
+        else
+        {
+            //Show notification if not more hints
+            WeakReferenceMessenger.Default.Send(new ShowNotificationMessage("No more hints found"));
+        }
+    }
+
+    public void Receive(ShowNotificationMessage message)
+    {
+        Notification = message.Notification;
+        ShowMessage = true;
     }
 }
