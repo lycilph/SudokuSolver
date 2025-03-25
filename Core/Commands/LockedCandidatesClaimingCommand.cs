@@ -1,10 +1,10 @@
 ﻿namespace Core.Commands;
 
 /// <summary>
-/// See LockedCandidatesPointingStrategy for more information
+/// See LockedCandidatesClaimingStrategy for more information
 /// </summary>
 
-public class LockedCandidatesPointingCommand(string name) : BaseCommand(name)
+public class LockedCandidatesClaimingCommand(string name) : BaseCommand(name)
 {
     public override void Do()
     {

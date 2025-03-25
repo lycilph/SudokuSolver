@@ -1,6 +1,5 @@
 ﻿using Core.Commands;
 using Core.Models;
-using System;
 
 namespace Core.Strategies;
 
@@ -65,7 +64,6 @@ public class LockedCandidatesPointingStrategy : BaseStrategy<LockedCandidatesPoi
 
                 // Remove the value from all other cells in the column/row
                 if (cells.Count > 0)
-                {
                     command.Add(new CommandElement
                     {
                         Description = $"A pointing candidate {value} in {box.FullName} and {unit.FullName}, eliminates {value} in cells: {string.Join(',', cells.Select(c => c.Index))}",
@@ -73,7 +71,6 @@ public class LockedCandidatesPointingStrategy : BaseStrategy<LockedCandidatesPoi
                         Cells = cells,
                         CellsToVisualize = pointing_cells
                     });
-                }
             }
         }
     }
