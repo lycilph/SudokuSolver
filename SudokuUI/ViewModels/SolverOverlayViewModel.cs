@@ -10,11 +10,10 @@ namespace SudokuUI.ViewModels;
 public partial class SolverOverlayViewModel : ObservableObject
 {
     private readonly PuzzleService puzzle_service;
+    private readonly SolverService solver_service;
     private readonly HighlightService highlight_service;
     private readonly UndoRedoService undo_service;
     private readonly GridViewModel gridVM;
-
-    private readonly Dictionary<Type, IStrategyVisualizer> visualizers = [];
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(ApplyCommand))]
@@ -30,15 +29,17 @@ public partial class SolverOverlayViewModel : ObservableObject
     private bool CanApply => Command != null;
     private bool CanApplyAndNext => Command != null;
 
-    public SolverOverlayViewModel(PuzzleService puzzle_service, HighlightService highlight_service, UndoRedoService undo_service, GridViewModel gridVM)
+    public SolverOverlayViewModel(PuzzleService puzzle_service,
+                                  SolverService solver_service,
+                                  HighlightService highlight_service,
+                                  UndoRedoService undo_service,
+                                  GridViewModel gridVM)
     {
         this.puzzle_service = puzzle_service;
+        this.solver_service = solver_service;
         this.highlight_service = highlight_service;
         this.undo_service = undo_service;
         this.gridVM = gridVM;
-
-        visualizers.Add(typeof(BasicEliminationCommand), new BasicEliminationVisualizer());
-        visualizers.Add(typeof(NakedSinglesCommand), new NakedSinglesVisualizer());
     }
 
     partial void OnIsOpenChanged(bool value)
@@ -55,7 +56,7 @@ public partial class SolverOverlayViewModel : ObservableObject
         if (Command != null && Command is BaseCommand base_command)
         {
             var type = Command.GetType();
-            var visualizer = visualizers[type];
+            var visualizer = solver_service.Visualizers[type];
 
             // Show visualization here
             visualizer.Show(gridVM, base_command);

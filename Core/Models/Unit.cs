@@ -11,5 +11,8 @@ public class Unit
     public int Index { get; set; }
     public Cell[] Cells { get; set; } = [];
 
+    public IEnumerable<Cell> FilledCells() => Cells.Where(c => c.IsFilled);
+    public IEnumerable<Cell> EmptyCells() => Cells.Where(c => c.IsEmpty);
+
     public string FullName => $"{Name} {Index}";
 }
