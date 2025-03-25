@@ -21,7 +21,7 @@ public partial class StrategyViewModel : ObservableObject
     private IStrategy wrappedObject;
 
     [ObservableProperty]
-    private bool selected = false;
+    private bool selected = true;
 
     public StrategyViewModel(IStrategy strategy)
     {

@@ -56,7 +56,7 @@
             <Button Content="Toggle"
                     Command="{Binding ToggleCommand}"/>
             <Button Content="Next"
-                    IsEnabled="False"
+                    Command="{Binding NextCommand}"
                     Margin="10 0 0 0"/>
         </StackPanel>
     </Grid>
