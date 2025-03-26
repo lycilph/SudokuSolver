@@ -53,7 +53,7 @@ public class HiddenPairsStrategy : BaseStrategy<HiddenPairsStrategy>
                     digit_to_cells[i].SequenceEqual(digit_to_cells[j]))
                 {
                     // Since the the entries for i and j should be the same, either can be used to make the pair
-                    var cell_pair = (digit_to_cells[i][0], digit_to_cells[i][0]);
+                    var cell_pair = (digit_to_cells[i][0], digit_to_cells[i][1]);
 
                     // Check if this pair has already been found
                     if (!pairs_found.Contains(cell_pair))
@@ -69,7 +69,8 @@ public class HiddenPairsStrategy : BaseStrategy<HiddenPairsStrategy>
                                     Description = $"Hidden pair ({i},{j}) in {unit.FullName}: Eliminates {candidate_to_eliminate} in cell {cell.Index}",
                                     Numbers = [candidate_to_eliminate],
                                     Cells = [cell],
-                                    NumbersToVisualize = [i, j]
+                                    NumbersToVisualize = [i, j],
+                                    CellsToVisualize = [cell_pair.Item1, cell_pair.Item2]
                                 });
                         }
                     }
