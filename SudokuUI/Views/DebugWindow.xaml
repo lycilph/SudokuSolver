@@ -4,60 +4,84 @@
                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                  xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" 
-                 xmlns:vm="clr-namespace:SudokuUI.ViewModels"
+                 xmlns:icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                 xmlns:vm="clr-namespace:SudokuUI.ViewModels" 
+                 xmlns:infra="clr-namespace:SudokuUI.Infrastructure"
                  mc:Ignorable="d"
                  Title="Debug" 
                  Height="650" 
                  Width="350"
                  ResizeMode="NoResize"
                  d:DataContext="{d:DesignInstance Type=vm:DebugViewModel}">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="1*"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="1*"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="1*"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="2*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+    <mah:MetroWindow.Resources>
+        <infra:ExpanderIndexConverter x:Key="expander_index_converter"/>
+    </mah:MetroWindow.Resources>
 
-        
-        <TextBlock Grid.Row="0"
-                   Text="Undo stack"/>
-        <ListBox Grid.Row="1"
-                 ItemsSource="{Binding UndoStack}"
-                 DisplayMemberPath="Name"
-                 SelectedItem="{Binding Selected}"/>
+    <StackPanel>
+        <Expander Header="Predefined puzzles"
+                  IsExpanded="{Binding ActiveExpander, Converter={StaticResource expander_index_converter}, ConverterParameter=0}">
+            <DockPanel LastChildFill="True">
+                <TextBlock DockPanel.Dock="Top"
+                           Text="Select puzzle to load"/>
+                <Button DockPanel.Dock="Right"
+                        Content="{icon:Lucide Kind=ArrowDownToLine, Height=24, Width=24}"
+                        Command="{Binding LoadCommand}"
+                        Margin="10 0 0 0"/>
+                <ComboBox ItemsSource="{Binding Puzzles}"
+                          SelectedItem="{Binding SelectedPuzzle}"
+                          DisplayMemberPath="Item1"/>
+            </DockPanel>
+        </Expander>
 
-        <TextBlock Grid.Row="2"
-                   Text="Redo stack"/>
-        <ListBox Grid.Row="3"
-                 ItemsSource="{Binding RedoStack}"
-                 DisplayMemberPath="Name"
-                 SelectedItem="{Binding Selected}"/>
-        
-        <TextBlock Grid.Row="4"
-                   Text="Command description"/>
-        <TextBox Grid.Row="5"
-                 IsReadOnly="True"
-                 Text="{Binding Selected.Description, Mode=OneWay}"
-                 TextWrapping="Wrap"/>
+        <Expander Header="Strategies"
+                  IsExpanded="{Binding ActiveExpander, Converter={StaticResource expander_index_converter}, ConverterParameter=1}">
+            <StackPanel Height="500">
+                <ItemsControl ItemsSource="{Binding Strategies}"
+                              Grid.IsSharedSizeScope="True"/>
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="Toggle"
+                            Command="{Binding ToggleCommand}"/>
+                    <Button Content="Next"
+                            Command="{Binding NextCommand}"
+                            Margin="10 0 0 0"/>
+                </StackPanel>
+            </StackPanel>
+        </Expander>
 
-        <TextBlock Grid.Row="6"
-                   Text="Strategies"/>
-        <ItemsControl Grid.Row="7"
-                      ItemsSource="{Binding Strategies}"
-                      Grid.IsSharedSizeScope="True"/>
-        <StackPanel Grid.Row="8"
-                    Orientation="Horizontal">
-            <Button Content="Toggle"
-                    Command="{Binding ToggleCommand}"/>
-            <Button Content="Next"
-                    Command="{Binding NextCommand}"
-                    Margin="10 0 0 0"/>
-        </StackPanel>
-    </Grid>
+        <Expander Header="Undo/Redo stacks"
+                  VerticalAlignment="Stretch"
+                  IsExpanded="{Binding ActiveExpander, Converter={StaticResource expander_index_converter}, ConverterParameter=2}">
+            <Grid Height="500">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0"
+                           Text="Undo stack"/>
+                <ListBox Grid.Row="1"
+                         ItemsSource="{Binding UndoStack}"
+                         DisplayMemberPath="Name"
+                         SelectedItem="{Binding Selected}"/>
+
+                <TextBlock Grid.Row="2"
+                           Text="Redo stack"/>
+                <ListBox Grid.Row="3"
+                         ItemsSource="{Binding RedoStack}"
+                         DisplayMemberPath="Name"
+                         SelectedItem="{Binding Selected}"/>
+
+                <TextBlock Grid.Row="4"
+                           Text="Command description"/>
+                <TextBox Grid.Row="5"
+                         IsReadOnly="True"
+                         Text="{Binding Selected.Description, Mode=OneWay}"
+                         TextWrapping="Wrap"/>
+            </Grid>
+        </Expander>
+    </StackPanel>
 </mah:MetroWindow>
