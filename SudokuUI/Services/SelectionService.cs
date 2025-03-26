@@ -9,6 +9,9 @@ public partial class SelectionService : ObservableRecipient, IRecipient<ResetMes
 {
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
+    private enum CycleDirection { Next, Previous };
+    private CycleDirection cycle_direction = CycleDirection.Next;
+
     public enum Mode { Digits, Hints };
 
     [ObservableProperty]
@@ -19,6 +22,7 @@ public partial class SelectionService : ObservableRecipient, IRecipient<ResetMes
 
     public SelectionService()
     {
+        // Needs to be activated to receive messages
         IsActive = true;
     }
 
@@ -28,6 +32,8 @@ public partial class SelectionService : ObservableRecipient, IRecipient<ResetMes
 
     public void Next()
     {
+        cycle_direction = CycleDirection.Next;
+
         if (Digit == 9)
             Digit = 1;
         else
@@ -36,10 +42,20 @@ public partial class SelectionService : ObservableRecipient, IRecipient<ResetMes
 
     public void Previous()
     {
+        cycle_direction = CycleDirection.Previous;
+
         if (Digit == 1)
             Digit = 9;
         else
             Digit--;
+    }
+
+    public void Continue()
+    {
+        if (cycle_direction == CycleDirection.Next)
+            Next();
+        else
+            Previous();
     }
 
     partial void OnInputModeChanged(Mode value)

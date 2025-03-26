@@ -41,6 +41,16 @@ public partial class DigitSelectionViewModel : ObservableObject
 
     private void UpdateSelectedDigit(int digit)
     {
+        if (digit > 0)
+        {
+            var digit_to_select = Digits[digit - 1];
+            if (digit_to_select.Missing <= 0 && Digits.Any(d => d.Missing > 0))
+            {
+                selection_service.Continue();
+                return;
+            }
+        }
+
         Digits.ForEach(d => d.Selected = d.Digit == digit);
     }
 

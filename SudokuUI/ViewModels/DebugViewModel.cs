@@ -33,6 +33,8 @@ public partial class DebugViewModel : ObservableObject
     [ObservableProperty]
     private ObservableCollection<Tuple<string, string>> puzzles = 
         [
+            Tuple.Create("Easy 1", "..8.......3.......9.....2..8.1..2.9..576..1.....5..7.25..8.1..3.93.....56...3..4."),
+            Tuple.Create("Easy 2", ".5..83.17...1..4..3.4..56.8....3...9.9.8245....6....7...9....5...729..861.36.72.4"),
             Tuple.Create("Naked Singles", ".5..83.17...1..4..3.4..56.8....3...9.9.8245....6....7...9....5...729..861.36.72.4"),
             Tuple.Create("Hidden Singles", ".28..7....16.83.7.....2.85113729.......73........463.729..7.......86.14....3..7.."),
             Tuple.Create("Pointing Candidates 1", ".179.36......8....9.....5.7.72.1.43....4.2.7..6437.25.7.1....65....3......56.172."),
@@ -69,6 +71,9 @@ public partial class DebugViewModel : ObservableObject
     [RelayCommand]
     private void Next()
     {
+        if (puzzle_service.Grid.IsSolved())
+            return;
+
         var strategies = Strategies.Where(s => s.Selected).Select(s => s.WrappedObject).ToArray();
         var command = Solver.Step(puzzle_service.Grid, strategies);
 
