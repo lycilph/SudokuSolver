@@ -17,7 +17,8 @@ public static class Solver
             new HiddenPairsStrategy(),
             new NakedTriplesStrategy(),
             new HiddenTriplesStrategy(),
-            new NakedQuadsStrategy()
+            new NakedQuadsStrategy(),
+            new HiddenQuadsStrategy()
         ];
 
     public static ICommand? Step(Grid grid)
