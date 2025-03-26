@@ -3,7 +3,7 @@
 /// <summary>
 /// See NakedTriplesStrategy for more information
 /// </summary>
-/// 
+
 public class NakedTriplesCommand(string name) : BaseCommand(name)
 {
     public override void Do()

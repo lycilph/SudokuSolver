@@ -44,7 +44,8 @@ public partial class DebugViewModel : ObservableObject
             Tuple.Create("Naked Pairs", "4.....938.32.941...953..24.37.6.9..4529..16736.47.3.9.957..83....39..4..24..3.7.9"),
             Tuple.Create("Hidden Pairs 1", "72.4.8.3..8.....474.1.768.281.739......851......264.8.2.968.41334......8168943275"),
             Tuple.Create("Hidden Pairs 2", ".49132....81479...327685914.96.518...75.28....38.46..5853267...712894563964513..."),
-            Tuple.Create("Naked Triples", ".7.4.8.29..2.....4854.2...7..83742...2.........32617......936122.....4.313.642.7.")
+            Tuple.Create("Naked Triples", ".7.4.8.29..2.....4854.2...7..83742...2.........32617......936122.....4.313.642.7."),
+            Tuple.Create("Hidden Triples", ".....1.3.231.9.....65..31..6789243..1.3.5...6...1367....936.57...6.198433........")
         ];
     
     public DebugViewModel(PuzzleService puzzle_service, UndoRedoService undo_service, SolverService solver_service)
