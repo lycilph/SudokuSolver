@@ -11,6 +11,9 @@ public partial class VictoryOverlayViewModel : ObservableObject
 {
     private readonly PuzzleService puzzle_service;
 
+    public event EventHandler RequestNewGame = null!;
+    public event EventHandler RequestClearGame = null!;
+
     [ObservableProperty]
     private bool isOpen = false;
 
@@ -24,12 +27,6 @@ public partial class VictoryOverlayViewModel : ObservableObject
     {
         this.puzzle_service = puzzle_service;
 
-        puzzle_service.PuzzleSolved += (s, e) =>
-        {
-            Elapsed = puzzle_service.GetElapsedTime();
-            Show();
-        };
-
         Cells = puzzle_service.Grid.Cells.ToObservableCollection();
     }
 
@@ -41,13 +38,13 @@ public partial class VictoryOverlayViewModel : ObservableObject
     private void New()
     {
         Close();
-        puzzle_service.New();
+        RequestNewGame?.Invoke(this, EventArgs.Empty);
     }
 
     [RelayCommand]
     private void Clear()
     {
         Close();
-        puzzle_service.Clear();
+        RequestClearGame?.Invoke(this, EventArgs.Empty);
     }
 }
