@@ -146,7 +146,7 @@
                                 Focusable="False"/>
 
                         <Button Content="{icon:Lucide Kind=Flag, Height=24, Width=24}"
-                                IsEnabled="False"
+                                Command="{Binding RunSolverCommand}"
                                 Margin="0 5 0 0"
                                 ToolTip="Solve the puzzle"
                                 Focusable="False"/>

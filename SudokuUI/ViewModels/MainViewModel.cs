@@ -1,11 +1,12 @@
 ﻿using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Core;
 using Core.DancingLinks;
 using Core.Extensions;
+using Core.Models;
 using MahApps.Metro.Controls.Dialogs;
 using SudokuUI.Dialogs;
 using SudokuUI.Messages;
@@ -19,6 +20,7 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<ShowNotific
     private readonly SelectionService selection_service;
     private readonly SettingsService settings_service;
     private readonly SolverService solver_service;
+    private readonly UndoRedoService undo_service;
     private readonly DebugService debug_service;
 
     [ObservableProperty]
@@ -284,6 +286,33 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<ShowNotific
         {
             //Show notification if not more hints
             WeakReferenceMessenger.Default.Send(new ShowNotificationMessage("No more hints found"));
+        }
+    }
+
+    [RelayCommand]
+    private async Task RunSolverAsync()
+    {
+        var any_candidates = puzzle_service.Grid.Cells.Any(c => c.Count() > 0);
+        if (!any_candidates)
+        {
+            var result = await DialogCoordinator.Instance.ShowMessageAsync(this, "No candidates found", "Do you want to add them automatically?", MessageDialogStyle.AffirmativeAndNegative);
+            if (result == MessageDialogResult.Affirmative)
+                puzzle_service.FillCandidates();
+            else
+                return;
+        }
+
+        (var commands, var stats) = Solver.Solve(puzzle_service.Grid);
+
+        if (puzzle_service.Grid.IsSolved())
+        {
+            VictoryOverlayVM.AddStatistics(stats);
+            UndoService.Execute(commands); // This will also trigger the PuzzleSolved event, and show the victory overlay
+        }
+        else
+        {
+            UndoService.Execute(commands);
+            WeakReferenceMessenger.Default.Send(new ShowNotificationMessage("Puzzle couldn't be solved!"));
         }
     }
 
