@@ -12,7 +12,8 @@ public static class Solver
             new NakedSinglesStrategy(),
             new HiddenSinglesStrategy(),
             new LockedCandidatesPointingStrategy(),
-            new LockedCandidatesClaimingStrategy()
+            new LockedCandidatesClaimingStrategy(),
+            new NakedPairsStrategy()
         ];
 
     public static ICommand? Step(Grid grid)

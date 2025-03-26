@@ -86,7 +86,7 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<ShowNotific
 
         UndoService = undo_service;
 
-        // Disable keyboard if settings, waiting overlay or victory overlay is showing
+        // Disable keyboard if any of the overlays is showing
         settings_service.PropertyChanged += (s, e) =>
         {
             if (e.PropertyName == nameof(SettingsService.IsShown))
