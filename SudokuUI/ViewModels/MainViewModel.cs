@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -261,10 +262,19 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<ShowNotific
     }
 
     [RelayCommand]
-    private void ShowHint()
+    private async Task ShowHint()
     {
-        var has_hint = solver_service.NextHint();
+        var any_candidates = puzzle_service.Grid.Cells.Any(c => c.Count() > 0);
+        if (!any_candidates)
+        {
+            var result = await DialogCoordinator.Instance.ShowMessageAsync(this, "No candidates found", "Do you want to add them automatically?", MessageDialogStyle.AffirmativeAndNegative);
+            if (result == MessageDialogResult.Affirmative)
+                puzzle_service.FillCandidates();
+            else
+                return;
+        }
 
+        var has_hint = solver_service.NextHint();
         if (has_hint)
         {
             selection_service.Clear();

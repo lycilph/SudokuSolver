@@ -74,6 +74,11 @@ public partial class DebugViewModel : ObservableObject
         if (puzzle_service.Grid.IsSolved())
             return;
 
+        // Check if any cells have candidates (solver needs this)
+        var any_candidates = puzzle_service.Grid.Cells.Any(c => c.Count() > 0);
+        if (!any_candidates)
+            puzzle_service.FillCandidates();
+
         var strategies = Strategies.Where(s => s.Selected).Select(s => s.WrappedObject).ToArray();
         var command = Solver.Step(puzzle_service.Grid, strategies);
 
