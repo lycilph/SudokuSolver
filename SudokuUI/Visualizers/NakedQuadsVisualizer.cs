@@ -4,18 +4,18 @@ using SudokuUI.ViewModels;
 
 namespace SudokuUI.Visualizers;
 
-public class NakedTriplesVisualizer : IStrategyVisualizer<NakedTriplesCommand>
+public class NakedQuadsVisualizer : IStrategyVisualizer<NakedQuadsCommand>
 {
     private readonly Brush eliminated_color;
-    private readonly Brush triple_color;
+    private readonly Brush quad_color;
 
-    public NakedTriplesVisualizer()
+    public NakedQuadsVisualizer()
     {
         eliminated_color = App.Current.Resources["cell_negative_color"] as Brush ?? Brushes.Black;
-        triple_color = App.Current.Resources["cell_information_color"] as Brush ?? Brushes.Black;
+        quad_color = App.Current.Resources["cell_information_color"] as Brush ?? Brushes.Black;
     }
 
-    public void Show(GridViewModel vm, NakedTriplesCommand command)
+    public void Show(GridViewModel vm, NakedQuadsCommand command)
     {
         foreach (var element in command.Elements)
         {
@@ -26,9 +26,10 @@ public class NakedTriplesVisualizer : IStrategyVisualizer<NakedTriplesCommand>
                 var candidate_vm = cell_vm.Candidates[element.Number - 1];
                 if (candidate_vm.IsVisible)
                 {
-                    candidate_vm.HighlightColor = triple_color;
+                    candidate_vm.HighlightColor = quad_color;
                     candidate_vm.Highlight = true;
                 }
+                
             }
 
             foreach (var cell in element.Cells)
