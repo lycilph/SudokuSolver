@@ -20,8 +20,10 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<ShowNotific
     private readonly SelectionService selection_service;
     private readonly SettingsService settings_service;
     private readonly SolverService solver_service;
-    private readonly UndoRedoService undo_service;
     private readonly DebugService debug_service;
+
+    public event EventHandler DisableKeybindingsRequest = null!;
+    public event EventHandler EnableKeybindingsRequest = null!;
 
     [ObservableProperty]
     private bool isKeyboardDisabled = false;
@@ -150,6 +152,8 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<ShowNotific
     [RelayCommand]
     private async Task Import()
     {
+        DisableKeybindingsRequest?.Invoke(this, EventArgs.Empty);
+
         var vm = new ImportDialogViewModel();
         var view = new ImportDialogView { DataContext = vm };
         var dialog = new CustomDialog { Title = "Import Puzzle", Content = view };
@@ -160,20 +164,24 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<ShowNotific
 
         if (!string.IsNullOrWhiteSpace(result))
             puzzle_service.Import(result);
+
+        EnableKeybindingsRequest?.Invoke(this, EventArgs.Empty);
     }
 
     [RelayCommand]
     private async Task Export()
     {
+        DisableKeybindingsRequest?.Invoke(this, EventArgs.Empty);
+
         var vm = new ExportDialogViewModel { Puzzle = puzzle_service.Export() };
         var view = new ExportDialogView { DataContext = vm };
         var dialog = new CustomDialog { Title = "Export Puzzle", Content = view };
 
-        IsKeyboardDisabled = true;
-
         await DialogCoordinator.Instance.ShowMetroDialogAsync(this, dialog);
         await vm.DialogResult;
         await DialogCoordinator.Instance.HideMetroDialogAsync(this, dialog);
+        
+        EnableKeybindingsRequest?.Invoke(this, EventArgs.Empty);
     }
 
     [RelayCommand]

@@ -20,7 +20,8 @@
             <TextBox Grid.Column="0"
                      Text="{Binding Puzzle}"
                      VerticalAlignment="Center"
-                     IsReadOnly="True"/>
+                     IsReadOnly="True"
+                     Focusable="False"/>
 
             <Button Grid.Column="1"
                     Content="{icon:Lucide Kind=ClipboardCopy}"
@@ -33,6 +34,7 @@
             <Button Content="OK"
                     Command="{Binding OkCommand}"
                     IsDefault="True"
+                    IsCancel="True"
                     Style="{DynamicResource MahApps.Styles.Button.Dialogs.Accent}"
                     MinWidth="80"
                     Margin="8 8"/>
