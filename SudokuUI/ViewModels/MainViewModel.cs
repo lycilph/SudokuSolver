@@ -268,7 +268,7 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<ShowNotific
     [RelayCommand]
     private void ShowDebugWindow()
     {
-        debug_service.ShowDebugWindow();
+        debug_service.ToggleDebugWindow();
     }
 
     [RelayCommand]

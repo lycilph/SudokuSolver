@@ -22,6 +22,14 @@ public partial class DebugService : ObservableRecipient, IRecipient<MainWindowLo
         IsActive = true;
     }
 
+    public void ToggleDebugWindow()
+    {
+        if (debug_window != null)
+            debug_window.Close();
+        else
+            ShowDebugWindow();
+    }
+
     public void ShowDebugWindow()
     {
         if (debug_window != null)
