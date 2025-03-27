@@ -45,6 +45,7 @@ public partial class Cell(int index) : ObservableObject
     }
 
     public string GetCandidatesAsString() => string.Join("", Grid.PossibleValues.Select(v => Candidates.Contains(v) ? v.ToString() : "."));
+    public string GetCandidatesAsShortString() => string.Join("", Grid.PossibleValues.Select(v => Candidates.Contains(v) ? v.ToString() : ""));
 
     public void Reset()
     {

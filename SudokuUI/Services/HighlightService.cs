@@ -53,6 +53,7 @@ public class HighlightService
         {
             c.Highlight = false;
             c.HighlightColor = Brushes.CornflowerBlue;
+            c.BackgroundColor = Brushes.Transparent;
         });
         grid_vm.Boxes.SelectMany(b => b.Cells).SelectMany(c => c.Candidates).ForEach(c => 
         {

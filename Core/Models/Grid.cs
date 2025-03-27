@@ -16,7 +16,9 @@ public class Grid
     public Unit[] Columns { get; set; }
     public Unit[] Boxes { get; set; }
     public Unit[] AllUnits { get; set; }
-    public Chute[] Chutes { get; set; }
+    public Chute[] HorizontalChutes { get; set; }
+    public Chute[] VerticalChutes { get; set; }
+    public Chute[] AllChutes { get; set; }
 
     public Grid()
     {
@@ -36,12 +38,15 @@ public class Grid
         foreach (var cell in Cells)
             cell.Peers = GetPeerIndices(cell.Index).Select(i => Cells[i]).ToArray();
 
-        Chutes = new Chute[6];
+        //Chutes = new Chute[6];
+        HorizontalChutes = new Chute[3];
+        VerticalChutes = new Chute[3];
         for (int i = 0; i < 3; i++)
         {
-            Chutes[i] = new Chute { Name = "Chute Horizontal", Index = i, Boxes = Enumerable.Range(0, 3).Select(n => Boxes[n + i * 3]).ToArray() };
-            Chutes[i + 3] = new Chute { Name = "Chute Vertical", Index = i + 3, Boxes = Enumerable.Range(0, 3).Select(n => Boxes[n * 3 + i]).ToArray() };
+            HorizontalChutes[i] = new Chute { Name = "Chute Horizontal", Index = i, Boxes = Enumerable.Range(0, 3).Select(n => Boxes[n + i * 3]).ToArray() };
+            VerticalChutes[i] = new Chute { Name = "Chute Vertical", Index = i, Boxes = Enumerable.Range(0, 3).Select(n => Boxes[n * 3 + i]).ToArray() };
         }
+        AllChutes = HorizontalChutes.Concat(VerticalChutes).ToArray();
     }
 
     public Cell this[int i]

@@ -30,6 +30,9 @@ public partial class CellViewModel : ObservableObject
     [ObservableProperty]
     private Brush highlightColor = Brushes.Black;
 
+    [ObservableProperty]
+    private Brush backgroundColor = Brushes.Transparent;
+
     public CellViewModel(Cell cell)
     {
         puzzle_service = App.Current.Services.GetRequiredService<PuzzleService>();

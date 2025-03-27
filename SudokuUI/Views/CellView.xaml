@@ -14,7 +14,8 @@
         <infra:BindingProxy x:Key="digit_brush" Data="{DynamicResource MahApps.Brushes.Accent}"/>
         
         <DataTemplate x:Key="value_cell_template">
-            <Border Style="{StaticResource cell_border_style}">
+            <Border Style="{StaticResource cell_border_style}"
+                    Background="{Binding BackgroundColor}">
                 <Grid>
                     <Ellipse Fill="{Binding HighlightColor}"
                              Opacity="0.5"
@@ -42,7 +43,8 @@
         </DataTemplate>
 
         <DataTemplate x:Key="candidates_cell_template">
-            <Border Style="{StaticResource cell_border_style}">
+            <Border Style="{StaticResource cell_border_style}"
+                    Background="{Binding BackgroundColor}">
                 <ItemsControl ItemsSource="{Binding Candidates}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
