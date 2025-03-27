@@ -78,21 +78,16 @@ public class ChuteRemotePairsStrategy : BaseStrategy<ChuteRemotePairsStrategy>
             if (candidates_overlap.Count() == 1)
             {
                 var candidate_to_eliminate = candidates_overlap.Single();
-                Console.WriteLine($"Value {candidate_to_eliminate} found in last box of chute");
 
                 // Finding cells that potentially could contain candidates to be eliminated
                 var cells_in_box1 = box_with_cell1.Cells.Intersect(pair.Item2.Peers);
                 var cells_in_box2 = box_with_cell2.Cells.Intersect(pair.Item1.Peers);
                 var potential_cells = cells_in_box1.Concat(cells_in_box2).Where(c => c.Contains(candidate_to_eliminate)).ToList();
 
-                //// DEBUG
-                //foreach (var cell in potential_cells)
-                //    Console.WriteLine($"Value {candidate_to_eliminate} cannot be in cell {cell.Index} due to chute remote pairs ({pair.Item1.Index},{pair.Item2.Index}) in [{pair.Item1.GetCandidatesAsShortString()}]");
-
                 if (potential_cells.Count > 0)
                     command.Add(new CommandElement
                     {
-                        Description = $"Value {candidate_to_eliminate} cannot be in cell(s) {string.Join(',',potential_cells.Select(c => c.Index))} due to chute remote pairs ({pair.Item1.Index},{pair.Item2.Index}) in [{pair.Item1.GetCandidatesAsShortString()}]",
+                        Description = $"{chute.FullName}: Value {candidate_to_eliminate} cannot be in cell(s) {string.Join(',',potential_cells.Select(c => c.Index))} due to chute remote pairs ({pair.Item1.Index},{pair.Item2.Index}) in [{pair.Item1.GetCandidatesAsShortString()}]",
                         Numbers = [candidate_to_eliminate],
                         Cells = potential_cells,
                         CellsToVisualize = [pair.Item1, pair.Item2, .. last_box_row],
@@ -100,13 +95,5 @@ public class ChuteRemotePairsStrategy : BaseStrategy<ChuteRemotePairsStrategy>
                     });
             }
         }
-
-        //// DEBUG
-        //if (pairs.Count > 0)
-        //{
-        //    Console.WriteLine($"{chute.FullName}");
-        //    foreach (var pair in pairs)
-        //        Console.WriteLine($"Pair: ({pair.Item1.Index}, [{pair.Item1.GetCandidatesAsShortString()}]) and ({pair.Item2.Index}, [{pair.Item2.GetCandidatesAsShortString()}])");
-        //}
     }
 }
