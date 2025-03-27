@@ -145,6 +145,12 @@
                                 ToolTip="Hint"
                                 Focusable="False"/>
 
+                        <Button Content="{icon:Lucide Kind=WandSparkles, Height=24, Width=24}"
+                                Command="{Binding SolveNakedSinglesCommand}"
+                                Margin="0 5 0 0"
+                                ToolTip="Solver naked singles"
+                                Focusable="False"/>
+                        
                         <Button Content="{icon:Lucide Kind=Flag, Height=24, Width=24}"
                                 Command="{Binding RunSolverCommand}"
                                 Margin="0 5 0 0"
@@ -153,7 +159,7 @@
 
                         <Button Content="{icon:Lucide Kind=Hash, Height=24, Width=24}"
                                 Command="{Binding ShowSolutionCountCommand}"
-                                Margin="0 5 0 0"
+                                Margin="0 20 0 0"
                                 ToolTip="Count # of solutions"
                                 Focusable="False"/>
 

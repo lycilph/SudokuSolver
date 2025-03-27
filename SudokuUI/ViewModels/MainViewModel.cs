@@ -324,6 +324,22 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<ShowNotific
         }
     }
 
+    [RelayCommand]
+    private async Task SolveNakedSinglesAsync()
+    {
+        var any_candidates = puzzle_service.Grid.Cells.Any(c => c.Count() > 0);
+        if (!any_candidates)
+        {
+            var result = await DialogCoordinator.Instance.ShowMessageAsync(this, "No candidates found", "Do you want to add them automatically?", MessageDialogStyle.AffirmativeAndNegative);
+            if (result == MessageDialogResult.Affirmative)
+                puzzle_service.FillCandidates();
+            else
+                return;
+        }
+
+        solver_service.SolveNakedSingles();
+    }
+
     public void Receive(ShowNotificationMessage message)
     {
         Notification = message.Notification;

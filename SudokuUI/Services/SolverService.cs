@@ -1,10 +1,12 @@
 ﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
 using Core;
 using Core.Commands;
 using Core.Extensions;
 using Core.Strategies;
 using SudokuUI.Infrastructure;
+using SudokuUI.Messages;
 using SudokuUI.ViewModels;
 using SudokuUI.Visualizers;
 
@@ -52,6 +54,28 @@ public partial class SolverService : ObservableObject
     {
         if (Command != null)
             undo_service.Execute(Command);
+    }
+
+    public void SolveNakedSingles()
+    {
+        while (true)
+        {
+            var command = NakedSinglesStrategy.Instance.Plan(puzzle_service.Grid);
+            if (command != null)
+            {
+                undo_service.Execute(command);
+                
+                command = BasicEliminationStrategy.Instance.Plan(puzzle_service.Grid);
+                if (command != null)
+                    undo_service.Execute(command);
+            }
+            else
+            {
+                if (!puzzle_service.Grid.IsSolved())
+                    WeakReferenceMessenger.Default.Send(new ShowNotificationMessage("No more naked singles found"));
+                return;
+            }    
+        }
     }
 
     public void ShowVisualization()
