@@ -1,6 +1,7 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using Core.Models;
+using System.Diagnostics.CodeAnalysis;
 
-namespace Core.Models;
+namespace Core.Misc;
 
 public class CellIndexComparer : IEqualityComparer<Cell>
 {
