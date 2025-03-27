@@ -21,7 +21,8 @@ public static class Solver
             new NakedQuadsStrategy(),
             new HiddenQuadsStrategy(),
             new XWingStrategy(),
-            new ChuteRemotePairsStrategy()
+            new ChuteRemotePairsStrategy(),
+            new SkyscraperStrategy()
         ];
 
     public static (List<ICommand>, Statistics) Solve(Grid grid)

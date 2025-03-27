@@ -53,7 +53,9 @@ public partial class DebugViewModel : ObservableObject
             Tuple.Create("XWing 1", "1.....569492.561.8.561.924...964.8.1.64.1....218.356.4.4.5...169.5.614.2621.....5"),
             Tuple.Create("XWing 2", ".......9476.91..5..9...2.81.7..5..1....7.9....8..31.6724.1...7..1..9..459.....1.."),
             Tuple.Create("Chute Remote Pair 1", ".2.9.56.39.5.3..12.631...5939..5..6.5.63.19.4.4.769385.3.5...9.859.13...614297538"),
-            Tuple.Create("Chute Remote Pair 2", "35.682.171.6573...7289413656..25.....1.43..5.5..168..4265814793...3965...3.725.8.")
+            Tuple.Create("Chute Remote Pair 2", "35.682.171.6573...7289413656..25.....1.43..5.5..168..4265814793...3965...3.725.8."),
+            Tuple.Create("Skyscraper 1", "697.....2..1972.63..3..679.912...6.737426.95.8657.9.241486932757.9.24..6..68.7..9"),
+            Tuple.Create("Skyscraper 2", "..1.28759.879.5132952173486.2.7..34....5..27.714832695....9.817.78.5196319..87524")
         ];
     
     public DebugViewModel(PuzzleService puzzle_service, UndoRedoService undo_service, SolverService solver_service)

@@ -8,9 +8,9 @@ internal class Program
 {
     static void Main()
     {
-        var g = new Grid().Load(".2.9.56.39.5.3..12.631...5939..5..6.5.63.19.4.4.769385.3.5...9.859.13...614297538", true);
+        var g = new Grid().Load("697.....2..1972.63..3..679.912...6.737426.95.8657.9.241486932757.9.24..6..68.7..9", true);
         BasicEliminationStrategy.PlanAndExecute(g);
-        var cmd = ChuteRemotePairsStrategy.PlanAndExecute(g);
+        var cmd = SkyscraperStrategy.PlanAndExecute(g);
 
         Console.WriteLine(cmd);
 
