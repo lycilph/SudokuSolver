@@ -9,8 +9,6 @@ namespace SudokuUI.ViewModels;
 
 public partial class VictoryOverlayViewModel : ObservableObject
 {
-    private readonly PuzzleService puzzle_service;
-
     public event EventHandler RequestNewGame = null!;
     public event EventHandler RequestClearGame = null!;
 
@@ -23,16 +21,31 @@ public partial class VictoryOverlayViewModel : ObservableObject
     [ObservableProperty]
     private TimeSpan elapsed = TimeSpan.FromSeconds(0);
 
+    [ObservableProperty]
+    private Statistics statistics = new();
+
+    [ObservableProperty]
+    private bool showStatistics = false;
+
     public VictoryOverlayViewModel(PuzzleService puzzle_service)
     {
-        this.puzzle_service = puzzle_service;
-
         Cells = puzzle_service.Grid.Cells.ToObservableCollection();
     }
 
     public void Show() => IsOpen = true;
-    public void Close() => IsOpen = false;
-    public void Toggle() => IsOpen = !IsOpen;
+    public void Close() 
+    {
+        ShowStatistics = false;
+        Statistics.Reset();
+
+        IsOpen = false;
+    }
+
+    public void AddStatistics(Statistics stats)
+    {
+        Statistics = stats;
+        ShowStatistics = true;
+    }
 
     [RelayCommand]
     private void New()

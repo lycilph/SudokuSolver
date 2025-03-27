@@ -35,6 +35,11 @@ public partial class UndoRedoService : ObservableRecipient, IRecipient<ResetMess
         IsActive = true;
     }
 
+    public void Execute(List<ICommand> commands)
+    {
+        commands.ForEach(Execute);
+    }
+
     public void Execute(ICommand command)
     {
         logger.Info("Executing command");
