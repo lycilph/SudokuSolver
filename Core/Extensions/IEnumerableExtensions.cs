@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using Core.Models;
 
 namespace Core.Extensions;
 
@@ -14,5 +15,10 @@ public static class IEnumerableExtensions
         foreach (var i in col)
             action(i);
         return col;
+    }
+
+    public static string ToIndexString(this IEnumerable<Cell> list)
+    {
+        return string.Join(',', list.Select(c => c.Index));
     }
 }

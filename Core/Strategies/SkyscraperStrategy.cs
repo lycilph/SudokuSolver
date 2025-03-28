@@ -29,13 +29,14 @@ public class SkyscraperStrategy : BaseStrategy<SkyscraperStrategy>
     {
         var command = new SkyscraperCommand(Name);
 
-        //FindSkyscrapers(grid.Rows);
-        FindSkyscrapers(grid, grid.Columns);
+        FindSkyscrapers(grid, grid.Rows, UnitType.Column, command);
+        FindSkyscrapers(grid, grid.Columns, UnitType.Row, command);
 
         return command.IsValid() ? command : null;
     }
 
-    private void FindSkyscrapers(Grid grid, Unit[] units)
+    // Here the base_unit_type determines if the base of the skyscraper should be found in a row or column
+    private void FindSkyscrapers(Grid grid, Unit[] units, UnitType base_unit_type, SkyscraperCommand command)
     {
         var links_per_value = new Dictionary<int, List<Link>>();
         foreach (var value in Grid.PossibleValues) 
@@ -46,8 +47,7 @@ public class SkyscraperStrategy : BaseStrategy<SkyscraperStrategy>
                 var link_candidates = unit.EmptyCells().Where(c => c.Contains(value)).ToList();
                 if (link_candidates.Count == 2)
                 {
-                    var link = new Link(link_candidates[0], link_candidates[1]);
-                    Console.WriteLine($"Link found for {value} in {unit.FullName} and cells {link}");
+                    var link = new Link(value, link_candidates[0], link_candidates[1]);
                     if (links_per_value.ContainsKey(value))
                         links_per_value[value].Add(link);
                     else
@@ -56,21 +56,18 @@ public class SkyscraperStrategy : BaseStrategy<SkyscraperStrategy>
             }
         }
 
+        var skyscraper_units = base_unit_type == UnitType.Row ? UnitType.Column : UnitType.Row;
         foreach (var pair in links_per_value)
         {
             if (pair.Value.Count >= 2)
             {
-                //Console.WriteLine($"Potential for a skyscraper in {pair.Key} (found {pair.Value.Count} strong links)");
                 foreach (var (link1, link2) in pair.Value.GetPairCombinations())
-                {
-                    Console.WriteLine($"Testing {link1} and {link2} for a skyscraper in {pair.Key}");
-                    CheckLinksForSkyscraper(grid, link1, link2, pair.Key);
-                }
+                    CheckLinksForSkyscraper(grid, link1, link2, pair.Key, base_unit_type, command);
             }
         }
     }
 
-    private void CheckLinksForSkyscraper(Grid grid, Link link1, Link link2, int value)
+    private void CheckLinksForSkyscraper(Grid grid, Link link1, Link link2, int value, UnitType base_unit_type, SkyscraperCommand command)
     {
         var box_indices = new List<int>
         {
@@ -84,26 +81,29 @@ public class SkyscraperStrategy : BaseStrategy<SkyscraperStrategy>
         {
             Console.WriteLine($" * Links starts and ends in different boxes");
 
-            // Try to find the skyscraper base
-            if (link1.Start.Row == link2.Start.Row)
-            {
-                Console.WriteLine($" * Found a base in row {link1.Start.Row}");
+            // Try to find the skyscraper base and roof
+            var roof_overlaps = new List<Cell>();
+            if (link1.Start.GetIndexInUnit(base_unit_type) == link2.Start.GetIndexInUnit(base_unit_type)) // The start of the links are the base
+                roof_overlaps = link1.End.Peers.Intersect(link2.End.Peers).ToList(); // Find overlap of peers of the roof
+            else if (link1.End.GetIndexInUnit(base_unit_type) == link2.End.GetIndexInUnit(base_unit_type)) // The end of the links are the base
+                roof_overlaps = link1.Start.Peers.Intersect(link2.Start.Peers).ToList(); // Find overlap of peers of the roof
 
-            }
-            else if (link1.End.Row == link2.End.Row)
-            {
-                Console.WriteLine($" * Found a base in row {link1.End.Row}");
+            var cells_with_candidates_to_eliminate = roof_overlaps.Where(c => c.Contains(value)).ToList();
 
-                var overlap = link1.Start.Peers.Intersect(link2.Start.Peers).ToArray();
-                Console.WriteLine($" * Overlap: {string.Join(',', overlap.Select(c => c.Index))}");
-
-                foreach (var cell in overlap.Where(c => c.Contains(value)))
-                    Console.WriteLine($" * Value {value} can be removed from cell {cell.Index}");
-            }
+            // Update command
+            var skyscraper_units = base_unit_type == UnitType.Row ? UnitType.Column : UnitType.Row;
+            if (cells_with_candidates_to_eliminate.Count > 0)
+                command.Add(new CommandElement
+                {
+                    Description = $"A skyscraper on {value} in {skyscraper_units}s found for {link1} and {link2}, eliminating {value} in cells ({cells_with_candidates_to_eliminate.ToIndexString()})",
+                    Numbers = [value],
+                    Cells = cells_with_candidates_to_eliminate,
+                    CellsToVisualize = [link1.Start, link1.End, link2.Start, link2.End, .. roof_overlaps]
+                });
         }
     }
 
-    private Unit FindBoxContainingCell(Grid grid, Cell cell)
+    private static Unit FindBoxContainingCell(Grid grid, Cell cell)
     {
         return grid.Boxes.Where(b => b.Cells.Contains(cell)).First();
     }

@@ -104,5 +104,6 @@ public partial class DebugViewModel : ObservableObject
     private void Load()
     {
         puzzle_service.Import(SelectedPuzzle.Item2);
+        ActiveExpander++; // This should open the strategies expander
     }
 }
