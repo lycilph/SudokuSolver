@@ -9,6 +9,7 @@
                  xmlns:dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
                  xmlns:vm="clr-namespace:SudokuUI.ViewModels" 
                  xmlns:infra="clr-namespace:SudokuUI.Infrastructure"
+                 xmlns:be="clr-namespace:SudokuUI.Behaviors"
                  mc:Ignorable="d"
                  Title="Sudoku" 
                  Height="700" 
@@ -39,13 +40,13 @@
     </Window.InputBindings>
 
     <i:Interaction.Behaviors>
-        <infra:DisableKeyboardInputBehavior IsDisabled="{Binding IsKeyboardDisabled}">
-            <infra:DisableKeyboardInputBehavior.IgnoredKeys>
+        <be:DisableKeyboardInputBehavior IsDisabled="{Binding IsKeyboardDisabled}">
+            <be:DisableKeyboardInputBehavior.IgnoredKeys>
                 <infra:KeyCollection>
                     <Key>Escape</Key>
                 </infra:KeyCollection>
-            </infra:DisableKeyboardInputBehavior.IgnoredKeys>
-        </infra:DisableKeyboardInputBehavior>
+            </be:DisableKeyboardInputBehavior.IgnoredKeys>
+        </be:DisableKeyboardInputBehavior>
     </i:Interaction.Behaviors>
     
     <mah:MetroWindow.RightWindowCommands>
@@ -138,8 +139,8 @@
                         <ContentControl Content="{Binding GridVM}"/>
                         <Canvas>
                             <i:Interaction.Behaviors>
-                                <infra:VisualizationBehavior Visualizer="{Binding VisualizationService}"
-                                                             ViewModel="{Binding GridVM}"/>
+                                <be:VisualizationBehavior Visualizer="{Binding VisualizationService}"
+                                                          ViewModel="{Binding GridVM}"/>
                             </i:Interaction.Behaviors>
                         </Canvas>
                     </Grid>

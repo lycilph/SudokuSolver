@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
              xmlns:vm="clr-namespace:SudokuUI.ViewModels" 
              xmlns:v="clr-namespace:SudokuUI.Views"
-             xmlns:infra="clr-namespace:SudokuUI.Infrastructure"
+             xmlns:conv="clr-namespace:SudokuUI.Converters"
              Startup="Application_Startup">
     <Application.Resources>
         <ResourceDictionary>
@@ -19,7 +19,7 @@
             </ResourceDictionary.MergedDictionaries>
 
             <BooleanToVisibilityConverter x:Key="bool_to_visibilty_converter"/>
-            <infra:InvertBoolConverter x:Key="invert_bool_converter"/>
+            <conv:InvertBoolConverter x:Key="invert_bool_converter"/>
 
             <DataTemplate DataType="{x:Type vm:GridViewModel}">
                 <v:GridView/>

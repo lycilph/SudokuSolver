@@ -6,7 +6,7 @@
                  xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" 
                  xmlns:icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
                  xmlns:vm="clr-namespace:SudokuUI.ViewModels" 
-                 xmlns:infra="clr-namespace:SudokuUI.Infrastructure"
+                 xmlns:conv="clr-namespace:SudokuUI.Converters"
                  mc:Ignorable="d"
                  Title="Debug" 
                  Height="650" 
@@ -14,7 +14,7 @@
                  ResizeMode="NoResize"
                  d:DataContext="{d:DesignInstance Type=vm:DebugViewModel}">
     <mah:MetroWindow.Resources>
-        <infra:ExpanderIndexConverter x:Key="expander_index_converter"/>
+        <conv:ExpanderIndexConverter x:Key="expander_index_converter"/>
     </mah:MetroWindow.Resources>
 
     <StackPanel>

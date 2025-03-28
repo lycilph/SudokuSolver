@@ -6,7 +6,7 @@ using Microsoft.Xaml.Behaviors;
 using SudokuUI.Services;
 using SudokuUI.ViewModels;
 
-namespace SudokuUI.Infrastructure;
+namespace SudokuUI.Behaviors;
 
 public class VisualizationBehavior : Behavior<Canvas>
 {

@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Windows.Data;
 
-namespace SudokuUI.Infrastructure;
+namespace SudokuUI.Converters;
 
 public class ExpanderIndexConverter : IValueConverter
 {

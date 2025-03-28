@@ -1,8 +1,9 @@
 ﻿using System.Windows;
 using System.Windows.Input;
 using Microsoft.Xaml.Behaviors;
+using SudokuUI.Infrastructure;
 
-namespace SudokuUI.Infrastructure;
+namespace SudokuUI.Behaviors;
 
 public class DisableKeyboardInputBehavior : Behavior<Window>
 {

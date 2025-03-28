@@ -5,11 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:vm="clr-namespace:SudokuUI.ViewModels"
              xmlns:infra="clr-namespace:SudokuUI.Infrastructure"
+             xmlns:conv="clr-namespace:SudokuUI.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance Type=vm:CellViewModel, IsDesignTimeCreatable=False}">
     <UserControl.Resources>
-        <infra:BoolToBrushConverter x:Key="bool_to_brush_converter"/>
+        <conv:BoolToBrushConverter x:Key="bool_to_brush_converter"/>
         <infra:BindingProxy x:Key="clue_brush" Data="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
         <infra:BindingProxy x:Key="digit_brush" Data="{DynamicResource MahApps.Brushes.Accent}"/>
         

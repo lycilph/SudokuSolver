@@ -4,15 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:vm="clr-namespace:SudokuUI.ViewModels"
-             xmlns:infra="clr-namespace:SudokuUI.Infrastructure"
+             xmlns:conv="clr-namespace:SudokuUI.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance Type=vm:DigitViewModel, IsDesignTimeCreatable=False}">
     <UserControl.Resources>
-        <infra:MissingDigitsToSizeConverter x:Key="missing_digits_to_size_converter"
+        <conv:MissingDigitsToSizeConverter x:Key="missing_digits_to_size_converter"
                                             NormalSize="40"
                                             ScaledSize="35"/>
-        <infra:MissingDigitsToVisibilityConverter x:Key="missing_digits_to_visibility_converter"/>
+        <conv:MissingDigitsToVisibilityConverter x:Key="missing_digits_to_visibility_converter"/>
     </UserControl.Resources>
     
     <ToggleButton Command="{Binding SelectCommand}"

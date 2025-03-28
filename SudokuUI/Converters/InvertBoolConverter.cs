@@ -1,18 +1,20 @@
 ﻿using System.Globalization;
-using System.Windows;
 using System.Windows.Data;
 
-namespace SudokuUI.Infrastructure;
+namespace SudokuUI.Converters;
 
-public class MissingDigitsToVisibilityConverter : IValueConverter
+public class InvertBoolConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        return value is int missing && missing <= 0 ? Visibility.Collapsed : Visibility.Visible;
+        if (value is bool b)
+            return !b;
+        return value;
     }
-
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        throw new NotImplementedException();
+        if (value is bool b)
+            return !b;
+        return value;
     }
 }
