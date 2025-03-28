@@ -69,10 +69,6 @@ public class ChuteRemotePairsStrategy : BaseStrategy<ChuteRemotePairsStrategy>
             var last_box_row = last_box.Cells.Except(pair.Item1.Peers).Except(pair.Item2.Peers).ToArray();
 
             // Get the overlap in candidates Or values between the remote pair and the last_box_row
-            //var candidates_overlap = last_box_row
-            //    .SelectMany(c => c.Candidates) // add all candidates from the last box row
-            //    .Distinct()
-            //    .Intersect(pair.Item1.Candidates);
             var candidates_in_last_box_row = last_box_row.SelectMany(c => c.Candidates);
             var values_in_last_box_row = last_box_row.Select(c => c.Value);
             var values_or_candidates_overlap = candidates_in_last_box_row
