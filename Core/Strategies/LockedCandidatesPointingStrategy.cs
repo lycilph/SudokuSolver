@@ -20,10 +20,11 @@ namespace Core.Strategies;
 public class LockedCandidatesPointingStrategy : BaseStrategy<LockedCandidatesPointingStrategy>
 {
     public override string Name => "Locked Candidates (Pointing)";
+    public override int Difficulty => 3;
 
     public override ICommand? Plan(Grid grid)
     {
-        var command = new LockedCandidatesPointingCommand(Name);
+        var command = new LockedCandidatesPointingCommand(this);
         
         foreach (var box in grid.Boxes)
         {

@@ -1,10 +1,12 @@
-﻿namespace Core.Commands;
+﻿using Core.Strategies;
+
+namespace Core.Commands;
 
 /// <summary>
 /// See LockedCandidatesClaimingStrategy for more information
 /// </summary>
 
-public class LockedCandidatesClaimingCommand(string name) : BaseCommand(name)
+public class LockedCandidatesClaimingCommand(IStrategy strategy) : BaseCommand(strategy)
 {
     public override void Do()
     {

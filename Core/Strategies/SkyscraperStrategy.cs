@@ -24,10 +24,11 @@ namespace Core.Strategies;
 public class SkyscraperStrategy : BaseStrategy<SkyscraperStrategy>
 {
     public override string Name => "Skyscraper";
+    public override int Difficulty => 10;
 
     public override ICommand? Plan(Grid grid)
     {
-        var command = new SkyscraperCommand(Name);
+        var command = new SkyscraperCommand(this);
 
         FindSkyscrapers(grid, grid.Rows, UnitType.Column, command);
         FindSkyscrapers(grid, grid.Columns, UnitType.Row, command);
@@ -79,8 +80,6 @@ public class SkyscraperStrategy : BaseStrategy<SkyscraperStrategy>
         var box_indices_count = box_indices.Distinct().Count();
         if (box_indices_count == 4)
         {
-            Console.WriteLine($" * Links starts and ends in different boxes");
-
             // Try to find the skyscraper base and roof
             var roof_overlaps = new List<Cell>();
             Link base_link = null!;

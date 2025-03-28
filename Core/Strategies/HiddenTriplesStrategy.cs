@@ -19,10 +19,11 @@ namespace Core.Strategies;
 public class HiddenTriplesStrategy : BaseStrategy<HiddenTriplesStrategy>
 {
     public override string Name => "Hidden Triples";
+    public override int Difficulty => 7;
 
     public override ICommand? Plan(Grid grid)
     {
-        var command = new HiddenTriplesCommand(Name);
+        var command = new HiddenTriplesCommand(this);
         var triples_found = new HashSet<(Cell, Cell, Cell)>(); // This is used to find duplicates (ie. a triple found in a row, could also be found in a box)
 
         foreach (var unit in grid.AllUnits)

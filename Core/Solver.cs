@@ -9,20 +9,20 @@ public static class Solver
 {
     public static readonly IStrategy[] KnownStrategies =
         [
-            new BasicEliminationStrategy(),
-            new NakedSinglesStrategy(),
-            new HiddenSinglesStrategy(),
-            new LockedCandidatesPointingStrategy(),
-            new LockedCandidatesClaimingStrategy(),
-            new NakedPairsStrategy(),
-            new HiddenPairsStrategy(),
-            new NakedTriplesStrategy(),
-            new HiddenTriplesStrategy(),
-            new NakedQuadsStrategy(),
-            new HiddenQuadsStrategy(),
-            new XWingStrategy(),
-            new ChuteRemotePairsStrategy(),
-            new SkyscraperStrategy()
+            new BasicEliminationStrategy(), // Difficulty 1
+            new NakedSinglesStrategy(), // Difficulty 1
+            new HiddenSinglesStrategy(), // Difficulty 2
+            new LockedCandidatesPointingStrategy(), // Difficulty 3
+            new LockedCandidatesClaimingStrategy(), // Difficulty 3
+            new NakedPairsStrategy(), // Difficulty 4
+            new HiddenPairsStrategy(), // Difficulty 5
+            new NakedTriplesStrategy(), // Difficulty 6
+            new HiddenTriplesStrategy(), // Difficulty 7
+            new NakedQuadsStrategy(), // Difficulty 8
+            new HiddenQuadsStrategy(), // Difficulty 9
+            new XWingStrategy(), // Difficulty 10
+            new SkyscraperStrategy(), // Difficulty 10
+            new ChuteRemotePairsStrategy()  // Difficulty 11
         ];
 
     public static (List<ICommand>, Statistics) Solve(Grid grid)

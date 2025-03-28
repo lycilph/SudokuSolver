@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using Core.Strategies;
+using System.Text;
 
 namespace Core.Commands;
 
@@ -6,9 +7,11 @@ namespace Core.Commands;
 /// Base class for the commands used by the strategy classes
 /// </summary>
 
-public abstract class BaseCommand(string name) : ICommand
+public abstract class BaseCommand(IStrategy strategy) : ICommand
 {
-    public string Name { get; } = name;
+    public IStrategy Strategy { get; private set; } = strategy;
+    public string Name => Strategy.Name;
+    public int Difficulty => Strategy.Difficulty;
     public string Description => ToString();
 
     public List<CommandElement> Elements { get; set; } = [];

@@ -15,10 +15,11 @@ namespace Core.Strategies;
 public class HiddenSinglesStrategy : BaseStrategy<HiddenSinglesStrategy>
 {
     public override string Name => "Hidden Singles";
+    public override int Difficulty => 2;
 
     public override ICommand? Plan(Grid grid)
     {
-        var command = new HiddenSinglesCommand(Name);
+        var command = new HiddenSinglesCommand(this);
         var singles_found = new HashSet<int>(); // This is used to find duplicates (ie. single found in a row, could also be found in a box)
 
         foreach (var unit in grid.AllUnits)

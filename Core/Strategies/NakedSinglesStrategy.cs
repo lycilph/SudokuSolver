@@ -15,10 +15,11 @@ namespace Core.Strategies;
 public class NakedSinglesStrategy : BaseStrategy<NakedSinglesStrategy>
 {
     public override string Name => "Naked Singles";
+    public override int Difficulty => 1;
 
     public override ICommand? Plan(Grid grid)
     {
-        var command = new NakedSinglesCommand(Name);
+        var command = new NakedSinglesCommand(this);
 
         var cells = grid.Cells.Where(c => c.IsEmpty && c.Candidates.Count == 1).ToArray();
         foreach (var cell in cells)

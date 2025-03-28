@@ -27,10 +27,11 @@ namespace Core.Strategies;
 public class ChuteRemotePairsStrategy : BaseStrategy<ChuteRemotePairsStrategy>
 {
     public override string Name => "Chute Remote Pairs";
+    public override int Difficulty => 11;
 
     public override ICommand? Plan(Grid grid)
     {
-        var command = new ChuteRemotePairsCommand(Name);
+        var command = new ChuteRemotePairsCommand(this);
 
         foreach (var chute in grid.AllChutes)
             FindRemotePairs(chute, command);

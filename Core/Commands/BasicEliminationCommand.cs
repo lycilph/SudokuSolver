@@ -1,4 +1,5 @@
 ﻿using Core.Models;
+using Core.Strategies;
 
 namespace Core.Commands;
 
@@ -6,7 +7,7 @@ namespace Core.Commands;
 /// See BasicEliminationStrategy for more information
 /// </summary>
 
-public class BasicEliminationCommand(string name) : BaseCommand(name)
+public class BasicEliminationCommand(IStrategy strategy) : BaseCommand(strategy)
 {
     public List<Cell> CellsToVisualize { get; private set; } = [];
 

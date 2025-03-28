@@ -1,10 +1,12 @@
-﻿namespace Core.Commands;
+﻿using Core.Strategies;
+
+namespace Core.Commands;
 
 /// <summary>
 /// See LockedCandidatesPointingStrategy for more information
 /// </summary>
 
-public class LockedCandidatesPointingCommand(string name) : BaseCommand(name)
+public class LockedCandidatesPointingCommand(IStrategy strategy) : BaseCommand(strategy)
 {
     public override void Do()
     {

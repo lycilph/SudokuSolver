@@ -19,9 +19,11 @@ namespace Core.Strategies;
 public class LockedCandidatesClaimingStrategy : BaseStrategy<LockedCandidatesClaimingStrategy>
 {
     public override string Name => "Locked Candidates (Claiming)";
+    public override int Difficulty => 3;
+
     public override ICommand? Plan(Grid grid)
     {
-        var command = new LockedCandidatesClaimingCommand(Name);
+        var command = new LockedCandidatesClaimingCommand(this);
         
         var units = grid.Rows.Concat(grid.Columns).ToArray();
         foreach (var box in grid.Boxes)

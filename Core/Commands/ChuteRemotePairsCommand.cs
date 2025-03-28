@@ -1,10 +1,12 @@
-﻿namespace Core.Commands;
+﻿using Core.Strategies;
+
+namespace Core.Commands;
 
 /// <summary>
 /// See ChuteRemotePairsStrategy for more information
 /// </summary>
 
-public class ChuteRemotePairsCommand(string name) : BaseCommand(name)
+public class ChuteRemotePairsCommand(IStrategy strategy) : BaseCommand(strategy)
 {
     public override void Do()
     {

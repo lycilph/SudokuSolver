@@ -9,6 +9,7 @@ public abstract class BaseStrategy<T> : IStrategy where T : BaseStrategy<T>, ISt
     public static T Instance => instance.Value;
 
     public abstract string Name { get; }
+    public abstract int Difficulty { get; }
 
     public abstract ICommand? Plan(Grid grid);
 

@@ -16,10 +16,11 @@ namespace Core.Strategies;
 public class NakedPairsStrategy : BaseStrategy<NakedPairsStrategy>
 {
     public override string Name => "Naked Pairs";
+    public override int Difficulty => 4;
 
     public override ICommand? Plan(Grid grid)
     {
-        var command = new NakedPairsCommand(Name);
+        var command = new NakedPairsCommand(this);
         
         foreach (var unit in grid.AllUnits)
             FindNakedPairs(unit, command);

@@ -19,10 +19,11 @@ namespace Core.Strategies;
 public class HiddenPairsStrategy : BaseStrategy<HiddenPairsStrategy>
 {
     public override string Name => "Hidden Pairs";
+    public override int Difficulty => 5;
 
     public override ICommand? Plan(Grid grid)
     {
-        var command = new HiddenPairsCommand(Name);
+        var command = new HiddenPairsCommand(this);
         var pairs_found = new HashSet<(Cell, Cell)>(); // This is used to find duplicates (ie. a pair found in a row, could also be found in a box)
 
         foreach (var unit in grid.AllUnits)

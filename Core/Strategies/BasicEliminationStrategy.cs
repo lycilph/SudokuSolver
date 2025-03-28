@@ -12,10 +12,11 @@ namespace Core.Strategies;
 public class BasicEliminationStrategy : BaseStrategy<BasicEliminationStrategy>
 {
     public override string Name => "Basic Elimination";
+    public override int Difficulty => 1;
 
     public override ICommand? Plan(Grid grid)
     {
-        var command = new BasicEliminationCommand(Name);
+        var command = new BasicEliminationCommand(this);
 
         foreach (var cell in grid.FilledCells())
         {

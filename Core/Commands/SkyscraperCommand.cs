@@ -1,10 +1,12 @@
-﻿namespace Core.Commands;
+﻿using Core.Strategies;
+
+namespace Core.Commands;
 
 /// <summary>
 /// See SkyscraperStrategy for more information
 /// </summary>
 
-public class SkyscraperCommand(string name) : BaseCommand(name)
+public class SkyscraperCommand(IStrategy strategy) : BaseCommand(strategy)
 {
     public override void Do()
     {

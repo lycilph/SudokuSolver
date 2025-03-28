@@ -20,10 +20,11 @@ namespace Core.Strategies;
 public class XWingStrategy : BaseStrategy<XWingStrategy>
 {
     public override string Name => "X-Wing";
+    public override int Difficulty => 10;
 
     public override ICommand? Plan(Grid grid)
     {
-        var command = new XWingCommand(Name);
+        var command = new XWingCommand(this);
 
         FindXWings(grid.Rows, grid.Columns, UnitType.Row, UnitType.Column, command); // Look for x-wing in the rows
         FindXWings(grid.Columns, grid.Rows, UnitType.Column, UnitType.Row, command); // Look for x-wing in the columns

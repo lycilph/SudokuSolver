@@ -1,4 +1,5 @@
 ﻿using Core.Models;
+using Core.Strategies;
 
 namespace Core.Commands;
 
@@ -6,7 +7,7 @@ namespace Core.Commands;
 /// See HiddenSinglesStrategy for more information
 /// </summary>
 
-public class HiddenSinglesCommand(string name) : BaseCommand(name)
+public class HiddenSinglesCommand(IStrategy strategy) : BaseCommand(strategy)
 {
     private Dictionary<Cell, IEnumerable<int>> candidates = [];
 

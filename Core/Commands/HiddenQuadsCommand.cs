@@ -1,4 +1,5 @@
 ﻿using Core.Models;
+using Core.Strategies;
 
 namespace Core.Commands;
 
@@ -6,7 +7,7 @@ namespace Core.Commands;
 /// See HiddenQuadsStrategy for more information
 /// </summary>
 
-public class HiddenQuadsCommand(string name) : BaseCommand(name)
+public class HiddenQuadsCommand(IStrategy strategy) : BaseCommand(strategy)
 {
     private Dictionary<Cell, IEnumerable<int>> candidates = [];
 

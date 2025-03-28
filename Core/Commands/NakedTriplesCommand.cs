@@ -1,10 +1,12 @@
-﻿namespace Core.Commands;
+﻿using Core.Strategies;
+
+namespace Core.Commands;
 
 /// <summary>
 /// See NakedTriplesStrategy for more information
 /// </summary>
 
-public class NakedTriplesCommand(string name) : BaseCommand(name)
+public class NakedTriplesCommand(IStrategy strategy) : BaseCommand(strategy)
 {
     public override void Do()
     {

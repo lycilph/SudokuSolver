@@ -1,10 +1,12 @@
-﻿namespace Core.Commands;
+﻿using Core.Strategies;
+
+namespace Core.Commands;
 
 /// <summary>
 /// See NakedSinglesStrategy for more information
 /// </summary>
 
-public class NakedSinglesCommand(string name) : BaseCommand(name)
+public class NakedSinglesCommand(IStrategy strategy) : BaseCommand(strategy)
 {
     public override void Do()
     {
