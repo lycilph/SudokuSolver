@@ -83,10 +83,17 @@ public class SkyscraperStrategy : BaseStrategy<SkyscraperStrategy>
 
             // Try to find the skyscraper base and roof
             var roof_overlaps = new List<Cell>();
+            Link base_link = null!;
             if (link1.Start.GetIndexInUnit(base_unit_type) == link2.Start.GetIndexInUnit(base_unit_type)) // The start of the links are the base
+            {
+                base_link = new Link(value, link1.Start, link2.Start);
                 roof_overlaps = link1.End.Peers.Intersect(link2.End.Peers).ToList(); // Find overlap of peers of the roof
+            }
             else if (link1.End.GetIndexInUnit(base_unit_type) == link2.End.GetIndexInUnit(base_unit_type)) // The end of the links are the base
+            {
+                base_link = new Link(value, link1.End, link2.End);
                 roof_overlaps = link1.Start.Peers.Intersect(link2.Start.Peers).ToList(); // Find overlap of peers of the roof
+            }
 
             var cells_with_candidates_to_eliminate = roof_overlaps.Where(c => c.Contains(value)).ToList();
 
@@ -98,7 +105,7 @@ public class SkyscraperStrategy : BaseStrategy<SkyscraperStrategy>
                     Description = $"A skyscraper on {value} in {skyscraper_units}s found for {link1} and {link2}, eliminating {value} in cells ({cells_with_candidates_to_eliminate.ToIndexString()})",
                     Numbers = [value],
                     Cells = cells_with_candidates_to_eliminate,
-                    CellsToVisualize = [link1.Start, link1.End, link2.Start, link2.End, .. roof_overlaps]
+                    CellsToVisualize = [link1.Start, link1.End, link2.Start, link2.End, base_link.Start, base_link.End, .. roof_overlaps]
                 });
         }
     }

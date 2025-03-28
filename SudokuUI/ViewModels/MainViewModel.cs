@@ -53,6 +53,9 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<ShowNotific
     private UndoRedoService undoService;
 
     [ObservableProperty]
+    private VisualizationService visualizationService;
+
+    [ObservableProperty]
     private TimeSpan elapsed;
     
     [ObservableProperty]
@@ -66,6 +69,7 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<ShowNotific
                          SelectionService selection_service,
                          SettingsService settings_service,
                          SolverService solver_service,
+                         VisualizationService visualization_service,
                          DebugService debug_service,
                          GridViewModel gridVM,
                          DigitSelectionViewModel digitSelectionVM,
@@ -90,6 +94,7 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<ShowNotific
         SolverOverlayVM = solverOverlayVM;
 
         UndoService = undo_service;
+        VisualizationService = visualization_service;
 
         // Disable keyboard if any of the overlays is showing
         settings_service.PropertyChanged += (s, e) =>

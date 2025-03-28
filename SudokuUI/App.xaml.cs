@@ -33,6 +33,7 @@ public partial class App : Application
         services.AddSingleton<SettingsService>();
         services.AddSingleton<HighlightService>();
         services.AddSingleton<SolverService>();
+        services.AddSingleton<VisualizationService>();
         services.AddSingleton<DebugService>();
 
         // The grid view model is a singleton because it is used by multiple view models
