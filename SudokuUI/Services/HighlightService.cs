@@ -49,16 +49,7 @@ public class HighlightService
 
     public void Clear()
     {
-        grid_vm.Boxes.SelectMany(b => b.Cells).ForEach(c => 
-        {
-            c.Highlight = false;
-            c.HighlightColor = Brushes.CornflowerBlue;
-            c.BackgroundColor = Brushes.Transparent;
-        });
-        grid_vm.Boxes.SelectMany(b => b.Cells).SelectMany(c => c.Candidates).ForEach(c => 
-        {
-            c.Highlight = false;
-            c.HighlightColor = Brushes.CornflowerBlue;
-        });
+        grid_vm.Boxes.SelectMany(b => b.Cells).ForEach(c => c.ResetVisuals());
+        grid_vm.Boxes.SelectMany(b => b.Cells).SelectMany(c => c.Candidates).ForEach(c => c.ResetVisuals());
     }
 }

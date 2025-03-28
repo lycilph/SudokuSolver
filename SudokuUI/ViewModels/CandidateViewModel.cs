@@ -6,6 +6,7 @@ namespace SudokuUI.ViewModels;
 
 public partial class CandidateViewModel : ObservableObject
 {
+    private readonly Brush default_highlight_color;
     private readonly Cell cell;
 
     [ObservableProperty]
@@ -18,7 +19,7 @@ public partial class CandidateViewModel : ObservableObject
     private bool highlight = false;
 
     [ObservableProperty]
-    private Brush highlightColor = Brushes.CornflowerBlue;
+    private Brush highlightColor = Brushes.Black;
 
     public CandidateViewModel(Cell cell, int value)
     {
@@ -27,8 +28,16 @@ public partial class CandidateViewModel : ObservableObject
         Value = value;
         IsVisible = true;
 
-        HighlightColor = App.Current.Resources["cell_highlight_color"] as Brush ?? Brushes.Black;
+        default_highlight_color = App.Current.Resources["cell_highlight_color"] as Brush ?? Brushes.Black;
+
+        ResetVisuals();
     }
 
     public bool CellHasCandidate() => cell.Contains(Value);
+    
+    public void ResetVisuals()
+    {
+        Highlight = false;
+        HighlightColor = default_highlight_color;
+    }
 }

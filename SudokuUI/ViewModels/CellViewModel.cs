@@ -17,6 +17,8 @@ public partial class CellViewModel : ObservableObject
 
     private readonly PuzzleService puzzle_service;
     private readonly SelectionService selection_service;
+    private readonly Brush default_highlight_color;
+    private readonly Brush default_background_color;
 
     [ObservableProperty]
     private Cell wrappedObject;
@@ -31,14 +33,14 @@ public partial class CellViewModel : ObservableObject
     private Brush highlightColor = Brushes.Black;
 
     [ObservableProperty]
-    private Brush backgroundColor = Brushes.Transparent;
+    private Brush backgroundColor = Brushes.Black;
 
     public CellViewModel(Cell cell)
     {
         puzzle_service = App.Current.Services.GetRequiredService<PuzzleService>();
         selection_service = App.Current.Services.GetRequiredService<SelectionService>();
-
-        HighlightColor = App.Current.Resources["cell_highlight_color"] as Brush ?? Brushes.Black;
+        default_highlight_color = App.Current.Resources["cell_highlight_color"] as Brush ?? Brushes.Black;
+        default_background_color = App.Current.Resources["cell_background_color"] as Brush ?? Brushes.Black;
 
         WrappedObject = cell;
 
@@ -47,6 +49,8 @@ public partial class CellViewModel : ObservableObject
             .ToObservableCollection();
 
         WrappedObject.Candidates.CollectionChanged += CandidatesChanged;
+
+        ResetVisuals();
     }
 
     private void CandidatesChanged(in NotifyCollectionChangedEventArgs<int> e)
@@ -86,5 +90,12 @@ public partial class CellViewModel : ObservableObject
             return;
 
         puzzle_service.ClearCell(WrappedObject);
+    }
+
+    public void ResetVisuals()
+    {
+        Highlight = false;
+        HighlightColor = default_highlight_color;
+        BackgroundColor = default_background_color;
     }
 }
