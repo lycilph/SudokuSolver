@@ -7,6 +7,10 @@ public static class GridExtensions
 {
     public static Grid Load(this Grid grid, string puzzle, bool fill_candidates = false)
     {
+        // Replace 0 with . (if 0 is used to denote an empty cell)
+        puzzle = puzzle.Replace('0', '.');
+
+        // Try to validate the puzzle here
         if (string.IsNullOrWhiteSpace(puzzle) || puzzle.Length != Grid.Size() || !Regex.IsMatch(puzzle, @"^[1-9.]+$"))
             throw new ArgumentException("The input string must be 81 characters long and consist only of digits and .");
 
