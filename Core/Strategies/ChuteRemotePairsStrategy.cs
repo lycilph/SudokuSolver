@@ -68,16 +68,22 @@ public class ChuteRemotePairsStrategy : BaseStrategy<ChuteRemotePairsStrategy>
             var last_box = chute.Boxes.Single(b => b.Index != box_with_cell1.Index && b.Index != box_with_cell2.Index);
             var last_box_row = last_box.Cells.Except(pair.Item1.Peers).Except(pair.Item2.Peers).ToArray();
 
-            // Get the overlap in candidates between the remote pair and the last_box_row
-            var candidates_overlap = last_box_row
-                .SelectMany(c => c.Candidates)
+            // Get the overlap in candidates Or values between the remote pair and the last_box_row
+            //var candidates_overlap = last_box_row
+            //    .SelectMany(c => c.Candidates) // add all candidates from the last box row
+            //    .Distinct()
+            //    .Intersect(pair.Item1.Candidates);
+            var candidates_in_last_box_row = last_box_row.SelectMany(c => c.Candidates);
+            var values_in_last_box_row = last_box_row.Select(c => c.Value);
+            var values_or_candidates_overlap = candidates_in_last_box_row
+                .Union(values_in_last_box_row)
                 .Distinct()
                 .Intersect(pair.Item1.Candidates);
 
             // If 1 and only 1 of the pair candidates are in the last box row, then we can continue with eliminations
-            if (candidates_overlap.Count() == 1)
+            if (values_or_candidates_overlap.Count() == 1)
             {
-                var candidate_to_eliminate = candidates_overlap.Single();
+                var candidate_to_eliminate = values_or_candidates_overlap.Single();
 
                 // Finding cells that potentially could contain candidates to be eliminated
                 var cells_in_box1 = box_with_cell1.Cells.Intersect(pair.Item2.Peers);
