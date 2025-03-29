@@ -11,12 +11,16 @@ public class TwoStringKiteVisualizer : IStrategyVisualizer<TwoStringKiteCommand>
 {
     private readonly Brush candidate_color;
     private readonly Brush kite_color;
+    private readonly Brush strong_link_color;
+    private readonly Brush weak_link_color;
     private readonly VisualizationService visualizer;
 
     public TwoStringKiteVisualizer()
     {
         candidate_color = App.Current.Resources["cell_negative_color"] as Brush ?? Brushes.Black;
         kite_color = App.Current.Resources["cell_positive_color"] as Brush ?? Brushes.Black;
+        strong_link_color = App.Current.Resources["strong_link_color"] as Brush ?? Brushes.Black;
+        weak_link_color = App.Current.Resources["weak_link_color"] as Brush ?? Brushes.Black;
 
         visualizer = App.Current.Services.GetRequiredService<VisualizationService>();
     }
@@ -41,9 +45,9 @@ public class TwoStringKiteVisualizer : IStrategyVisualizer<TwoStringKiteCommand>
                 candidate_vm.Highlight = true;
             }
 
-            visualizer.Add(element.LinksToVisualize[0], Brushes.Blue);
-            visualizer.Add(element.LinksToVisualize[1], Brushes.Blue);
-            visualizer.Add(element.LinksToVisualize[2], Brushes.Red, LinkVisualizer.LineType.Dotted);
+            visualizer.Add(element.LinksToVisualize[0], strong_link_color);
+            visualizer.Add(element.LinksToVisualize[1], strong_link_color);
+            visualizer.Add(element.LinksToVisualize[2], weak_link_color, LinkVisualizer.LineType.Dotted);
         }
     }
 }
