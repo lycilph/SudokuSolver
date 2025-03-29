@@ -84,6 +84,8 @@ public class PuzzleService : ObservableRecipient, IRecipient<ResetMessage>, IRec
         var task = Task.Run(() =>
         {
             (var temp, _) = Generator.Generate();
+            if (temp == null)
+                temp = new Grid();
             return temp.ToSimpleString();
         });
 

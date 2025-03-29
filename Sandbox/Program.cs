@@ -10,7 +10,7 @@ internal class Program
 {
     static void Main()
     {
-        (var grid, var grade) = GeneratorNew.Generate(11, 11, 25, 100);
+        (var grid, var grade) = Generator.Generate(11, 11, 25, 100);
         if (grid == null)
         {
             Console.WriteLine($"No grid found (last difficult {grade.Difficulty})");
