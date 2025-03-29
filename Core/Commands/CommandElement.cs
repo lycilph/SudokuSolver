@@ -12,6 +12,7 @@ public class CommandElement
 
     public List<int> NumbersToVisualize { get; set; } = [];
     public List<Cell> CellsToVisualize { get; set; } = [];
+    public List<Link> LinksToVisualize { get; set; } = [];
 
     public int Number => Numbers.Single();
     public Cell Cell => Cells.Single();

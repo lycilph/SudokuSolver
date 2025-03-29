@@ -8,7 +8,7 @@ public static class Grader
 {
     public static Grade Grade(Grid grid)
     {
-        var clone = new Grid().Load(grid.ToSimpleString(), true);
+        var clone = grid.Copy(true);
         (var commands, _) = Solver.Solve(clone);
 
         if (clone.IsSolved())

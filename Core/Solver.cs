@@ -22,6 +22,7 @@ public static class Solver
             new HiddenQuadsStrategy(), // Difficulty 9
             new XWingStrategy(), // Difficulty 10
             new SkyscraperStrategy(), // Difficulty 10
+            new TwoStringKiteStrategy(), // Difficulty 10
             new ChuteRemotePairsStrategy()  // Difficulty 11
         ];
 

@@ -1,14 +1,14 @@
 ﻿using System.Windows.Media;
 using Core.Models;
 
-namespace SudokuUI.Visualizers.Graphics;
+namespace SudokuUI.Visualizers.Misc;
 
-public class Link(Cell start, Cell end, Link.LineType line_type = Link.LineType.Solid)
+public class LinkVisualizer(Cell start, Cell end, Brush color, LinkVisualizer.LineType line_type = LinkVisualizer.LineType.Solid)
 {
     public enum LineType { Solid, Dotted };
 
     public Cell Start { get; set; } = start;
     public Cell End { get; set; } = end;
+    public Brush Color { get; set; } = color;
     public LineType Style { get; set; } = line_type;
-    public Brush Color { get; set; } = Brushes.Black;
 }

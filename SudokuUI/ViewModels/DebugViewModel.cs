@@ -31,7 +31,7 @@ public partial class DebugViewModel : ObservableObject
     private Tuple<string, string> selectedPuzzle;
 
     [ObservableProperty]
-    private ObservableCollection<Tuple<string, string>> puzzles = 
+    private ObservableCollection<Tuple<string, string>> puzzles =
         [
             Tuple.Create("Easy 1", "..8.......3.......9.....2..8.1..2.9..576..1.....5..7.25..8.1..3.93.....56...3..4."),
             Tuple.Create("Easy 2", ".5..83.17...1..4..3.4..56.8....3...9.9.8245....6....7...9....5...729..861.36.72.4"),
@@ -55,7 +55,9 @@ public partial class DebugViewModel : ObservableObject
             Tuple.Create("Chute Remote Pair 1", ".2.9.56.39.5.3..12.631...5939..5..6.5.63.19.4.4.769385.3.5...9.859.13...614297538"),
             Tuple.Create("Chute Remote Pair 2", "35.682.171.6573...7289413656..25.....1.43..5.5..168..4265814793...3965...3.725.8."),
             Tuple.Create("Skyscraper 1", "697.....2..1972.63..3..679.912...6.737426.95.8657.9.241486932757.9.24..6..68.7..9"),
-            Tuple.Create("Skyscraper 2", "..1.28759.879.5132952173486.2.7..34....5..27.714832695....9.817.78.5196319..87524")
+            Tuple.Create("Skyscraper 2", "..1.28759.879.5132952173486.2.7..34....5..27.714832695....9.817.78.5196319..87524"),
+            Tuple.Create("2-String Kite 1", ".81.2.6...42.6..89.568..24.69314275842835791617568932451..3689223...846.86.2....."),
+            Tuple.Create("2-String Kite 2", "3617..295842395671.5.2614831.8526.34625....18.341..5264..61.85258...2167216857349")
         ];
     
     public DebugViewModel(PuzzleService puzzle_service, UndoRedoService undo_service, SolverService solver_service)

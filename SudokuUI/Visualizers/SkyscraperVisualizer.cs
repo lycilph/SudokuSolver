@@ -3,7 +3,7 @@ using Core.Commands;
 using Microsoft.Extensions.DependencyInjection;
 using SudokuUI.Services;
 using SudokuUI.ViewModels;
-using SudokuUI.Visualizers.Graphics;
+using SudokuUI.Visualizers.Misc;
 
 namespace SudokuUI.Visualizers;
 
@@ -36,9 +36,9 @@ public class SkyscraperVisualizer : IStrategyVisualizer<SkyscraperCommand>
                 candidate_vm.HighlightColor = skyscraper_color;
                 candidate_vm.Highlight = true;
             }
-            visualizer.Links.Add(new Link(element.CellsToVisualize[0], element.CellsToVisualize[1]) { Color = Brushes.Blue });
-            visualizer.Links.Add(new Link(element.CellsToVisualize[2], element.CellsToVisualize[3]) { Color = Brushes.Blue });
-            visualizer.Links.Add(new Link(element.CellsToVisualize[4], element.CellsToVisualize[5], Link.LineType.Dotted) { Color = Brushes.Red });
+            visualizer.Add(element.CellsToVisualize[0], element.CellsToVisualize[1], Brushes.Blue);
+            visualizer.Add(element.CellsToVisualize[2], element.CellsToVisualize[3], Brushes.Blue);
+            visualizer.Add(element.CellsToVisualize[4], element.CellsToVisualize[5], Brushes.Red, LinkVisualizer.LineType.Dotted);
 
             // Mark the overlap cells here
             foreach (var cell in element.CellsToVisualize.Skip(6))

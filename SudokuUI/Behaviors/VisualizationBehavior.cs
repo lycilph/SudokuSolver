@@ -5,6 +5,7 @@ using System.Windows.Shapes;
 using Microsoft.Xaml.Behaviors;
 using SudokuUI.Services;
 using SudokuUI.ViewModels;
+using SudokuUI.Visualizers.Misc;
 
 namespace SudokuUI.Behaviors;
 
@@ -67,7 +68,7 @@ public class VisualizationBehavior : Behavior<Canvas>
                         StrokeThickness = 4
                     };
 
-                    if (link.Style == Visualizers.Graphics.Link.LineType.Dotted)
+                    if (link.Style == LinkVisualizer.LineType.Dotted)
                         line.StrokeDashArray = [4, 2];
 
                     canvas.Children.Add(line);
