@@ -140,6 +140,7 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<ShowNotific
         // Handle events from the victory overlay
         VictoryOverlayVM.RequestNewGame += async (s, e) => await NewPuzzle();
         VictoryOverlayVM.RequestClearGame += (s, e) => ClearPuzzle();
+        VictoryOverlayVM.RequestRestartGame += (s, e) => UndoService.Reset();
 
         var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(100) };
         timer.Tick += (s, e) => Elapsed = puzzle_service.GetElapsedTime();

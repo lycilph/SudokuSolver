@@ -73,7 +73,7 @@ public partial class UndoRedoService : ObservableRecipient, IRecipient<ResetMess
     }
 
     [RelayCommand(CanExecute = nameof(CanReset))]
-    private void Reset()
+    public void Reset()
     {
         logger.Info("Resetting undo/redo stack");
 

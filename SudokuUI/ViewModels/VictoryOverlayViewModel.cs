@@ -12,6 +12,7 @@ public partial class VictoryOverlayViewModel : ObservableObject
 {
     public event EventHandler RequestNewGame = null!;
     public event EventHandler RequestClearGame = null!;
+    public event EventHandler RequestRestartGame = null!;
 
     [ObservableProperty]
     private bool isOpen = false;
@@ -60,5 +61,12 @@ public partial class VictoryOverlayViewModel : ObservableObject
     {
         Close();
         RequestClearGame?.Invoke(this, EventArgs.Empty);
+    }
+
+    [RelayCommand]
+    private void Restart()
+    {
+        Close();
+        RequestRestartGame?.Invoke(this, EventArgs.Empty);
     }
 }
