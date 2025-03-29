@@ -40,7 +40,7 @@
         </Grid.Style>
         
         <Rectangle Fill="Gray"
-                   Opacity="0.20"/>
+                   Opacity="0.50"/>
 
         <mah:ProgressRing IsActive="True"
                           Foreground="{DynamicResource MahApps.Brushes.Accent}"

@@ -64,7 +64,11 @@
             <DataTemplate DataType="{x:Type vm:SolverOverlayViewModel}">
                 <v:SolverOverlayView/>
             </DataTemplate>
-            
+
+            <DataTemplate DataType="{x:Type vm:NewGameOverlayViewModel}">
+                <v:NewGameOverlayView/>
+            </DataTemplate>
+
             <DataTemplate DataType="{x:Type vm:StrategyViewModel}">
                 <v:StrategyView/>
             </DataTemplate>

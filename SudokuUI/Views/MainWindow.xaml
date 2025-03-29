@@ -197,7 +197,9 @@
         <ContentControl Content="{Binding WaitingOverlayVM}"/>
 
         <ContentControl Content="{Binding VictoryOverlayVM}"/>
-        
+
         <ContentControl Content="{Binding SolverOverlayVM}"/>
+        
+        <ContentControl Content="{Binding NewGameOverlayVM}"/>
     </Grid>
 </mah:MetroWindow>

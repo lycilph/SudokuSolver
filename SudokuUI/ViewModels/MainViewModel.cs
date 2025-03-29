@@ -50,6 +50,9 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<ShowNotific
     private SolverOverlayViewModel solverOverlayVM;
 
     [ObservableProperty]
+    private NewGameOverlayViewModel newGameOverlayVM;
+
+    [ObservableProperty]
     private UndoRedoService undoService;
 
     [ObservableProperty]
@@ -77,7 +80,8 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<ShowNotific
                          SettingsOverlayViewModel settingsOverlayVM,
                          WaitingOverlayViewModel waitingOverlayVM,
                          VictoryOverlayViewModel victoryOverlayVM,
-                         SolverOverlayViewModel solverOverlayVM)
+                         SolverOverlayViewModel solverOverlayVM,
+                         NewGameOverlayViewModel newGameOverlayVM)
     {
         this.puzzle_service = puzzle_service;
         this.selection_service = selection_service;
@@ -92,6 +96,7 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<ShowNotific
         WaitingOverlayVM = waitingOverlayVM;
         VictoryOverlayVM = victoryOverlayVM;
         SolverOverlayVM = solverOverlayVM;
+        NewGameOverlayVM = newGameOverlayVM;
 
         UndoService = undo_service;
         VisualizationService = visualization_service;
@@ -111,6 +116,11 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<ShowNotific
         {
             if (e.PropertyName == nameof(VictoryOverlayViewModel.IsOpen))
                 IsKeyboardDisabled = VictoryOverlayVM.IsOpen;
+        };
+        NewGameOverlayVM.PropertyChanged += (s, e) =>
+        {
+            if (e.PropertyName == nameof(NewGameOverlayViewModel.IsOpen))
+                IsKeyboardDisabled = NewGameOverlayVM.IsOpen;
         };
         solver_service.PropertyChanged += (s, e) =>
         {
@@ -141,11 +151,15 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<ShowNotific
     [RelayCommand]
     private async Task NewPuzzle()
     {
-        WaitingOverlayVM.Show();
+        NewGameOverlayVM.Show();
+        var difficulty = await NewGameOverlayVM.Task;
 
-        await puzzle_service.New();
-
-        WaitingOverlayVM.Close();
+        if (difficulty != null)
+        {
+            WaitingOverlayVM.Show();
+            await puzzle_service.New(difficulty);
+            WaitingOverlayVM.Close();
+        }
     }
 
     [RelayCommand]
@@ -234,6 +248,12 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<ShowNotific
         if (solver_service.IsShown)
         {
             solver_service.Hide();
+            return;
+        }
+
+        if (NewGameOverlayVM.IsOpen)
+        {
+            NewGameOverlayVM.Close();
             return;
         }
 

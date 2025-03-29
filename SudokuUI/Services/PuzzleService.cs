@@ -77,15 +77,18 @@ public class PuzzleService : ObservableRecipient, IRecipient<ResetMessage>, IRec
         return numbers;
     }
 
-    public Task<string> New()
+    public Task<string> New(Difficulty difficulty)
     {
         logger.Info("Generating a new puzzle");
         
         var task = Task.Run(() =>
         {
-            (var temp, _) = Generator.Generate();
+            (var temp, _) = Generator.Generate(difficulty.Min, difficulty.Max);
             if (temp == null)
+            { 
                 temp = new Grid();
+                WeakReferenceMessenger.Default.Send(new ShowNotificationMessage("Couldn't create a puzzle of the selected difficulty, Try again!"));
+            }
             return temp.ToSimpleString();
         });
 
@@ -190,6 +193,6 @@ public class PuzzleService : ObservableRecipient, IRecipient<ResetMessage>, IRec
         var mode = BuildModeDetector.GetBuildMode(assembly);
 
         if (mode == BuildModeDetector.BuildMode.Debug)
-            New();
+            New(Difficulty.Easy());
     }
 }
