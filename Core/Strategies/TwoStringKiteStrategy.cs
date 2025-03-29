@@ -48,11 +48,11 @@ public class TwoStringKiteStrategy : BaseStrategy<TwoStringKiteStrategy>
             {
                 var box_overlap = row_link.OverlapsInBox(column_link);
 
-                // Check that the row and column link cells does NOT overlap (ie. one end of each link is the same cell) &&
+                // Check that the row and column link cells does NOT overlap (ie. none of the 2 link cells are the same) &&
                 // Check that the row and column link DOES overlap in a box
                 if (row_link.OverlapsInCells(column_link) == null && box_overlap != null)
                 {
-                    // Find the cells that sees the other ends of the links
+                    // Find the cell that sees the other ends of the links
                     var row_link_other_end = row_link.GetOtherEnd(box_overlap);
                     var column_link_other_end = column_link.GetOtherEnd(box_overlap);
 
