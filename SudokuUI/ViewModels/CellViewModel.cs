@@ -59,8 +59,7 @@ public partial class CellViewModel : ObservableObject
             candidate.IsVisible = WrappedObject.Contains(candidate.Value);
     }
 
-    [RelayCommand]
-    private void Set()
+    public void Set()
     {
         if (WrappedObject.IsClue)
         {

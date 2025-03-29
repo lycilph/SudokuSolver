@@ -13,7 +13,7 @@
         <conv:BoolToBrushConverter x:Key="bool_to_brush_converter"/>
         <infra:BindingProxy x:Key="clue_brush" Data="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
         <infra:BindingProxy x:Key="digit_brush" Data="{DynamicResource MahApps.Brushes.Accent}"/>
-        
+
         <DataTemplate x:Key="value_cell_template">
             <Border Style="{StaticResource cell_border_style}"
                     Background="{Binding BackgroundColor}">
@@ -24,7 +24,7 @@
                              HorizontalAlignment="Stretch"
                              VerticalAlignment="Stretch"
                              Visibility="{Binding Highlight, Converter={StaticResource bool_to_visibilty_converter}}"/>
-                    
+
                     <TextBlock Text="{Binding WrappedObject.Value}"
                                FontSize="24"
                                FontWeight="Bold"
@@ -74,8 +74,6 @@
     <ContentControl Content="{Binding}"
                     ContentTemplate="{StaticResource base_cell_template}">
         <ContentControl.InputBindings>
-            <MouseBinding MouseAction="LeftClick"
-                          Command="{Binding SetCommand}"/>
             <MouseBinding MouseAction="RightClick"
                           Command="{Binding ClearCommand}"/>
         </ContentControl.InputBindings>

@@ -9,10 +9,15 @@ namespace SudokuUI.ViewModels;
 public partial class GridViewModel : ObservableObject
 {
     [ObservableProperty]
+    private SelectionService selectionService;
+
+    [ObservableProperty]
     private ObservableCollection<BoxViewModel> boxes = null!;
 
-    public GridViewModel(PuzzleService puzzle_service)
+    public GridViewModel(PuzzleService puzzle_service, SelectionService selectionService)
     {
+        SelectionService = selectionService;
+
         Boxes = puzzle_service.Grid.Boxes.Select(b => new BoxViewModel(b)).ToObservableCollection();
     }
 

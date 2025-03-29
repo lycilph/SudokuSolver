@@ -17,4 +17,6 @@
 
     <SolidColorBrush x:Key="strong_link_color" Color="Blue"/>
     <SolidColorBrush x:Key="weak_link_color" Color="Red"/>
+    
+    <SolidColorBrush x:Key="drag_selection_color" Color="Azure"/>
 </ResourceDictionary>
