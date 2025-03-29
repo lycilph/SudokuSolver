@@ -122,9 +122,9 @@
                     <TextBlock Text="{Binding Statistics.Iterations, StringFormat=Iterations: {0}}"/>
                     <TextBlock Text="Strategies used"
                                Margin="0 10 0 0"/>
-                    <ScrollViewer VerticalScrollBarVisibility="Auto">
-                        <ItemsControl ItemsSource="{Binding Statistics.StrategyCount}"
-                                      Height="80">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                  Height="80">
+                        <ItemsControl ItemsSource="{Binding Statistics.StrategyCount}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">

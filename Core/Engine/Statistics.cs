@@ -1,4 +1,4 @@
-﻿namespace Core.Models;
+﻿namespace Core.Engine;
 
 /* Statistics about the solving of a puzzle should be kept here
  */

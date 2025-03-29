@@ -1,8 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
-using Core;
 using Core.Commands;
+using Core.Engine;
 using Core.Extensions;
 using Core.Strategies;
 using SudokuUI.Infrastructure;

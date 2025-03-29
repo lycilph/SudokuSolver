@@ -3,7 +3,7 @@ using Core.DancingLinks;
 using Core.Extensions;
 using Core.Models;
 
-namespace Core;
+namespace Core.Engine;
 
 public static class Generator
 {

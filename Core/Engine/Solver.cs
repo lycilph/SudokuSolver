@@ -3,7 +3,7 @@ using Core.Models;
 using Core.Strategies;
 using System.Diagnostics;
 
-namespace Core;
+namespace Core.Engine;
 
 public static class Solver
 {

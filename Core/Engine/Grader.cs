@@ -2,7 +2,7 @@
 using Core.Extensions;
 using Core.Models;
 
-namespace Core;
+namespace Core.Engine;
 
 public static class Grader
 {
@@ -14,8 +14,8 @@ public static class Grader
         if (clone.IsSolved())
         {
             var base_commands = commands.Cast<BaseCommand>();
-            foreach (var command in base_commands)
-                Console.WriteLine($"Command {command.Name} difficulty {command.Difficulty}");
+            //foreach (var command in base_commands)
+            //    Console.WriteLine($"Command {command.Name} difficulty {command.Difficulty}");
 
             var difficulty = base_commands.Max(s => s.Difficulty);
             var effort = base_commands.Sum(s => s.Difficulty);

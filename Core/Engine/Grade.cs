@@ -1,4 +1,4 @@
-﻿namespace Core.Models;
+﻿namespace Core.Engine;
 
 public class Grade(int difficulty, int effort)
 {

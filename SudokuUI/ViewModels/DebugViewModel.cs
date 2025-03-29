@@ -2,8 +2,8 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Core;
 using Core.Commands;
+using Core.Engine;
 using Core.Extensions;
 using ObservableCollections;
 using SudokuUI.Messages;
