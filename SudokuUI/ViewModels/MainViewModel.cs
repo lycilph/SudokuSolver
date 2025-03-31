@@ -1,6 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using MahApps.Metro.Controls.Dialogs;
+using SudokuUI.Dialogs;
 using SudokuUI.Messages;
 using SudokuUI.Services;
 
@@ -8,7 +10,10 @@ namespace SudokuUI.ViewModels;
 
 public partial class MainViewModel : ObservableObject
 {
+    private readonly PuzzleService puzzle_service;
     private readonly SettingsService settings_service;
+    private readonly SelectionService selection_service;
+    private readonly DebugService debug_service;
 
     [ObservableProperty]
     private GridViewModel gridVM;
@@ -25,22 +30,44 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     private SettingsViewModel settingsVM;
 
-    public MainViewModel(SettingsService settings_service,
+    [ObservableProperty]
+    private UndoRedoService undoService;
+
+    [ObservableProperty]
+    private bool isKeyboardDisabled = false;
+
+    [ObservableProperty]
+    private bool isInputBindingsDisabled = false;
+    
+    public MainViewModel(PuzzleService puzzle_service,
+                         SettingsService settings_service,
+                         SelectionService selection_service,
+                         DebugService debug_service,
+                         UndoRedoService undo_service,
                          GridViewModel gridVM,
                          DigitSelectionViewModel digitSelectionVM,
                          NotificationViewModel notificationVM,
                          OverlayViewModel overlayVM,
                          SettingsViewModel settingsVM)
     {
+        this.puzzle_service = puzzle_service;
         this.settings_service = settings_service;
+        this.selection_service = selection_service;
+        this.debug_service = debug_service;
 
         GridVM = gridVM;
         DigitSelectionVM = digitSelectionVM;
         NotificationVM = notificationVM;
         OverlayVM = overlayVM;
         SettingsVM = settingsVM;
+        UndoService = undo_service;
 
-        OverlayVM.ClickCommand = EscapeCommand;
+        OverlayVM.EscapeCommand = EscapeCommand;
+        OverlayVM.PropertyChanged += (s, e) =>
+        {
+            if (e.PropertyName == nameof(OverlayViewModel.IsOpen))
+                IsKeyboardDisabled = OverlayVM.IsOpen;
+        };
 
         settings_service.PropertyChanged += (s, e) =>
         {
@@ -60,6 +87,13 @@ public partial class MainViewModel : ObservableObject
     // Input binding commands
 
     [RelayCommand]
+    private void NumberKeyPressed(string number)
+    {
+        if (int.TryParse(number, out int digit))
+            selection_service.Digit = digit;
+    }
+
+    [RelayCommand]
     private void Escape()
     {
         if (settings_service.IsOpen)
@@ -68,11 +102,36 @@ public partial class MainViewModel : ObservableObject
             return;
         }
 
-        if (OverlayVM.IsOpen)
+        // The overlay cannot be cancelled if the spinner is shown (ie. it is working)
+        if (OverlayVM.IsOpen && !OverlayVM.ShowSpinner)
         {
             OverlayVM.Hide();
             return;
         }
+    }
+
+    [RelayCommand]
+    private void ToggleInputMode()
+    {
+        selection_service.ToggleInputMode();
+    }
+
+    [RelayCommand]
+    private void NextDigit()
+    {
+        selection_service.Next();
+    }
+
+    [RelayCommand]
+    private void PreviousDigit()
+    {
+        selection_service.Previous();
+    }
+
+    [RelayCommand]
+    private void ShowDebugWindow()
+    {
+        debug_service.ToggleDebugWindow();
     }
 
     // Left side buttons
@@ -80,7 +139,14 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     private async Task NewPuzzle()
     {
-        await OverlayVM.ShowNewGame();
+        var difficulty = await OverlayVM.ShowNewGame();
+
+        if (difficulty != null)
+        {
+            OverlayVM.Show(true);
+            await puzzle_service.New(difficulty);
+            OverlayVM.Hide();
+        }
     }
 
     [RelayCommand]
@@ -94,9 +160,22 @@ public partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void Import()
+    private async Task Import()
     {
-        WeakReferenceMessenger.Default.Send(new ShowNotificationMessage("Testing"));
+        IsInputBindingsDisabled = true;
+
+        var vm = new ImportDialogViewModel();
+        var view = new ImportDialogView { DataContext = vm };
+        var dialog = new CustomDialog { Title = "Import Puzzle", Content = view };
+
+        await DialogCoordinator.Instance.ShowMetroDialogAsync(this, dialog);
+        var result = await vm.DialogResult;
+        await DialogCoordinator.Instance.HideMetroDialogAsync(this, dialog);
+
+        if (!string.IsNullOrWhiteSpace(result))
+            puzzle_service.Import(result);
+
+        IsInputBindingsDisabled = false;
     }
 
     // Right side buttons

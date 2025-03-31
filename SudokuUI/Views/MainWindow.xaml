@@ -19,7 +19,7 @@
                  dialog:DialogParticipation.Register="{Binding}"
                  d:DataContext="{d:DesignInstance Type=vm:MainViewModel}">
     <Window.InputBindings>
-        <!--<KeyBinding Key="D1" Command="{Binding NumberKeyPressedCommand}" CommandParameter="1"/>
+        <KeyBinding Key="D1" Command="{Binding NumberKeyPressedCommand}" CommandParameter="1"/>
         <KeyBinding Key="D2" Command="{Binding NumberKeyPressedCommand}" CommandParameter="2"/>
         <KeyBinding Key="D3" Command="{Binding NumberKeyPressedCommand}" CommandParameter="3"/>
         <KeyBinding Key="D4" Command="{Binding NumberKeyPressedCommand}" CommandParameter="4"/>
@@ -27,31 +27,33 @@
         <KeyBinding Key="D6" Command="{Binding NumberKeyPressedCommand}" CommandParameter="6"/>
         <KeyBinding Key="D7" Command="{Binding NumberKeyPressedCommand}" CommandParameter="7"/>
         <KeyBinding Key="D8" Command="{Binding NumberKeyPressedCommand}" CommandParameter="8"/>
-        <KeyBinding Key="D9" Command="{Binding NumberKeyPressedCommand}" CommandParameter="9"/>-->
+        <KeyBinding Key="D9" Command="{Binding NumberKeyPressedCommand}" CommandParameter="9"/>
         <KeyBinding Key="Esc" Command="{Binding EscapeCommand}"/>
-        <!--<KeyBinding Key="Space" Command="{Binding ToggleInputModeCommand}"/>
+        <KeyBinding Key="Space" Command="{Binding ToggleInputModeCommand}"/>
         <KeyBinding Key="Tab" Command="{Binding NextDigitCommand}"/>
         <KeyBinding Key="Tab" Modifiers="Shift" Command="{Binding PreviousDigitCommand}"/>
         <KeyBinding Key="F1" Command="{Binding ShowSettingsCommand}"/>
         <KeyBinding Key="D" Modifiers="Ctrl" Command="{Binding ShowDebugWindowCommand}"/>
         <KeyBinding Key="Z" Modifiers="Ctrl" Command="{Binding UndoService.UndoCommand}"/>
         <KeyBinding Key="Y" Modifiers="Ctrl" Command="{Binding UndoService.RedoCommand}"/>
-        <KeyBinding Key="N" Modifiers="Ctrl" Command="{Binding NewPuzzleCommand}"/>-->
+        <KeyBinding Key="N" Modifiers="Ctrl" Command="{Binding NewPuzzleCommand}"/>
     </Window.InputBindings>
 
-    <!--<i:Interaction.Behaviors>
-        <be:DisableKeyboardInputBehavior IsDisabled="{Binding IsKeyboardDisabled}">
+    <i:Interaction.Behaviors>
+        <be:DisableKeyboardInputBehavior IsDisabled="{Binding IsKeyboardDisabled}"
+                                         IsInputBindingsDisabled="{Binding IsInputBindingsDisabled}">
             <be:DisableKeyboardInputBehavior.IgnoredKeys>
                 <infra:KeyCollection>
                     <Key>Escape</Key>
                 </infra:KeyCollection>
             </be:DisableKeyboardInputBehavior.IgnoredKeys>
         </be:DisableKeyboardInputBehavior>
-    </i:Interaction.Behaviors>-->
+    </i:Interaction.Behaviors>
 
     <mah:MetroWindow.RightWindowCommands>
-        <mah:WindowCommands ShowSeparators="False" IsEnabled="{Binding IsKeyboardDisabled, Converter={StaticResource invert_bool_converter}}">
-            <!--<Button Content="{icon:Lucide Kind=RotateCcw}"
+        <mah:WindowCommands ShowSeparators="False"
+                            IsEnabled="{Binding IsKeyboardDisabled, Converter={StaticResource invert_bool_converter}}">
+            <Button Content="{icon:Lucide Kind=RotateCcw}"
                     Command="{Binding UndoService.ResetCommand}"
                     ToolTip="Reset"
                     Focusable="False"/>
@@ -64,7 +66,7 @@
             <Button Content="{icon:Lucide Kind=Redo}"
                     Command="{Binding UndoService.RedoCommand}"
                     ToolTip="Redo (crtl+y)"
-                    Focusable="False"/>-->
+                    Focusable="False"/>
 
             <Button Content="{icon:Lucide Kind=Settings}"
                     Command="{Binding ShowSettingsCommand}"
@@ -83,12 +85,13 @@
                 <ContentControl Content="{Binding SettingsVM}"/>
             </mah:Flyout>
 
-            <mah:Flyout Header="{Binding NotificationVM.Message}" 
+            <mah:Flyout Header="{Binding NotificationVM.Message}"
                         Position="Bottom" 
                         IsOpen="{Binding NotificationVM.ShowMessage}" 
                         CloseButtonVisibility="Collapsed"
                         AutoCloseInterval="2000"
                         IsAutoCloseEnabled="True"/>
+
         </mah:FlyoutsControl>
     </mah:MetroWindow.Flyouts>
 
@@ -197,13 +200,5 @@
         </DockPanel>
 
         <ContentControl Content="{Binding OverlayVM}"/>
-
-        <!--<ContentControl Content="{Binding SettingsOverlayVM}"/>
-
-        <ContentControl Content="{Binding WaitingOverlayVM}"/>
-
-        <ContentControl Content="{Binding VictoryOverlayVM}"/>
-
-        <ContentControl Content="{Binding SolverOverlayVM}"/>-->
     </Grid>
 </mah:MetroWindow>

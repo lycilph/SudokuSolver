@@ -56,8 +56,7 @@ public partial class App : Application
     private void Application_Startup(object sender, StartupEventArgs e)
     {
         // These needs to be instantiated somewhere to initialize properly...
-        //var highlighter = Services.GetService<HighlightService>();
-        //var debug = Services.GetService<DebugService>();
+        var highlighter = Services.GetService<HighlightService>();
 
         // Initialize main window
         var vm = Services.GetService<MainViewModel>();

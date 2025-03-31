@@ -1,6 +1,6 @@
-﻿using System.Windows.Input;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Core.Engine;
+using System.Windows.Input;
 
 namespace SudokuUI.ViewModels;
 
@@ -13,10 +13,10 @@ public partial class OverlayViewModel : ObservableObject
     private bool showSpinner = false;
 
     [ObservableProperty]
-    private ICommand? clickCommand = null;
+    private NewGameViewModel newGameVM;
 
     [ObservableProperty]
-    private NewGameViewModel newGameVM;
+    private ICommand escapeCommand = null!;
 
     public OverlayViewModel(NewGameViewModel newGameVM)
     {

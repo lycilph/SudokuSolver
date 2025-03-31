@@ -12,7 +12,7 @@ public static class GridExtensions
 
         // Try to validate the puzzle here
         if (string.IsNullOrWhiteSpace(puzzle) || puzzle.Length != Grid.Size() || !Regex.IsMatch(puzzle, @"^[1-9.]+$"))
-            throw new ArgumentException("The input string must be 81 characters long and consist only of digits and .");
+            throw new ArgumentException("Invalid puzzle (valid 0-9 and .)");
 
         grid.Reset();
 

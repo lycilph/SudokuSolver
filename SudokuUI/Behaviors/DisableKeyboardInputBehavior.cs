@@ -4,9 +4,10 @@ using Microsoft.Xaml.Behaviors;
 using SudokuUI.Infrastructure;
 
 namespace SudokuUI.Behaviors;
-
-/*public class DisableKeyboardInputBehavior : Behavior<Window>
+public class DisableKeyboardInputBehavior : Behavior<Window>
 {
+    private InputBindingCollection original_input_bindings = new InputBindingCollection();
+
     public static readonly DependencyProperty IsDisabledProperty =
         DependencyProperty.Register(
             nameof(IsDisabled),
@@ -33,15 +34,46 @@ namespace SudokuUI.Behaviors;
         set => SetValue(IgnoredKeysProperty, value);
     }
 
+    public bool IsInputBindingsDisabled
+    {
+        get { return (bool)GetValue(IsInputBindingsDisabledProperty); }
+        set { SetValue(IsInputBindingsDisabledProperty, value); }
+    }
+
+    public static readonly DependencyProperty IsInputBindingsDisabledProperty =
+        DependencyProperty.Register(
+            nameof(IsInputBindingsDisabled),
+            typeof(bool),
+            typeof(DisableKeyboardInputBehavior), 
+            new PropertyMetadata(false, new PropertyChangedCallback(OnInputBindingsDisabledChanged)));
+
+    private static void OnInputBindingsDisabledChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+    {
+        if (obj is DisableKeyboardInputBehavior behavior)
+        {
+            var str = behavior.IsInputBindingsDisabled ? "disabled" : "enabled";
+            System.Diagnostics.Debug.WriteLine($"Input bindings is now {str}");
+
+            if (behavior.IsInputBindingsDisabled)
+                behavior.AssociatedObject.InputBindings.Clear();
+            else
+                behavior.AssociatedObject.InputBindings.AddRange(behavior.original_input_bindings);
+        }
+    }
+
     protected override void OnAttached()
     {
         base.OnAttached();
+        
         AssociatedObject.PreviewKeyDown += Window_PreviewKeyDown;
+        original_input_bindings = new InputBindingCollection(AssociatedObject.InputBindings);
     }
 
     protected override void OnDetaching()
     {
+        original_input_bindings.Clear();
         AssociatedObject.PreviewKeyDown -= Window_PreviewKeyDown;
+        
         base.OnDetaching();
     }
 
@@ -52,4 +84,4 @@ namespace SudokuUI.Behaviors;
             e.Handled = true;
         }
     }
-}*/
+}

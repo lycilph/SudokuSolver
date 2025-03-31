@@ -41,7 +41,7 @@
         
         <Grid.InputBindings>
             <MouseBinding MouseAction="LeftClick"
-                          Command="{Binding ClickCommand}"/>
+                          Command="{Binding EscapeCommand}"/>
         </Grid.InputBindings>
         
         <Rectangle Fill="Gray"
@@ -54,6 +54,7 @@
                           HorizontalAlignment="Center"
                           VerticalAlignment="Center"/>
 
-        <ContentControl Content="{Binding NewGameVM}"/>
+        <ContentControl Content="{Binding NewGameVM}"
+                        Visibility="{Binding NewGameVM.IsOpen, Converter={StaticResource bool_to_visibilty_converter}}"/>
     </Grid>
 </UserControl>

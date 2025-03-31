@@ -181,7 +181,16 @@ public class PuzzleService : ObservableRecipient, IRecipient<ResetMessage>, IRec
     public void Receive(ResetMessage message)
     {
         logger.Info("Received a reset message");
-        Grid.Load(source);
+        try
+        {
+            Grid.Load(source);
+        }
+        catch (ArgumentException ae)
+        {
+            source = empty_source;
+            Grid.Load(source);
+            WeakReferenceMessenger.Default.Send(new ShowNotificationMessage(ae.Message));
+        }
         stopwatch.Restart();
     }
 
