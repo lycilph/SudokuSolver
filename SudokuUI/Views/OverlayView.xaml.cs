@@ -2,9 +2,9 @@
 
 namespace SudokuUI.Views;
 
-public partial class SettingsOverlayView : UserControl
+public partial class OverlayView : UserControl
 {
-    public SettingsOverlayView()
+    public OverlayView()
     {
         InitializeComponent();
     }

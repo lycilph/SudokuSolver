@@ -10,7 +10,7 @@ public partial class SettingsService : ObservableObject
     public static readonly string DefaultColorScheme = "Steel";
 
     [ObservableProperty]
-    private bool isShown = false;
+    private bool isOpen = false;
 
     public List<Theme> Themes { get; private set; }
 
@@ -23,6 +23,17 @@ public partial class SettingsService : ObservableObject
 
     public string GetColorScheme() => ThemeManager.Current.DetectTheme()?.ColorScheme ?? DefaultColorScheme;
 
-    public void Show() => IsShown = true;
-    public void Hide() => IsShown = false;
+    public void SetBaseColorScheme(bool light)
+    {
+        var base_color_scheme = light ? Light : Dark;
+        ThemeManager.Current.ChangeThemeBaseColor(App.Current, base_color_scheme);
+    }
+
+    public void SetColorScheme(string color_scheme)
+    {
+        ThemeManager.Current.ChangeThemeColorScheme(App.Current, color_scheme);
+    }
+
+    public void Show() => IsOpen = true;
+    public void Hide() => IsOpen = false;
 }

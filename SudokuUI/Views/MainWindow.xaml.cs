@@ -17,27 +17,27 @@ public partial class MainWindow
         original_input_bindings = new InputBindingCollection(InputBindings);
 
         Loaded += MainWindowLoaded;
-        DataContextChanged += MainWindowDataContextChanged;
+        //DataContextChanged += MainWindowDataContextChanged;
     }
 
-    private void MainWindowDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
-    {
-        if (DataContext is MainViewModel vm)
-        {
-            vm.DisableKeybindingsRequest += OnDisableKeybindingsRequest;
-            vm.EnableKeybindingsRequest += OnEnableKeybindingsRequest;
-        }
-    }
+    //private void MainWindowDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+    //{
+    //    if (DataContext is MainViewModel vm)
+    //    {
+    //        vm.DisableKeybindingsRequest += OnDisableKeybindingsRequest;
+    //        vm.EnableKeybindingsRequest += OnEnableKeybindingsRequest;
+    //    }
+    //}
 
-    private void OnEnableKeybindingsRequest(object? sender, EventArgs e)
-    {
-        InputBindings.AddRange(original_input_bindings);
-    }
+    //private void OnEnableKeybindingsRequest(object? sender, EventArgs e)
+    //{
+    //    InputBindings.AddRange(original_input_bindings);
+    //}
 
-    private void OnDisableKeybindingsRequest(object? sender, EventArgs e)
-    {
-        InputBindings.Clear();
-    }
+    //private void OnDisableKeybindingsRequest(object? sender, EventArgs e)
+    //{
+    //    InputBindings.Clear();
+    //}
 
     private void MainWindowLoaded(object sender, RoutedEventArgs e)
     {

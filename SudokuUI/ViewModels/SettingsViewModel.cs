@@ -12,8 +12,8 @@ public partial class SettingsViewModel : ObservableObject
 
     public bool IsOpen
     {
-        get => settings_service.IsShown;
-        set => settings_service.IsShown = value;
+        get => settings_service.IsOpen;
+        set => settings_service.IsOpen = value;
     }
 
     [ObservableProperty]
@@ -34,19 +34,11 @@ public partial class SettingsViewModel : ObservableObject
 
         settings_service.PropertyChanged += (s, e) =>
         {
-            if (e.PropertyName == nameof(SettingsService.IsShown))
+            if (e.PropertyName == nameof(SettingsService.IsOpen))
                 OnPropertyChanged(nameof(IsOpen));
         };
     }
 
-    partial void OnIsLightChanged(bool value)
-    {
-        var base_color_scheme = IsLight ? SettingsService.Light : SettingsService.Dark;
-        ThemeManager.Current.ChangeThemeBaseColor(App.Current, base_color_scheme);
-    }
-
-    partial void OnSelectedApplicationColorChanged(Theme value)
-    {
-        ThemeManager.Current.ChangeThemeColorScheme(App.Current, SelectedApplicationColor.ColorScheme);
-    }
+    partial void OnIsLightChanged(bool value) => settings_service.SetBaseColorScheme(value);
+    partial void OnSelectedApplicationColorChanged(Theme value) => settings_service.SetColorScheme(value.ColorScheme);
 }

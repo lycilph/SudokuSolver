@@ -43,11 +43,11 @@ public partial class App : Application
         services.AddTransient<MainViewModel>();
         services.AddTransient<DigitSelectionViewModel>();
         services.AddTransient<SettingsViewModel>();
-        services.AddTransient<SettingsOverlayViewModel>();
-        services.AddTransient<WaitingOverlayViewModel>();
+        services.AddTransient<OverlayViewModel>();
         services.AddTransient<VictoryOverlayViewModel>();
         services.AddTransient<SolverOverlayViewModel>();
         services.AddTransient<NewGameOverlayViewModel>();
+        services.AddTransient<NotificationViewModel>();
         services.AddTransient<DebugViewModel>();
 
         return services.BuildServiceProvider();
@@ -55,8 +55,9 @@ public partial class App : Application
 
     private void Application_Startup(object sender, StartupEventArgs e)
     {
-        // This needs to be instantiated somewhere...
-        var highlighter = Services.GetService<HighlightService>();
+        // These needs to be instantiated somewhere to initialize properly...
+        //var highlighter = Services.GetService<HighlightService>();
+        //var debug = Services.GetService<DebugService>();
 
         // Initialize main window
         var vm = Services.GetService<MainViewModel>();

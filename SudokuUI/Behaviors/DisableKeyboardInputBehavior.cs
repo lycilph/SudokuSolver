@@ -5,7 +5,7 @@ using SudokuUI.Infrastructure;
 
 namespace SudokuUI.Behaviors;
 
-public class DisableKeyboardInputBehavior : Behavior<Window>
+/*public class DisableKeyboardInputBehavior : Behavior<Window>
 {
     public static readonly DependencyProperty IsDisabledProperty =
         DependencyProperty.Register(
@@ -52,4 +52,4 @@ public class DisableKeyboardInputBehavior : Behavior<Window>
             e.Handled = true;
         }
     }
-}
+}*/

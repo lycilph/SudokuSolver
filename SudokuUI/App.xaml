@@ -49,12 +49,8 @@
                 <v:SettingsView/>
             </DataTemplate>
             
-            <DataTemplate DataType="{x:Type vm:SettingsOverlayViewModel}">
-                <v:SettingsOverlayView/>
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type vm:WaitingOverlayViewModel}">
-                <v:WaitingOverlayView/>
+            <DataTemplate DataType="{x:Type vm:OverlayViewModel}">
+                <v:OverlayView/>
             </DataTemplate>
             
             <DataTemplate DataType="{x:Type vm:VictoryOverlayViewModel}">
