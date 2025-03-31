@@ -53,19 +53,23 @@
         <mah:WindowCommands ShowSeparators="False" IsEnabled="{Binding IsKeyboardDisabled, Converter={StaticResource invert_bool_converter}}">
             <!--<Button Content="{icon:Lucide Kind=RotateCcw}"
                     Command="{Binding UndoService.ResetCommand}"
-                    ToolTip="Reset"/>
+                    ToolTip="Reset"
+                    Focusable="False"/>
 
             <Button Content="{icon:Lucide Kind=Undo}"
                     Command="{Binding UndoService.UndoCommand}"
-                    ToolTip="Undo (ctrl+z)"/>
+                    ToolTip="Undo (ctrl+z)"
+                    Focusable="False"/>
 
             <Button Content="{icon:Lucide Kind=Redo}"
                     Command="{Binding UndoService.RedoCommand}"
-                    ToolTip="Redo (crtl+y)"/>-->
+                    ToolTip="Redo (crtl+y)"
+                    Focusable="False"/>-->
 
             <Button Content="{icon:Lucide Kind=Settings}"
+                    Command="{Binding ShowSettingsCommand}"
                     ToolTip="Settings (F1)"
-                    Command="{Binding ShowSettingsCommand}"/>
+                    Focusable="False"/>
         </mah:WindowCommands>
     </mah:MetroWindow.RightWindowCommands>
 
@@ -200,8 +204,6 @@
 
         <ContentControl Content="{Binding VictoryOverlayVM}"/>
 
-        <ContentControl Content="{Binding SolverOverlayVM}"/>
-        
-        <ContentControl Content="{Binding NewGameOverlayVM}"/>-->
+        <ContentControl Content="{Binding SolverOverlayVM}"/>-->
     </Grid>
 </mah:MetroWindow>

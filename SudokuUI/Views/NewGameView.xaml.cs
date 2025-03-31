@@ -2,9 +2,9 @@
 
 namespace SudokuUI.Views;
 
-public partial class NewGameOverlayView : UserControl
+public partial class NewGameView : UserControl
 {
-    public NewGameOverlayView()
+    public NewGameView()
     {
         InitializeComponent();
     }

@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using SudokuUI.Messages;
@@ -68,6 +67,12 @@ public partial class MainViewModel : ObservableObject
             settings_service.Hide();
             return;
         }
+
+        if (OverlayVM.IsOpen)
+        {
+            OverlayVM.Hide();
+            return;
+        }
     }
 
     // Left side buttons
@@ -75,9 +80,7 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     private async Task NewPuzzle()
     {
-        OverlayVM.IsOpen = true;
-        await Task.Delay(1000);
-        OverlayVM.IsOpen = false;
+        await OverlayVM.ShowNewGame();
     }
 
     [RelayCommand]
