@@ -8,7 +8,7 @@ using SudokuUI.Services;
 
 namespace SudokuUI.ViewModels;
 
-public partial class VictoryOverlayViewModel : ObservableObject
+public partial class VictoryViewModel : ObservableObject
 {
     public event EventHandler RequestNewGame = null!;
     public event EventHandler RequestClearGame = null!;
@@ -29,13 +29,13 @@ public partial class VictoryOverlayViewModel : ObservableObject
     [ObservableProperty]
     private bool showStatistics = false;
 
-    public VictoryOverlayViewModel(PuzzleService puzzle_service)
+    public VictoryViewModel(PuzzleService puzzle_service)
     {
         Cells = puzzle_service.Grid.Cells.ToObservableCollection();
     }
 
     public void Show() => IsOpen = true;
-    public void Close() 
+    public void Hide() 
     {
         ShowStatistics = false;
         Statistics.Reset();
@@ -52,21 +52,21 @@ public partial class VictoryOverlayViewModel : ObservableObject
     [RelayCommand]
     private void New()
     {
-        Close();
+        Hide();
         RequestNewGame?.Invoke(this, EventArgs.Empty);
     }
 
     [RelayCommand]
     private void Clear()
     {
-        Close();
+        Hide();
         RequestClearGame?.Invoke(this, EventArgs.Empty);
     }
 
     [RelayCommand]
     private void Restart()
     {
-        Close();
+        Hide();
         RequestRestartGame?.Invoke(this, EventArgs.Empty);
     }
 }

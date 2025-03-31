@@ -56,5 +56,8 @@
 
         <ContentControl Content="{Binding NewGameVM}"
                         Visibility="{Binding NewGameVM.IsOpen, Converter={StaticResource bool_to_visibilty_converter}}"/>
+
+        <ContentControl Content="{Binding VictoryVM}"
+                        Visibility="{Binding VictoryVM.IsOpen, Converter={StaticResource bool_to_visibilty_converter}}"/>
     </Grid>
 </UserControl>

@@ -14,13 +14,17 @@ public partial class OverlayViewModel : ObservableObject
 
     [ObservableProperty]
     private NewGameViewModel newGameVM;
+    
+    [ObservableProperty]
+    private VictoryViewModel victoryVM;
 
     [ObservableProperty]
     private ICommand escapeCommand = null!;
 
-    public OverlayViewModel(NewGameViewModel newGameVM)
+    public OverlayViewModel(NewGameViewModel newGameVM, VictoryViewModel victoryVM)
     {
         NewGameVM = newGameVM;
+        VictoryVM = victoryVM;
     }
 
     public void Show(bool show_spinner = false)
@@ -50,5 +54,19 @@ public partial class OverlayViewModel : ObservableObject
         });
 
         return NewGameVM.Task;
+    }
+
+    public Task ShowVictory()
+    {
+        Show();
+
+        var task = Task.Delay(1000);
+        task.ContinueWith(_ =>
+        {
+            VictoryVM.Hide();
+            Hide();
+        });
+        
+        return task;
     }
 }

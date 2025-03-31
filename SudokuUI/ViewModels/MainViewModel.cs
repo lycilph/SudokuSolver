@@ -1,10 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
+using Core.DancingLinks;
+using Core.Extensions;
 using MahApps.Metro.Controls.Dialogs;
 using SudokuUI.Dialogs;
-using SudokuUI.Messages;
 using SudokuUI.Services;
+using System.Text;
+using System.Windows.Threading;
 
 namespace SudokuUI.ViewModels;
 
@@ -34,16 +36,23 @@ public partial class MainViewModel : ObservableObject
     private UndoRedoService undoService;
 
     [ObservableProperty]
+    private VisualizationService visualizationService;
+
+    [ObservableProperty]
     private bool isKeyboardDisabled = false;
 
     [ObservableProperty]
     private bool isInputBindingsDisabled = false;
-    
+
+    [ObservableProperty]
+    private TimeSpan elapsed;
+
     public MainViewModel(PuzzleService puzzle_service,
                          SettingsService settings_service,
                          SelectionService selection_service,
                          DebugService debug_service,
                          UndoRedoService undo_service,
+                         VisualizationService visualization_service,
                          GridViewModel gridVM,
                          DigitSelectionViewModel digitSelectionVM,
                          NotificationViewModel notificationVM,
@@ -61,6 +70,7 @@ public partial class MainViewModel : ObservableObject
         OverlayVM = overlayVM;
         SettingsVM = settingsVM;
         UndoService = undo_service;
+        VisualizationService = visualization_service;
 
         OverlayVM.EscapeCommand = EscapeCommand;
         OverlayVM.PropertyChanged += (s, e) =>
@@ -74,6 +84,21 @@ public partial class MainViewModel : ObservableObject
             if (e.PropertyName == nameof(SettingsService.IsOpen))
                 OverlayVM.IsOpen = settings_service.IsOpen;
         };
+
+        // Handle the puzzle solved event
+        puzzle_service.PuzzleSolved += (s, e) =>
+        {
+            //SolverOverlayVM.Close();
+
+            //VictoryOverlayVM.Elapsed = puzzle_service.GetElapsedTime();
+            //VictoryOverlayVM.Show();
+
+            OverlayVM.ShowVictory();
+        };
+
+        var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(100) };
+        timer.Tick += (s, e) => Elapsed = puzzle_service.GetElapsedTime();
+        timer.Start();
     }
 
     // Window commands (ie. buttons in the title bar)
@@ -178,5 +203,51 @@ public partial class MainViewModel : ObservableObject
         IsInputBindingsDisabled = false;
     }
 
+    [RelayCommand]
+    private async Task Export()
+    {
+        IsInputBindingsDisabled = true;
+
+        var vm = new ExportDialogViewModel { Puzzle = puzzle_service.Export() };
+        var view = new ExportDialogView { DataContext = vm };
+        var dialog = new CustomDialog { Title = "Export Puzzle", Content = view };
+
+        await DialogCoordinator.Instance.ShowMetroDialogAsync(this, dialog);
+        await vm.DialogResult;
+        await DialogCoordinator.Instance.HideMetroDialogAsync(this, dialog);
+
+        IsInputBindingsDisabled = false;
+    }
+
     // Right side buttons
+
+    [RelayCommand]
+    private async Task ShowSolutionCount()
+    {
+        IsInputBindingsDisabled = true;
+
+        var copy = puzzle_service.Grid.Copy();
+        copy.FillCandidates();
+
+        (var solutions, var stats) = DancingLinksSolver.Solve(copy, true);
+
+        var sb = new StringBuilder();
+        sb.AppendLine($"The puzzle has {solutions.Count} solutions");
+        sb.AppendLine($"Execution Time: {stats.ElapsedTime} ms");
+        await DialogCoordinator.Instance.ShowMessageAsync(this, "Solution Count", sb.ToString());
+
+        IsInputBindingsDisabled = false;
+    }
+
+    [RelayCommand]
+    private void FillCandidates()
+    {
+        puzzle_service.FillCandidates();
+    }
+
+    [RelayCommand]
+    private void ClearCandidates()
+    {
+        puzzle_service.ClearCandidates();
+    }
 }

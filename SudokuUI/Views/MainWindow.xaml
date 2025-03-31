@@ -134,11 +134,11 @@
                                 ToolTip="Import"
                                 Focusable="False"/>
 
-                        <!--<Button Content="{icon:Lucide Kind=ArrowUpFromLine, Height=24, Width=24}"
+                        <Button Content="{icon:Lucide Kind=ArrowUpFromLine, Height=24, Width=24}"
                                 Command="{Binding ExportCommand}"
                                 Margin="0 5 0 0"
                                 ToolTip="Export"
-                                Focusable="False"/>-->
+                                Focusable="False"/>
                     </StackPanel>
 
                     <Grid Grid.Column="1"
@@ -153,9 +153,9 @@
                     </Grid>
 
                     <!-- Right side buttons --> 
-                    <!--<StackPanel Grid.Column="2"
+                    <StackPanel Grid.Column="2"
                                 Orientation="Vertical">
-                        <Button Content="{icon:Lucide Kind=Lightbulb, Height=24, Width=24}"
+                        <!--<Button Content="{icon:Lucide Kind=Lightbulb, Height=24, Width=24}"
                                 Command="{Binding ShowHintCommand}"
                                 ToolTip="Hint"
                                 Focusable="False"/>
@@ -170,7 +170,7 @@
                                 Command="{Binding RunSolverCommand}"
                                 Margin="0 5 0 0"
                                 ToolTip="Solve the puzzle"
-                                Focusable="False"/>
+                                Focusable="False"/>-->
 
                         <Button Content="{icon:Lucide Kind=Hash, Height=24, Width=24}"
                                 Command="{Binding ShowSolutionCountCommand}"
@@ -189,7 +189,7 @@
                                 Margin="0 5 0 0"
                                 ToolTip="Delete all candidates"
                                 Focusable="False"/>
-                    </StackPanel>-->
+                    </StackPanel>
                 </Grid>
 
                 <!-- Digit and input mode selection --> 
