@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Core.Engine;
-using System.Threading.Tasks;
 
 namespace SudokuUI.ViewModels;
 
