@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:vm="clr-namespace:SudokuUI.ViewModels"
+             xmlns:conv="clr-namespace:SudokuUI.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance Type=vm:HintsViewModel, IsDesignTimeCreatable=False}">
@@ -17,14 +18,17 @@
             <Button Content="{icon:Lucide Kind=FastForward}"
                     Command="{Binding ApplyAndNextCommand}"
                     Margin="0 5 0 0"/>
-            <Button Content="{icon:Lucide Kind=Pause}"
-                    Command="{Binding CloseCommand}"
+            <Button Content="{icon:Lucide Kind=CircleX}"
+                    Command="{Binding CancelCommand}"
                     Margin="0 5 0 0"/>
         </StackPanel>
 
-        <TextBox Text="{Binding Description}"
+        <TextBox Text="{Binding Command.Description, 
+                                Mode=OneWay, 
+                                FallbackValue='No hints found'}"
                  Height="100"
                  IsReadOnly="True"
+                 Focusable="False"
                  TextWrapping="Wrap"/>
     </DockPanel>
 </UserControl>

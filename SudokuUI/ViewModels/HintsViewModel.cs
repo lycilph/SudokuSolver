@@ -1,76 +1,69 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Core.Commands;
 using SudokuUI.Services;
 
 namespace SudokuUI.ViewModels;
 
 public partial class HintsViewModel : ObservableObject
 {
+    private TaskCompletionSource task_completion_source = new();
+
     private readonly SolverService solver_service;
+
+    public Task Task => task_completion_source.Task;
 
     [ObservableProperty]
     private bool isOpen = false;
 
-    //public bool IsOpen
-    //{
-    //    get => solver_service.IsShown;
-    //    set => solver_service.IsShown = value;
-    //}
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(ApplyCommand))]
+    [NotifyCanExecuteChangedFor(nameof(ApplyAndNextCommand))]
+    private BaseCommand? command = null;
 
-    //[ObservableProperty]
-    //private string description = string.Empty;
-
-    //private bool CanApply => solver_service.Command != null;
-    //private bool CanApplyAndNext => solver_service.Command != null;
+    private bool CanApply => Command != null;
+    private bool CanApplyAndNext => Command != null;
 
     public HintsViewModel(SolverService solver_service)
     {
         this.solver_service = solver_service;
-
-        //solver_service.PropertyChanged += (s, e) =>
-        //{
-        //    switch (e.PropertyName)
-        //    {
-        //        case nameof(SolverService.IsShown):
-        //            OnPropertyChanged(nameof(IsOpen));
-        //            Update();
-        //            break;
-        //        case nameof(SolverService.Command):
-        //            ApplyCommand.NotifyCanExecuteChanged();
-        //            ApplyAndNextCommand.NotifyCanExecuteChanged();
-        //            Update();
-        //            break;
-        //    };
-        //};
     }
 
-    public void Show() => IsOpen = true;
-    public void Hide() => IsOpen = false;
+    public void Show()
+    {
+        task_completion_source = new TaskCompletionSource();
+        IsOpen = true;
 
-    //private void Update()
-    //{
-    //    if (IsOpen)
-    //    {
-    //        Description = solver_service.Command?.Description ?? "No more hints found";
-    //        solver_service.ShowVisualization();
-    //    }
-    //    else
-    //        solver_service.ClearVisualization();
-    //}
+        Command = solver_service.NextCommand();
+        if (Command != null )
+            solver_service.ShowVisualization(Command);
+    }
 
-    //[RelayCommand(CanExecute = nameof(CanApply))]
-    //private void Apply()
-    //{
-    //    solver_service.ExecuteCommand();
-    //    solver_service.Hide();
-    //}
+    public void Hide() 
+    { 
+        solver_service.ClearVisualization();
+        IsOpen = false; 
+    }
 
-    //[RelayCommand(CanExecute = nameof(CanApplyAndNext))]
-    //private void ApplyAndNext()
-    //{
-    //    solver_service.ExecuteCommand();
-    //    solver_service.NextHint();
-    //}
+    [RelayCommand(CanExecute = nameof(CanApply))]
+    private void Apply()
+    {
+        if (Command != null)
+            solver_service.Execute(Command);
+        Cancel(); // This closes the overlay
+    }
 
-    //[RelayCommand]
-    //public void Close() => solver_service.Hide();
+    [RelayCommand(CanExecute = nameof(CanApplyAndNext))]
+    private void ApplyAndNext()
+    {
+        if (Command != null)
+            solver_service.Execute(Command);
+
+        Command = solver_service.NextCommand();
+        if (Command != null)
+            solver_service.ShowVisualization(Command);
+    }
+
+    [RelayCommand]
+    public void Cancel() => task_completion_source.SetResult();
 }

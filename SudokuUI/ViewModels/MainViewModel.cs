@@ -1,10 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Core.DancingLinks;
 using Core.Extensions;
 using MahApps.Metro.Controls.Dialogs;
 using SudokuUI.Dialogs;
 using SudokuUI.Infrastructure;
+using SudokuUI.Messages;
 using SudokuUI.Services;
 using System.Text;
 using System.Windows.Threading;
@@ -14,6 +16,7 @@ namespace SudokuUI.ViewModels;
 public partial class MainViewModel : ObservableObject
 {
     private readonly PuzzleService puzzle_service;
+    private readonly SolverService solver_service;
     private readonly SettingsService settings_service;
     private readonly SelectionService selection_service;
     private readonly DebugService debug_service;
@@ -49,6 +52,7 @@ public partial class MainViewModel : ObservableObject
     private TimeSpan elapsed;
 
     public MainViewModel(PuzzleService puzzle_service,
+                         SolverService solver_service,
                          SettingsService settings_service,
                          SelectionService selection_service,
                          DebugService debug_service,
@@ -61,6 +65,7 @@ public partial class MainViewModel : ObservableObject
                          SettingsViewModel settingsVM)
     {
         this.puzzle_service = puzzle_service;
+        this.solver_service = solver_service;
         this.settings_service = settings_service;
         this.selection_service = selection_service;
         this.debug_service = debug_service;
@@ -151,11 +156,13 @@ public partial class MainViewModel : ObservableObject
         }
 
         // The overlay cannot be cancelled if the spinner is shown (ie. it is working)
-        if (OverlayVM.CanHide())
+        if (OverlayVM.IsOpen && OverlayVM.CanHide())
         {
             OverlayVM.Hide();
             return;
         }
+
+        selection_service.Clear();
     }
 
     [RelayCommand]
@@ -242,9 +249,33 @@ public partial class MainViewModel : ObservableObject
     // Right side buttons
 
     [RelayCommand]
-    private void ShowHint()
+    private async Task ShowHint()
     {
-        OverlayVM.ShowHint();
+        var any_candidates = puzzle_service.Grid.Cells.Any(c => c.Count() > 0);
+        if (!any_candidates)
+        {
+            IsInputBindingsDisabled = true;
+
+            var result = await DialogCoordinator.Instance.ShowMessageAsync(this, "No candidates found", "Do you want to add them automatically?", MessageDialogStyle.AffirmativeAndNegative);
+            
+            IsInputBindingsDisabled = false;
+            
+            if (result == MessageDialogResult.Affirmative)
+                puzzle_service.FillCandidates();
+            else
+                return;
+        }
+
+        if (solver_service.HasNextHint())
+        {
+            selection_service.Clear();
+            await OverlayVM.ShowHint();
+        }
+        else
+        {
+            //Show notification if not more hints
+            WeakReferenceMessenger.Default.Send(new ShowNotificationMessage("No more hints found"));
+        }
     }
 
     [RelayCommand]

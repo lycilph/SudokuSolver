@@ -43,11 +43,14 @@ public partial class OverlayViewModel : ObservableObject
         if (NewGameVM.IsOpen)
             NewGameVM.Cancel();
 
+        //if (HintsVM.IsOpen)
+        //    HintsVM.Cancel();
+
         IsOpen = false;
         ShowSpinner = false;
     }
 
-    public bool CanHide() => !ShowSpinner && !VictoryVM.IsOpen;
+    public bool CanHide() => !ShowSpinner && !VictoryVM.IsOpen && !HintsVM.IsOpen;
 
     public OverlayScope GetScope(bool show_spinner = false) => new(this, show_spinner);
 
@@ -79,9 +82,17 @@ public partial class OverlayViewModel : ObservableObject
             });
     }
 
-    public void ShowHint()
+    public Task ShowHint()
     {
         Show();
         HintsVM.Show();
+
+        return HintsVM.Task
+            .ContinueWith(t =>
+            {
+                HintsVM.Hide();
+                Hide();
+                return t;
+            }, TaskScheduler.FromCurrentSynchronizationContext());
     }
 }

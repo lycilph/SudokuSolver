@@ -1,12 +1,10 @@
 ﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Messaging;
 using Core.Commands;
 using Core.Engine;
 using Core.Extensions;
 using Core.Strategies;
 using SudokuUI.Infrastructure;
-using SudokuUI.Messages;
 using SudokuUI.ViewModels;
 using SudokuUI.Visualizers;
 
@@ -22,12 +20,6 @@ public partial class SolverService : ObservableObject
 
     public ObservableCollection<IStrategy> Strategies { get; private set; } = [];
     public Dictionary<Type, IStrategyVisualizer> Visualizers { get; private set; } = [];
-
-    //[ObservableProperty]
-    //private ICommand? command = null;
-
-    //[ObservableProperty]
-    //private bool isShown = false;
 
     public SolverService(PuzzleService puzzle_service,
                          HighlightService highlight_service,
@@ -45,58 +37,53 @@ public partial class SolverService : ObservableObject
         Visualizers = StrategyMapper.GetVisualizerMap(Strategies);
     }
 
-    //public void Show() => IsShown = true;
-    //public void Hide() => IsShown = false;
-
-    //public bool NextHint()
-    //{
-    //    Command = Solver.Step(puzzle_service.Grid);
-    //    return Command != null;
-    //}
-
-    //public void SetHint(ICommand cmd) => Command = cmd;
-
-    //public void ExecuteCommand()
-    //{
-    //    if (Command != null)
-    //        undo_service.Execute(Command);
-    //}
-
-    public void SolveNakedSingles()
+    public bool HasNextHint()
     {
-        while (true)
-        {
-            var command = NakedSinglesStrategy.Instance.Plan(puzzle_service.Grid);
-            if (command != null)
-            {
-                undo_service.Execute(command);
-                
-                command = BasicEliminationStrategy.Instance.Plan(puzzle_service.Grid);
-                if (command != null)
-                    undo_service.Execute(command);
-            }
-            else
-            {
-                if (!puzzle_service.Grid.IsSolved())
-                    WeakReferenceMessenger.Default.Send(new ShowNotificationMessage("No more naked singles found"));
-                return;
-            }    
-        }
+        return Solver.Step(puzzle_service.Grid) != null;
     }
 
-    public void ShowVisualization()
+    public BaseCommand? NextCommand()
+    {
+        if (Solver.Step(puzzle_service.Grid) is BaseCommand cmd)
+            return cmd;
+        else
+            return null;
+    }
+
+    public void Execute(BaseCommand cmd) => undo_service.Execute(cmd);
+
+    //public void SolveNakedSingles()
+    //{
+    //    while (true)
+    //    {
+    //        var command = NakedSinglesStrategy.Instance.Plan(puzzle_service.Grid);
+    //        if (command != null)
+    //        {
+    //            undo_service.Execute(command);
+
+    //            command = BasicEliminationStrategy.Instance.Plan(puzzle_service.Grid);
+    //            if (command != null)
+    //                undo_service.Execute(command);
+    //        }
+    //        else
+    //        {
+    //            if (!puzzle_service.Grid.IsSolved())
+    //                WeakReferenceMessenger.Default.Send(new ShowNotificationMessage("No more naked singles found"));
+    //            return;
+    //        }    
+    //    }
+    //}
+
+    public void ShowVisualization(BaseCommand cmd)
     {
         // Needs to clear (potentially old) stuff
-        //ClearVisualization();
+        ClearVisualization();
 
-        //if (Command != null && Command is BaseCommand base_command)
-        //{
-        //    var type = Command.GetType();
-        //    var visualizer = Visualizers[type];
+        var type = cmd.GetType();
+        var visualizer = Visualizers[type];
 
-        //    // Show visualization here
-        //    visualizer.Show(gridVM, base_command);
-        //}
+        // Show visualization here
+        visualizer.Show(gridVM, cmd);
     }
 
     public void ClearVisualization()
