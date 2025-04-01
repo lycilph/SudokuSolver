@@ -12,178 +12,140 @@
         <CubicEase x:Key="EaseOutFunction" EasingMode="EaseOut"/>
     </UserControl.Resources>
 
-    <Grid>
-        <Grid.Style>
-            <Style TargetType="Grid">
-                <Setter Property="Visibility" Value="Hidden"/>
-                <Style.Triggers>
-                    <DataTrigger Binding="{Binding IsOpen}" Value="True">
-                        <DataTrigger.EnterActions>
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility">
-                                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{x:Static Visibility.Visible}"/>
-                                    </ObjectAnimationUsingKeyFrames>
-                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.3"/>
+    <Border Margin="75 50"
+            CornerRadius="10"
+            BorderBrush="{DynamicResource MahApps.Brushes.Accent}"
+            BorderThickness="1"
+            Background="{DynamicResource MahApps.Brushes.Window.Background}">
+        <StackPanel HorizontalAlignment="Center">
+            <TextBlock Text="You completed the puzzle!"
+                       Margin="0 20 0 0"
+                       FontSize="24"
+                       FontWeight="Bold"/>
 
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </DataTrigger.EnterActions>
-                        <DataTrigger.ExitActions>
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" From="1" To="0" Duration="0:0:0.3"/>
-                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility">
-                                        <DiscreteObjectKeyFrame KeyTime="0:0:0.3" Value="{x:Static Visibility.Hidden}"/>
-                                    </ObjectAnimationUsingKeyFrames>
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </DataTrigger.ExitActions>
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
-        </Grid.Style>
+            <ItemsControl ItemsSource="{Binding Cells}"
+                          HorizontalAlignment="Center"
+                          Margin="0 20 0 0"
+                          Opacity="0">
+                <ItemsControl.Style>
+                    <Style TargetType="ItemsControl">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsOpen}" Value="true">
+                                <DataTrigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetProperty="Opacity" 
+                                                             From="0" To="1" 
+                                                             BeginTime="0:0:0.3"
+                                                             Duration="0:0:0.6"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.EnterActions>
+                                <DataTrigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetProperty="Opacity" 
+                                                             From="1" To="0" 
+                                                             Duration="0:0:0.3"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.ExitActions>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ItemsControl.Style>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Columns="9"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type m:Cell}">
+                        <TextBlock Text="{Binding Value}"
+                                   TextAlignment="Center"
+                                   Height="15"
+                                   Width="15"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
 
-        <Rectangle Fill="Gray"
-                   Opacity="0.20"/>
+            <TextBlock Text="Difficulty: Unknown"
+                       HorizontalAlignment="Center"
+                       Margin="0 20 0 0"/>
+            <TextBlock Text="{Binding Elapsed, Mode=OneWay, StringFormat=Time: {0}}"
+                       HorizontalAlignment="Center"
+                       Margin="0 10 0 0"/>
 
-        <Border Margin="75 50"
-                CornerRadius="10"
-                BorderBrush="{DynamicResource MahApps.Brushes.Accent}"
-                BorderThickness="1"
-                Background="{DynamicResource MahApps.Brushes.Window.Background}">
-            <StackPanel HorizontalAlignment="Center">
-                <TextBlock Text="You completed the puzzle!"
-                           Margin="0 20 0 0"
-                           FontSize="24"
+            <StackPanel Orientation="Vertical"
+                        HorizontalAlignment="Center"
+                        Visibility="{Binding ShowStatistics, Converter={StaticResource bool_to_visibilty_converter}}"
+                        Margin="0 20 0 0">
+                <TextBlock Text="Solver stats:"
                            FontWeight="Bold"/>
-
-                <ItemsControl ItemsSource="{Binding Cells}"
-                              HorizontalAlignment="Center"
-                              Margin="0 20 0 0"
-                              Opacity="0">
-                    <ItemsControl.Style>
-                        <Style TargetType="ItemsControl">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsOpen}" Value="true">
-                                    <DataTrigger.EnterActions>
-                                        <BeginStoryboard>
-                                            <Storyboard>
-                                                <DoubleAnimation Storyboard.TargetProperty="Opacity" 
-                                                                 From="0" To="1" 
-                                                                 BeginTime="0:0:0.3"
-                                                                 Duration="0:0:0.6"/>
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </DataTrigger.EnterActions>
-                                    <DataTrigger.ExitActions>
-                                        <BeginStoryboard>
-                                            <Storyboard>
-                                                <DoubleAnimation Storyboard.TargetProperty="Opacity" 
-                                                                 From="1" To="0" 
-                                                                 Duration="0:0:0.3"/>
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </DataTrigger.ExitActions>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ItemsControl.Style>
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <UniformGrid Columns="9"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate DataType="{x:Type m:Cell}">
-                            <TextBlock Text="{Binding Value}"
-                                       TextAlignment="Center"
-                                       Height="15"
-                                       Width="15"/>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-
-                <TextBlock Text="Difficulty: Unknown"
-                           HorizontalAlignment="Center"
-                           Margin="0 20 0 0"/>
-                <TextBlock HorizontalAlignment="Center"
-                           Margin="0 10 0 0">
-                    <Run Text="Time:"/>
-                    <Run Text="{Binding Elapsed, Mode=OneWay}"/>
-                </TextBlock>
-
-                <StackPanel Orientation="Vertical"
-                            HorizontalAlignment="Center"
-                            Visibility="{Binding ShowStatistics, Converter={StaticResource bool_to_visibilty_converter}}"
-                            Margin="0 20 0 0">
-                    <TextBlock Text="Solver stats:"
-                               FontWeight="Bold"/>
-                    <TextBlock Text="{Binding Statistics.Iterations, StringFormat=Iterations: {0}}"/>
-                    <TextBlock Text="Strategies used"
-                               Margin="0 10 0 0"/>
-                    <ScrollViewer VerticalScrollBarVisibility="Auto"
-                                  Height="80">
-                        <ItemsControl ItemsSource="{Binding Statistics.StrategyCount}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding Key}"/>
-                                        <TextBlock Text="{Binding Value, StringFormat=[Count: {0}]}"
-                                                   Margin="10 0 0 0"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </ScrollViewer>
-                </StackPanel>
-
-                <StackPanel Orientation="Horizontal"
-                            HorizontalAlignment="Center"
-                            Margin="0 20 0 0">
-                    <Button Content="New"
-                            Command="{Binding NewCommand}"/>
-                    <Button Content="Clear"
-                            Command="{Binding ClearCommand}"
-                            Margin="10 0 0 0"/>
-                    <Button Content="Restart"
-                            Command="{Binding RestartCommand}"
-                            Margin="10 0 0 0"/>
-
-                    <StackPanel.RenderTransform>
-                        <!-- Start below -->
-                        <TranslateTransform Y="200"/>
-                    </StackPanel.RenderTransform>
-                    <StackPanel.Style>
-                        <Style TargetType="StackPanel">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsOpen}" Value="True">
-                                    <DataTrigger.EnterActions>
-                                        <BeginStoryboard>
-                                            <Storyboard>
-                                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
-                                                                 From="200" To="0" 
-                                                                 BeginTime="0:0:0.3" 
-                                                                 Duration="0:0:0.3"
-                                                                 EasingFunction="{StaticResource EaseOutFunction}"/>
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </DataTrigger.EnterActions>
-                                    <DataTrigger.ExitActions>
-                                        <BeginStoryboard>
-                                            <Storyboard>
-                                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
-                                                                 From="0" To="200" 
-                                                                 Duration="0:0:0.3"/>
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </DataTrigger.ExitActions>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </StackPanel.Style>
-                </StackPanel>
+                <TextBlock Text="{Binding Statistics.Iterations, StringFormat=Iterations: {0}}"/>
+                <TextBlock Text="Strategies used"
+                           Margin="0 10 0 0"/>
+                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                              Height="80">
+                    <ItemsControl ItemsSource="{Binding Statistics.StrategyCount}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Key}"/>
+                                    <TextBlock Text="{Binding Value, StringFormat=[Count: {0}]}"
+                                               Margin="10 0 0 0"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
             </StackPanel>
-        </Border>
-    </Grid>
+
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Center"
+                        Margin="0 20 0 0">
+                <Button Content="New"
+                        Command="{Binding NewCommand}"/>
+                <Button Content="Clear"
+                        Command="{Binding ClearCommand}"
+                        Margin="10 0 0 0"/>
+                <Button Content="Reset"
+                        Command="{Binding ResetCommand}"
+                        Margin="10 0 0 0"/>
+
+                <StackPanel.RenderTransform>
+                    <!-- Start below -->
+                    <TranslateTransform Y="200"/>
+                </StackPanel.RenderTransform>
+                <StackPanel.Style>
+                    <Style TargetType="StackPanel">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsOpen}" Value="True">
+                                <DataTrigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                                             From="200" To="0" 
+                                                             BeginTime="0:0:0.3" 
+                                                             Duration="0:0:0.3"
+                                                             EasingFunction="{StaticResource EaseOutFunction}"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.EnterActions>
+                                <DataTrigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                                             From="0" To="200" 
+                                                             Duration="0:0:0.3"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.ExitActions>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </StackPanel.Style>
+            </StackPanel>
+        </StackPanel>
+    </Border>
 </UserControl>

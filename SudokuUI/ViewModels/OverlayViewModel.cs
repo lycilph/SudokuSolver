@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Core.Engine;
+using SudokuUI.Infrastructure;
 using System.Windows.Input;
 
 namespace SudokuUI.ViewModels;
@@ -42,31 +43,33 @@ public partial class OverlayViewModel : ObservableObject
         ShowSpinner = false;
     }
 
+    public bool CanHide() => !ShowSpinner && !VictoryVM.IsOpen;
+
     public Task<Difficulty?> ShowNewGame()
     {
         Show();
-
         NewGameVM.Show();
-        NewGameVM.Task.ContinueWith(_ =>
-        {
-            NewGameVM.Hide();
-            Hide();
-        });
 
-        return NewGameVM.Task;
+        return NewGameVM.Task
+            .ContinueWith(t => 
+            {
+                NewGameVM.Hide();
+                Hide();
+                return t.Result;
+            });
     }
 
-    public Task ShowVictory()
+    public Task<VictoryResult> ShowVictory(TimeSpan time)
     {
         Show();
+        VictoryVM.Show(time);
 
-        var task = Task.Delay(1000);
-        task.ContinueWith(_ =>
-        {
-            VictoryVM.Hide();
-            Hide();
-        });
-        
-        return task;
+        return VictoryVM.Task
+            .ContinueWith(t => 
+            {
+                VictoryVM.Hide();
+                Hide();
+                return t.Result;
+            });
     }
 }

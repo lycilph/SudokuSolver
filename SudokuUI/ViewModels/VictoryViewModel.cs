@@ -4,15 +4,17 @@ using CommunityToolkit.Mvvm.Input;
 using Core.Engine;
 using Core.Extensions;
 using Core.Models;
+using SudokuUI.Infrastructure;
 using SudokuUI.Services;
 
 namespace SudokuUI.ViewModels;
 
 public partial class VictoryViewModel : ObservableObject
 {
-    public event EventHandler RequestNewGame = null!;
-    public event EventHandler RequestClearGame = null!;
-    public event EventHandler RequestRestartGame = null!;
+    private TaskCompletionSource<VictoryResult> task_completion_source = new();
+    //public event EventHandler RequestNewGame = null!;
+    //public event EventHandler RequestClearGame = null!;
+    //public event EventHandler RequestRestartGame = null!;
 
     [ObservableProperty]
     private bool isOpen = false;
@@ -29,12 +31,20 @@ public partial class VictoryViewModel : ObservableObject
     [ObservableProperty]
     private bool showStatistics = false;
 
+    public Task<VictoryResult> Task => task_completion_source.Task;
+
     public VictoryViewModel(PuzzleService puzzle_service)
     {
         Cells = puzzle_service.Grid.Cells.ToObservableCollection();
     }
 
-    public void Show() => IsOpen = true;
+    public void Show(TimeSpan time)
+    {
+        task_completion_source = new TaskCompletionSource<VictoryResult>();
+        Elapsed = time;
+        IsOpen = true; 
+    }
+
     public void Hide() 
     {
         ShowStatistics = false;
@@ -50,23 +60,11 @@ public partial class VictoryViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void New()
-    {
-        Hide();
-        RequestNewGame?.Invoke(this, EventArgs.Empty);
-    }
+    private void New() => task_completion_source.SetResult(new VictoryResult(VictoryResult.ResultType.NewGame));
 
     [RelayCommand]
-    private void Clear()
-    {
-        Hide();
-        RequestClearGame?.Invoke(this, EventArgs.Empty);
-    }
+    private void Clear() => task_completion_source.SetResult(new VictoryResult(VictoryResult.ResultType.Clear));
 
     [RelayCommand]
-    private void Restart()
-    {
-        Hide();
-        RequestRestartGame?.Invoke(this, EventArgs.Empty);
-    }
+    private void Reset() => task_completion_source.SetResult(new VictoryResult(VictoryResult.ResultType.Reset));
 }

@@ -1,9 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Core.DancingLinks;
 using Core.Extensions;
 using MahApps.Metro.Controls.Dialogs;
 using SudokuUI.Dialogs;
+using SudokuUI.Infrastructure;
+using SudokuUI.Messages;
 using SudokuUI.Services;
 using System.Text;
 using System.Windows.Threading;
@@ -86,19 +89,42 @@ public partial class MainViewModel : ObservableObject
         };
 
         // Handle the puzzle solved event
-        puzzle_service.PuzzleSolved += (s, e) =>
-        {
-            //SolverOverlayVM.Close();
-
-            //VictoryOverlayVM.Elapsed = puzzle_service.GetElapsedTime();
-            //VictoryOverlayVM.Show();
-
-            OverlayVM.ShowVictory();
-        };
+        puzzle_service.PuzzleSolved += async (s, e) => await OnPuzzleSolved(s, e);
 
         var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(100) };
         timer.Tick += (s, e) => Elapsed = puzzle_service.GetElapsedTime();
         timer.Start();
+    }
+
+    // General event handlers
+
+    private async Task OnPuzzleSolved(object? sender, EventArgs e)
+    {
+        //SolverOverlayVM.Close();
+
+        var victory_result = await OverlayVM.ShowVictory(puzzle_service.GetElapsedTime());
+
+        switch (victory_result.Result)
+        {
+            case VictoryResult.ResultType.NewGame:
+                OverlayVM.Show(true);
+                await Task.Delay(250); // Give the clear time to complete
+
+                ClearPuzzle();
+                await NewPuzzle();
+                break;
+            case VictoryResult.ResultType.Clear:
+                OverlayVM.Show(true);
+                await Task.Delay(250); // Give the clear time to complete
+
+                ClearPuzzle();
+
+                OverlayVM.Hide();
+                break;
+            case VictoryResult.ResultType.Reset:
+                UndoService.Reset();
+                break;
+        }
     }
 
     // Window commands (ie. buttons in the title bar)
@@ -128,7 +154,7 @@ public partial class MainViewModel : ObservableObject
         }
 
         // The overlay cannot be cancelled if the spinner is shown (ie. it is working)
-        if (OverlayVM.IsOpen && !OverlayVM.ShowSpinner)
+        if (OverlayVM.CanHide())
         {
             OverlayVM.Hide();
             return;
@@ -175,13 +201,9 @@ public partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task ClearPuzzle()
+    private void ClearPuzzle()
     {
-        OverlayVM.IsOpen = true;
-        OverlayVM.ShowSpinner = true;
-        await Task.Delay(1000);
-        OverlayVM.ShowSpinner = false;
-        OverlayVM.IsOpen = false;
+        puzzle_service.Clear();
     }
 
     [RelayCommand]
