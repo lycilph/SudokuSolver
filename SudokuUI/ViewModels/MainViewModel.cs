@@ -242,6 +242,12 @@ public partial class MainViewModel : ObservableObject
     // Right side buttons
 
     [RelayCommand]
+    private void ShowHint()
+    {
+        OverlayVM.ShowHint();
+    }
+
+    [RelayCommand]
     private async Task ShowSolutionCount()
     {
         IsInputBindingsDisabled = true;

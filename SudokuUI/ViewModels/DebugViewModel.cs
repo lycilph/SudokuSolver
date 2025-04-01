@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using Core.Commands;
 using Core.Engine;
 using Core.Extensions;
+using Core.Strategies;
 using ObservableCollections;
 using SudokuUI.Messages;
 using SudokuUI.Services;
@@ -71,6 +72,17 @@ public partial class DebugViewModel : ObservableObject
         Strategies = solver_service.Strategies.Select(s => new StrategyViewModel(s)).ToObservableCollection();
 
         SelectedPuzzle = Puzzles.First();
+
+        foreach (var strategy in Strategies)
+            strategy.ExecuteCommandRequest += (s, e) => ExecuteStrategy(e);
+    }
+
+    private void ExecuteStrategy(IStrategy strategy)
+    {
+        if (strategy.Plan(puzzle_service.Grid) is BaseCommand command)
+            undo_service.Execute(command);
+        else
+            WeakReferenceMessenger.Default.Send(new ShowNotificationMessage($"Cannot execute strategy {strategy.Name}"));
     }
 
     [RelayCommand]

@@ -2,9 +2,9 @@
 
 namespace SudokuUI.Views;
 
-public partial class SolverOverlayView : UserControl
+public partial class HintsView : UserControl
 {
-    public SolverOverlayView()
+    public HintsView()
     {
         InitializeComponent();
     }

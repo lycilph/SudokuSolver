@@ -20,12 +20,16 @@ public partial class OverlayViewModel : ObservableObject
     private VictoryViewModel victoryVM;
 
     [ObservableProperty]
+    private HintsViewModel hintsVM;
+
+    [ObservableProperty]
     private ICommand escapeCommand = null!;
 
-    public OverlayViewModel(NewGameViewModel newGameVM, VictoryViewModel victoryVM)
+    public OverlayViewModel(NewGameViewModel newGameVM, VictoryViewModel victoryVM, HintsViewModel hintsVM)
     {
         NewGameVM = newGameVM;
         VictoryVM = victoryVM;
+        HintsVM = hintsVM;
     }
 
     public void Show(bool show_spinner = false)
@@ -73,5 +77,11 @@ public partial class OverlayViewModel : ObservableObject
                 Hide();
                 return t.Result;
             });
+    }
+
+    public void ShowHint()
+    {
+        Show();
+        HintsVM.Show();
     }
 }

@@ -45,7 +45,7 @@ public partial class App : Application
         services.AddTransient<SettingsViewModel>();
         services.AddTransient<OverlayViewModel>();
         services.AddTransient<VictoryViewModel>();
-        services.AddTransient<SolverOverlayViewModel>();
+        services.AddTransient<HintsViewModel>();
         services.AddTransient<NewGameViewModel>();
         services.AddTransient<NotificationViewModel>();
         services.AddTransient<DebugViewModel>();

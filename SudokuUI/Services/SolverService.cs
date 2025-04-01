@@ -23,11 +23,11 @@ public partial class SolverService : ObservableObject
     public ObservableCollection<IStrategy> Strategies { get; private set; } = [];
     public Dictionary<Type, IStrategyVisualizer> Visualizers { get; private set; } = [];
 
-    [ObservableProperty]
-    private ICommand? command = null;
+    //[ObservableProperty]
+    //private ICommand? command = null;
 
-    [ObservableProperty]
-    private bool isShown = false;
+    //[ObservableProperty]
+    //private bool isShown = false;
 
     public SolverService(PuzzleService puzzle_service,
                          HighlightService highlight_service,
@@ -45,22 +45,22 @@ public partial class SolverService : ObservableObject
         Visualizers = StrategyMapper.GetVisualizerMap(Strategies);
     }
 
-    public void Show() => IsShown = true;
-    public void Hide() => IsShown = false;
+    //public void Show() => IsShown = true;
+    //public void Hide() => IsShown = false;
 
-    public bool NextHint()
-    {
-        Command = Solver.Step(puzzle_service.Grid);
-        return Command != null;
-    }
+    //public bool NextHint()
+    //{
+    //    Command = Solver.Step(puzzle_service.Grid);
+    //    return Command != null;
+    //}
 
-    public void SetHint(ICommand cmd) => Command = cmd;
+    //public void SetHint(ICommand cmd) => Command = cmd;
 
-    public void ExecuteCommand()
-    {
-        if (Command != null)
-            undo_service.Execute(Command);
-    }
+    //public void ExecuteCommand()
+    //{
+    //    if (Command != null)
+    //        undo_service.Execute(Command);
+    //}
 
     public void SolveNakedSingles()
     {
@@ -86,17 +86,17 @@ public partial class SolverService : ObservableObject
 
     public void ShowVisualization()
     {
-        // Needs to clear (potetially old) stuff
-        ClearVisualization();
+        // Needs to clear (potentially old) stuff
+        //ClearVisualization();
 
-        if (Command != null && Command is BaseCommand base_command)
-        {
-            var type = Command.GetType();
-            var visualizer = Visualizers[type];
+        //if (Command != null && Command is BaseCommand base_command)
+        //{
+        //    var type = Command.GetType();
+        //    var visualizer = Visualizers[type];
 
-            // Show visualization here
-            visualizer.Show(gridVM, base_command);
-        }
+        //    // Show visualization here
+        //    visualizer.Show(gridVM, base_command);
+        //}
     }
 
     public void ClearVisualization()

@@ -57,8 +57,8 @@
                 <v:VictoryView/>
             </DataTemplate>
             
-            <DataTemplate DataType="{x:Type vm:SolverOverlayViewModel}">
-                <v:SolverOverlayView/>
+            <DataTemplate DataType="{x:Type vm:HintsViewModel}">
+                <v:HintsView/>
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type vm:NewGameViewModel}">

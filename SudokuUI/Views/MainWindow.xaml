@@ -155,12 +155,12 @@
                     <!-- Right side buttons --> 
                     <StackPanel Grid.Column="2"
                                 Orientation="Vertical">
-                        <!--<Button Content="{icon:Lucide Kind=Lightbulb, Height=24, Width=24}"
+                        <Button Content="{icon:Lucide Kind=Lightbulb, Height=24, Width=24}"
                                 Command="{Binding ShowHintCommand}"
                                 ToolTip="Hint"
                                 Focusable="False"/>
 
-                        <Button Content="{icon:Lucide Kind=WandSparkles, Height=24, Width=24}"
+                        <!--<Button Content="{icon:Lucide Kind=WandSparkles, Height=24, Width=24}"
                                 Command="{Binding SolveNakedSinglesCommand}"
                                 Margin="0 5 0 0"
                                 ToolTip="Solver naked singles"
