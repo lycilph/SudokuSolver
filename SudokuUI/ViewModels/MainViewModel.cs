@@ -1,12 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
 using Core.DancingLinks;
 using Core.Extensions;
 using MahApps.Metro.Controls.Dialogs;
 using SudokuUI.Dialogs;
 using SudokuUI.Infrastructure;
-using SudokuUI.Messages;
 using SudokuUI.Services;
 using System.Text;
 using System.Windows.Threading;
@@ -114,12 +112,11 @@ public partial class MainViewModel : ObservableObject
                 await NewPuzzle();
                 break;
             case VictoryResult.ResultType.Clear:
-                OverlayVM.Show(true);
-                await Task.Delay(250); // Give the clear time to complete
-
-                ClearPuzzle();
-
-                OverlayVM.Hide();
+                using (var scope = OverlayVM.GetScope(true))
+                {
+                    await Task.Delay(250); // Give the clear time to complete
+                    ClearPuzzle();
+                }
                 break;
             case VictoryResult.ResultType.Reset:
                 UndoService.Reset();
@@ -194,9 +191,10 @@ public partial class MainViewModel : ObservableObject
 
         if (difficulty != null)
         {
-            OverlayVM.Show(true);
-            await puzzle_service.New(difficulty);
-            OverlayVM.Hide();
+            using (var scope = OverlayVM.GetScope(true))
+            {
+                await puzzle_service.New(difficulty);
+            }
         }
     }
 

@@ -45,6 +45,8 @@ public partial class OverlayViewModel : ObservableObject
 
     public bool CanHide() => !ShowSpinner && !VictoryVM.IsOpen;
 
+    public OverlayScope GetScope(bool show_spinner = false) => new(this, show_spinner);
+
     public Task<Difficulty?> ShowNewGame()
     {
         Show();
