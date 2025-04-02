@@ -27,7 +27,7 @@
                 <TextBlock.Style>
                     <Style TargetType="TextBlock">
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsOpen}" Value="true">
+                            <DataTrigger Binding="{Binding IsActive}" Value="true">
                                 <DataTrigger.EnterActions>
                                     <BeginStoryboard>
                                         <Storyboard>
@@ -66,7 +66,7 @@
                 <Button.Style>
                     <Style TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button}">
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsOpen}" Value="True">
+                            <DataTrigger Binding="{Binding IsActive}" Value="True">
                                 <DataTrigger.EnterActions>
                                     <BeginStoryboard>
                                         <Storyboard>
@@ -110,7 +110,7 @@
                 <Button.Style>
                     <Style TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button}">
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsOpen}" Value="True">
+                            <DataTrigger Binding="{Binding IsActive}" Value="True">
                                 <DataTrigger.EnterActions>
                                     <BeginStoryboard>
                                         <Storyboard>
@@ -154,7 +154,7 @@
                 <Button.Style>
                     <Style TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button}">
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsOpen}" Value="True">
+                            <DataTrigger Binding="{Binding IsActive}" Value="True">
                                 <DataTrigger.EnterActions>
                                     <BeginStoryboard>
                                         <Storyboard>
@@ -198,7 +198,7 @@
                 <Button.Style>
                     <Style TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button}">
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsOpen}" Value="True">
+                            <DataTrigger Binding="{Binding IsActive}" Value="True">
                                 <DataTrigger.EnterActions>
                                     <BeginStoryboard>
                                         <Storyboard>

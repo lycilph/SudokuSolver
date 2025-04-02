@@ -122,24 +122,22 @@ public partial class MainViewModel : ObservableObject
     private async Task OnPuzzleSolved(object? sender, EventArgs e)
     {
         // If this is triggered while the user is in the hints view, cancel it here
-        OverlayVM.CancelHints();
-        await Task.Delay(500);
+        await OverlayVM.CancelHints();
 
         var victory_result = await OverlayVM.ShowVictory(puzzle_service.GetElapsedTime());
 
         switch (victory_result.Result)
         {
             case VictoryResult.ResultType.NewGame:
-                OverlayVM.Show(true);
-                await Task.Delay(250); // Give the clear time to complete
+                await OverlayVM.Show(true);
 
                 ClearPuzzle();
                 await NewPuzzle();
                 break;
             case VictoryResult.ResultType.Clear:
-                using (var scope = OverlayVM.GetScope(true))
+                using (var scope = OverlayVM.GetWaitingSpinnerScope(true))
                 {
-                    await Task.Delay(250); // Give the clear time to complete
+                    await scope.OpenAnimationTask;
                     ClearPuzzle();
                 }
                 break;
@@ -218,10 +216,8 @@ public partial class MainViewModel : ObservableObject
 
         if (difficulty != null)
         {
-            using (var scope = OverlayVM.GetScope(true))
-            {
-                await puzzle_service.New(difficulty);
-            }
+            using var scope = OverlayVM.GetWaitingSpinnerScope(true);
+            await puzzle_service.New(difficulty);
         }
     }
 
@@ -340,7 +336,6 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     private async Task ShowSolutionCount()
     {
-
         var copy = puzzle_service.Grid.Copy();
         copy.FillCandidates();
 

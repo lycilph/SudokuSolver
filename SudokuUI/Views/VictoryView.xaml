@@ -30,7 +30,7 @@
                 <ItemsControl.Style>
                     <Style TargetType="ItemsControl">
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsOpen}" Value="true">
+                            <DataTrigger Binding="{Binding IsActive}" Value="true">
                                 <DataTrigger.EnterActions>
                                     <BeginStoryboard>
                                         <Storyboard>
@@ -120,7 +120,7 @@
                 <StackPanel.Style>
                     <Style TargetType="StackPanel">
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsOpen}" Value="True">
+                            <DataTrigger Binding="{Binding IsActive}" Value="True">
                                 <DataTrigger.EnterActions>
                                     <BeginStoryboard>
                                         <Storyboard>

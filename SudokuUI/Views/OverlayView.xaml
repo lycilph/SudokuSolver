@@ -8,6 +8,22 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance Type=vm:OverlayViewModel, IsDesignTimeCreatable=False}">
+    <UserControl.Resources>
+        <Storyboard x:Key="open_animation" Completed="OpenAnimationCompleted">
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility">
+                <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{x:Static Visibility.Visible}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.3"/>
+        </Storyboard>
+
+        <Storyboard x:Key="close_animation" Completed="CloseAnimationCompleted">
+            <DoubleAnimation Storyboard.TargetProperty="Opacity" From="1" To="0" Duration="0:0:0.3"/>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility">
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.3" Value="{x:Static Visibility.Hidden}"/>
+            </ObjectAnimationUsingKeyFrames>
+        </Storyboard>
+    </UserControl.Resources>
+    
     <Grid>
         <Grid.Style>
             <Style TargetType="Grid">
@@ -15,24 +31,10 @@
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding IsOpen}" Value="True">
                         <DataTrigger.EnterActions>
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility">
-                                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{x:Static Visibility.Visible}"/>
-                                    </ObjectAnimationUsingKeyFrames>
-                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.3"/>
-                                </Storyboard>
-                            </BeginStoryboard>
+                            <BeginStoryboard Storyboard="{StaticResource open_animation}"/>
                         </DataTrigger.EnterActions>
                         <DataTrigger.ExitActions>
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" From="1" To="0" Duration="0:0:0.3"/>
-                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility">
-                                        <DiscreteObjectKeyFrame KeyTime="0:0:0.3" Value="{x:Static Visibility.Hidden}"/>
-                                    </ObjectAnimationUsingKeyFrames>
-                                </Storyboard>
-                            </BeginStoryboard>
+                            <BeginStoryboard Storyboard="{StaticResource close_animation}"/>
                         </DataTrigger.ExitActions>
                     </DataTrigger>
                 </Style.Triggers>
@@ -55,12 +57,12 @@
                           VerticalAlignment="Center"/>
 
         <ContentControl Content="{Binding NewGameVM}"
-                        Visibility="{Binding NewGameVM.IsOpen, Converter={StaticResource bool_to_visibilty_converter}}"/>
+                        Visibility="{Binding NewGameVM.IsActive, Converter={StaticResource bool_to_visibilty_converter}}"/>
 
         <ContentControl Content="{Binding VictoryVM}"
-                        Visibility="{Binding VictoryVM.IsOpen, Converter={StaticResource bool_to_visibilty_converter}}"/>
+                        Visibility="{Binding VictoryVM.IsActive, Converter={StaticResource bool_to_visibilty_converter}}"/>
 
         <ContentControl Content="{Binding HintsVM}"
-                        Visibility="{Binding HintsVM.IsOpen, Converter={StaticResource bool_to_visibilty_converter}}"/>
+                        Visibility="{Binding HintsVM.IsActive, Converter={StaticResource bool_to_visibilty_converter}}"/>
     </Grid>
 </UserControl>

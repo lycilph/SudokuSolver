@@ -9,29 +9,33 @@ public partial class NewGameViewModel : ObservableObject
     private TaskCompletionSource<Difficulty?> task_completion_source = new();
 
     [ObservableProperty]
-    private bool isOpen = false;
+    private bool isActive = false;
     
-    public Task<Difficulty?> Task => task_completion_source.Task;
-
-    public void Show()
+    public Task<Difficulty?> Activate()
     {
         task_completion_source = new TaskCompletionSource<Difficulty?>();
-        IsOpen = true;
+        IsActive = true;
+
+        return task_completion_source.Task;
     }
 
-    public void Hide() => IsOpen = false;
+    private void Complete(Difficulty? difficulty)
+    {
+        task_completion_source.SetResult(difficulty);
+        IsActive = false;
+    }
 
-    public void Cancel() => task_completion_source.SetResult(null);
-
-    [RelayCommand]
-    private void Easy() => task_completion_source.SetResult(Difficulty.Easy());
-
-    [RelayCommand]
-    private void Medium() => task_completion_source.SetResult(Difficulty.Medium());
+    public void Cancel() => Complete(null);
 
     [RelayCommand]
-    private void Hard() => task_completion_source.SetResult(Difficulty.Hard());
+    private void Easy() => Complete(Difficulty.Easy());
 
     [RelayCommand]
-    private void VeryHard() => task_completion_source.SetResult(Difficulty.VeryHard());
+    private void Medium() => Complete(Difficulty.Medium());
+
+    [RelayCommand]
+    private void Hard() => Complete(Difficulty.Hard());
+
+    [RelayCommand]
+    private void VeryHard() => Complete(Difficulty.VeryHard());
 }

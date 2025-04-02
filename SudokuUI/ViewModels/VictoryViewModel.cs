@@ -14,7 +14,7 @@ public partial class VictoryViewModel : ObservableObject
     private TaskCompletionSource<VictoryResult> task_completion_source = new();
 
     [ObservableProperty]
-    private bool isOpen = false;
+    private bool isActive = false;
 
     [ObservableProperty]
     public ObservableCollection<Cell> cells;
@@ -28,26 +28,18 @@ public partial class VictoryViewModel : ObservableObject
     [ObservableProperty]
     private bool showStatistics = false;
 
-    public Task<VictoryResult> Task => task_completion_source.Task;
-
     public VictoryViewModel(PuzzleService puzzle_service)
     {
         Cells = puzzle_service.Grid.Cells.ToObservableCollection();
     }
 
-    public void Show(TimeSpan time)
+    public Task<VictoryResult> Activate(TimeSpan time)
     {
         task_completion_source = new TaskCompletionSource<VictoryResult>();
         Elapsed = time;
-        IsOpen = true; 
-    }
+        IsActive = true; 
 
-    public void Hide() 
-    {
-        ShowStatistics = false;
-        Statistics.Reset();
-
-        IsOpen = false;
+        return task_completion_source.Task;
     }
 
     public void AddStatistics(Statistics stats)
@@ -56,12 +48,22 @@ public partial class VictoryViewModel : ObservableObject
         ShowStatistics = true;
     }
 
-    [RelayCommand]
-    private void New() => task_completion_source.SetResult(new VictoryResult(VictoryResult.ResultType.NewGame));
+    private void Complete(VictoryResult result) 
+    {
+        task_completion_source.SetResult(result);
+
+        ShowStatistics = false;
+        Statistics.Reset();
+
+        IsActive = false;
+    }
 
     [RelayCommand]
-    private void Clear() => task_completion_source.SetResult(new VictoryResult(VictoryResult.ResultType.Clear));
+    private void New() => Complete(new VictoryResult(VictoryResult.ResultType.NewGame));
 
     [RelayCommand]
-    private void Reset() => task_completion_source.SetResult(new VictoryResult(VictoryResult.ResultType.Reset));
+    private void Clear() => Complete(new VictoryResult(VictoryResult.ResultType.Clear));
+
+    [RelayCommand]
+    private void Reset() => Complete(new VictoryResult(VictoryResult.ResultType.Reset));
 }

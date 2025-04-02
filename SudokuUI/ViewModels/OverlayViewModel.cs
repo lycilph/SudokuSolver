@@ -7,6 +7,9 @@ namespace SudokuUI.ViewModels;
 
 public partial class OverlayViewModel : ObservableObject
 {
+    private TaskCompletionSource open_animation_completion_source = new();
+    private TaskCompletionSource close_animation_completion_source = new();
+
     [ObservableProperty]
     private bool isOpen = false;
 
@@ -32,71 +35,69 @@ public partial class OverlayViewModel : ObservableObject
         HintsVM = hintsVM;
     }
 
-    public void Show(bool show_spinner = false)
+    public void OnOpenAnimationCompleted() => open_animation_completion_source.SetResult();
+    public void OnCloseAnimationCompleted() => close_animation_completion_source.SetResult();
+
+    public Task Show(bool show_spinner = false)
     {
+        open_animation_completion_source = new();
+        close_animation_completion_source = new();
+
         IsOpen = true;
         ShowSpinner = show_spinner;
+
+        return open_animation_completion_source.Task;
     }
 
     public void Hide()
     {
-        if (NewGameVM.IsOpen)
+        if (NewGameVM.IsActive)
             NewGameVM.Cancel();
 
         IsOpen = false;
         ShowSpinner = false;
     }
 
-    public bool CanHide() => !ShowSpinner && !VictoryVM.IsOpen && !HintsVM.IsOpen;
+    public bool CanHide() => !ShowSpinner && !VictoryVM.IsActive && !HintsVM.IsActive;
 
-    public OverlayScope GetScope(bool show_spinner = false) => new(this, show_spinner);
+    public OverlayScope GetWaitingSpinnerScope(bool show_spinner = false) => new(this, show_spinner);
 
     public void AddVictoryStatistics(Statistics stats) => VictoryVM.AddStatistics(stats);
 
-    public Task<Difficulty?> ShowNewGame()
+    public async Task<Difficulty?> ShowNewGame()
     {
         Show();
-        NewGameVM.Show();
+        var difficulty = await NewGameVM.Activate();
+        
+        Hide();
+        await close_animation_completion_source.Task;
 
-        return NewGameVM.Task
-            .ContinueWith(t => 
-            {
-                NewGameVM.Hide();
-                Hide();
-                return t.Result;
-            });
+        return difficulty;
     }
 
-    public Task<VictoryResult> ShowVictory(TimeSpan time)
+    public async Task<VictoryResult> ShowVictory(TimeSpan time)
     {
         Show();
-        VictoryVM.Show(time);
+        var result = await VictoryVM.Activate(time);
 
-        return VictoryVM.Task
-            .ContinueWith(t => 
-            {
-                VictoryVM.Hide();
-                Hide();
-                return t.Result;
-            });
+        Hide();
+        await close_animation_completion_source.Task;
+
+        return result;
     }
 
-    public Task ShowHint(BaseCommand? cmd)
+    public async Task ShowHint(BaseCommand? cmd)
     {
         Show();
-        HintsVM.Show(cmd);
+        await HintsVM.Activate(cmd);
 
-        return HintsVM.Task
-            .ContinueWith(t =>
-            {
-                HintsVM.Hide();
-                Hide();
-                return t;
-            }, TaskScheduler.FromCurrentSynchronizationContext());
+        Hide();
+        await close_animation_completion_source.Task;
     }
 
-    public void CancelHints()
+    public async Task CancelHints()
     {
         HintsVM.Cancel();
+        await close_animation_completion_source.Task;
     }
 }

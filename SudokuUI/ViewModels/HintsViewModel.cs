@@ -11,10 +11,8 @@ public partial class HintsViewModel : ObservableObject
 
     private readonly SolverService solver_service;
 
-    public Task Task => task_completion_source.Task;
-
     [ObservableProperty]
-    private bool isOpen = false;
+    private bool isActive = false;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(ApplyCommand))]
@@ -29,20 +27,23 @@ public partial class HintsViewModel : ObservableObject
         this.solver_service = solver_service;
     }
 
-    public void Show(BaseCommand? cmd)
+    public Task Activate(BaseCommand? cmd)
     {
         task_completion_source = new TaskCompletionSource();
-        IsOpen = true;
+        IsActive = true;
 
         Command = cmd ?? solver_service.NextCommand();
         if (Command != null )
             solver_service.ShowVisualization(Command);
+
+        return task_completion_source.Task;
     }
 
-    public void Hide() 
+    private void Complete() 
     { 
+        task_completion_source.SetResult();
         solver_service.ClearVisualization();
-        IsOpen = false; 
+        IsActive = false; 
     }
 
     [RelayCommand(CanExecute = nameof(CanApply))]
@@ -50,7 +51,10 @@ public partial class HintsViewModel : ObservableObject
     {
         if (Command != null)
             solver_service.Execute(Command);
-        Cancel(); // This closes the overlay
+
+        // This might have triggered a puzzle solved event (which cancels this), so check if we are already completed
+        if (!task_completion_source.Task.IsCompleted)
+            Complete();
     }
 
     [RelayCommand(CanExecute = nameof(CanApplyAndNext))]
@@ -67,7 +71,6 @@ public partial class HintsViewModel : ObservableObject
     [RelayCommand]
     public void Cancel()
     {
-        if (!Task.IsCompleted)
-            task_completion_source.SetResult(); 
+        Complete();
     }
 }
