@@ -42,7 +42,7 @@ public partial class MainViewModel : ObservableObject
     private UndoRedoService undoService;
 
     [ObservableProperty]
-    private VisualizationService visualizationService;
+    private HighlightService highlightService;
 
     [ObservableProperty]
     private bool isKeyboardDisabled = false;
@@ -59,7 +59,7 @@ public partial class MainViewModel : ObservableObject
                          SelectionService selection_service,
                          DebugService debug_service,
                          UndoRedoService undo_service,
-                         VisualizationService visualization_service,
+                         HighlightService highlight_service,
                          GridViewModel gridVM,
                          DigitSelectionViewModel digitSelectionVM,
                          NotificationViewModel notificationVM,
@@ -78,7 +78,7 @@ public partial class MainViewModel : ObservableObject
         OverlayVM = overlayVM;
         SettingsVM = settingsVM;
         UndoService = undo_service;
-        VisualizationService = visualization_service;
+        highlightService = highlight_service;
 
         OverlayVM.EscapeCommand = EscapeCommand;
         OverlayVM.PropertyChanged += (s, e) =>

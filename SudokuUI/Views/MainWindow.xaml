@@ -146,8 +146,8 @@
                         <ContentControl Content="{Binding GridVM}"/>
                         <Canvas>
                             <i:Interaction.Behaviors>
-                                <be:VisualizationBehavior Visualizer="{Binding VisualizationService}"
-                                                          ViewModel="{Binding GridVM}"/>
+                                <be:HighlightBehavior Service="{Binding HighlightService}"
+                                                      ViewModel="{Binding GridVM}"/>
                             </i:Interaction.Behaviors>
                         </Canvas>
                     </Grid>

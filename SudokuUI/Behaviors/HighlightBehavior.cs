@@ -9,15 +9,15 @@ using SudokuUI.Visualizers.Misc;
 
 namespace SudokuUI.Behaviors;
 
-public class VisualizationBehavior : Behavior<Canvas>
+public class HighlightBehavior : Behavior<Canvas>
 {
-    public VisualizationService Visualizer
+    public HighlightService Service
     {
-        get { return (VisualizationService)GetValue(VisualizerProperty); }
-        set { SetValue(VisualizerProperty, value); }
+        get { return (HighlightService)GetValue(ServiceProperty); }
+        set { SetValue(ServiceProperty, value); }
     }
-    public static readonly DependencyProperty VisualizerProperty =
-        DependencyProperty.Register("Visualizer", typeof(VisualizationService), typeof(VisualizationBehavior), new PropertyMetadata(null, new PropertyChangedCallback(OnVisualizerChanged)));
+    public static readonly DependencyProperty ServiceProperty =
+        DependencyProperty.Register(nameof(Service), typeof(HighlightService), typeof(HighlightBehavior), new PropertyMetadata(null, new PropertyChangedCallback(OnServiceChanged)));
 
     public GridViewModel ViewModel
     {
@@ -25,20 +25,20 @@ public class VisualizationBehavior : Behavior<Canvas>
         set { SetValue(ViewModelProperty, value); }
     }
     public static readonly DependencyProperty ViewModelProperty =
-        DependencyProperty.Register("ViewModel", typeof(GridViewModel), typeof(VisualizationBehavior), new PropertyMetadata(null));
+        DependencyProperty.Register(nameof(ViewModel), typeof(GridViewModel), typeof(HighlightBehavior), new PropertyMetadata(null));
 
-    private static void OnVisualizerChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+    private static void OnServiceChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
     {
-        if (obj is VisualizationBehavior behavior)
+        if (obj is HighlightBehavior behavior)
         {
             System.Diagnostics.Debug.WriteLine("Visualizer was changed");
 
-            behavior.Visualizer.Links.CollectionChanged += (s,e) => 
-                UpdateLines(behavior.ViewModel, behavior.Visualizer, behavior.AssociatedObject);
+            behavior.Service.Links.CollectionChanged += (s,e) => 
+                UpdateLines(behavior.ViewModel, behavior.Service, behavior.AssociatedObject);
         }
     }
 
-    private static void UpdateLines(GridViewModel vm, VisualizationService service, Canvas canvas)
+    private static void UpdateLines(GridViewModel vm, HighlightService service, Canvas canvas)
     {
         System.Diagnostics.Debug.WriteLine("Lines changed");
         canvas.Children.Clear();
@@ -101,7 +101,6 @@ public class VisualizationBehavior : Behavior<Canvas>
     // Get coordinates of a control relative to its Canvas parent
     public static Point GetCoordinatesRelativeToVisual(UIElement element, Visual visual)
     {
-        // Assuming MyCanvas is the x:Name of your Canvas
         var transform = element.TransformToAncestor(visual);
         return transform.Transform(new Point(0, 0)); // Transform the origin (top-left) of the element
     }

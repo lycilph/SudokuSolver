@@ -13,7 +13,7 @@ public class TwoStringKiteVisualizer : IStrategyVisualizer<TwoStringKiteCommand>
     private readonly Brush kite_color;
     private readonly Brush strong_link_color;
     private readonly Brush weak_link_color;
-    private readonly VisualizationService visualizer;
+    private readonly HighlightService service;
 
     public TwoStringKiteVisualizer()
     {
@@ -22,7 +22,7 @@ public class TwoStringKiteVisualizer : IStrategyVisualizer<TwoStringKiteCommand>
         strong_link_color = App.Current.Resources["strong_link_color"] as Brush ?? Brushes.Black;
         weak_link_color = App.Current.Resources["weak_link_color"] as Brush ?? Brushes.Black;
 
-        visualizer = App.Current.Services.GetRequiredService<VisualizationService>();
+        service = App.Current.Services.GetRequiredService<HighlightService>();
     }
 
     public void Show(GridViewModel vm, TwoStringKiteCommand command)
@@ -45,9 +45,9 @@ public class TwoStringKiteVisualizer : IStrategyVisualizer<TwoStringKiteCommand>
                 candidate_vm.Highlight = true;
             }
 
-            visualizer.Add(element.LinksToVisualize[0], strong_link_color);
-            visualizer.Add(element.LinksToVisualize[1], strong_link_color);
-            visualizer.Add(element.LinksToVisualize[2], weak_link_color, LinkVisualizer.LineType.Dotted);
+            service.Add(element.LinksToVisualize[0], strong_link_color);
+            service.Add(element.LinksToVisualize[1], strong_link_color);
+            service.Add(element.LinksToVisualize[2], weak_link_color, LinkVisualizer.LineType.Dotted);
         }
     }
 }

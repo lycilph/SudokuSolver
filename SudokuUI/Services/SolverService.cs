@@ -16,7 +16,6 @@ public partial class SolverService : ObservableObject
 {
     private readonly PuzzleService puzzle_service;
     private readonly HighlightService highlight_service;
-    private readonly VisualizationService visualization_service;
     private readonly UndoRedoService undo_service;
     private readonly GridViewModel gridVM;
 
@@ -27,13 +26,11 @@ public partial class SolverService : ObservableObject
 
     public SolverService(PuzzleService puzzle_service,
                          HighlightService highlight_service,
-                         VisualizationService visualization_service,
                          UndoRedoService undo_service,
                          GridViewModel gridVM)
     {
         this.puzzle_service = puzzle_service;
         this.highlight_service = highlight_service;
-        this.visualization_service = visualization_service;
         this.undo_service = undo_service;
         this.gridVM = gridVM;
 
@@ -95,6 +92,5 @@ public partial class SolverService : ObservableObject
     public void ClearVisualization()
     {
         highlight_service.Clear();
-        visualization_service.Clear();
     }
 }

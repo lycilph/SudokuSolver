@@ -14,7 +14,7 @@ public class SkyscraperVisualizer : IStrategyVisualizer<SkyscraperCommand>
     private readonly Brush overlap_color;
     private readonly Brush strong_link_color;
     private readonly Brush weak_link_color;
-    private readonly VisualizationService visualizer;
+    private readonly HighlightService service;
 
     public SkyscraperVisualizer()
     {
@@ -24,7 +24,7 @@ public class SkyscraperVisualizer : IStrategyVisualizer<SkyscraperCommand>
         strong_link_color = App.Current.Resources["strong_link_color"] as Brush ?? Brushes.Black;
         weak_link_color = App.Current.Resources["weak_link_color"] as Brush ?? Brushes.Black;
 
-        visualizer = App.Current.Services.GetRequiredService<VisualizationService>();
+        service = App.Current.Services.GetRequiredService<HighlightService>();
     }
 
     public void Show(GridViewModel vm, SkyscraperCommand command)
@@ -35,9 +35,9 @@ public class SkyscraperVisualizer : IStrategyVisualizer<SkyscraperCommand>
             var link1 = element.LinksToVisualize[0];
             var link2 = element.LinksToVisualize[1];
             var base_link = element.LinksToVisualize[2];
-            visualizer.Add(link1, strong_link_color);
-            visualizer.Add(link2, strong_link_color);
-            visualizer.Add(base_link, weak_link_color, LinkVisualizer.LineType.Dotted);
+            service.Add(link1, strong_link_color);
+            service.Add(link2, strong_link_color);
+            service.Add(base_link, weak_link_color, LinkVisualizer.LineType.Dotted);
 
             // Mark skyscraper here
             foreach (var cell in link1.Cells.Concat(link2.Cells))
