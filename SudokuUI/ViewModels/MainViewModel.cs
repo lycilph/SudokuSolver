@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Core.Commands;
 using Core.DancingLinks;
+using Core.Engine;
 using Core.Extensions;
 using MahApps.Metro.Controls.Dialogs;
 using SudokuUI.Dialogs;
@@ -101,6 +102,19 @@ public partial class MainViewModel : ObservableObject
         var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(100) };
         timer.Tick += (s, e) => Elapsed = puzzle_service.GetElapsedTime();
         timer.Start();
+    }
+
+    // Misc general methods
+    private Task<MessageDialogResult> ShowMessageAsync(string title, string message, MessageDialogStyle style = MessageDialogStyle.Affirmative)
+    {
+        IsInputBindingsDisabled = true;
+
+        return DialogCoordinator.Instance.ShowMessageAsync(this, title, message, style)
+            .ContinueWith(t =>
+            {
+                IsInputBindingsDisabled = false;
+                return t.Result;
+            }, TaskScheduler.FromCurrentSynchronizationContext());
     }
 
     // General event handlers
@@ -260,12 +274,7 @@ public partial class MainViewModel : ObservableObject
         var any_candidates = puzzle_service.Grid.Cells.Any(c => c.Count() > 0);
         if (!any_candidates)
         {
-            IsInputBindingsDisabled = true;
-
-            var result = await DialogCoordinator.Instance.ShowMessageAsync(this, "No candidates found", "Do you want to add them automatically?", MessageDialogStyle.AffirmativeAndNegative);
-            
-            IsInputBindingsDisabled = false;
-            
+            var result = await ShowMessageAsync("No candidates found", "Do you want to add them automatically?", MessageDialogStyle.AffirmativeAndNegative);
             if (result == MessageDialogResult.Affirmative)
                 puzzle_service.FillCandidates();
             else
@@ -283,11 +292,54 @@ public partial class MainViewModel : ObservableObject
             WeakReferenceMessenger.Default.Send(new ShowNotificationMessage("No more hints found"));
         }
     }
+    
+    [RelayCommand]
+    private async Task SolveNakedSingles()
+    {
+        var any_candidates = puzzle_service.Grid.Cells.Any(c => c.Count() > 0);
+        if (!any_candidates)
+        {
+            var result = await ShowMessageAsync("No candidates found", "Do you want to add them automatically?", MessageDialogStyle.AffirmativeAndNegative);
+            if (result == MessageDialogResult.Affirmative)
+                puzzle_service.FillCandidates();
+            else
+                return;
+        }
+
+        solver_service.SolveNakedSingles();
+    }
+
+    [RelayCommand]
+    private async Task RunSolver()
+    {
+        var any_candidates = puzzle_service.Grid.Cells.Any(c => c.Count() > 0);
+        if (!any_candidates)
+        {
+            IsInputBindingsDisabled = false;
+            var result = await ShowMessageAsync("No candidates found", "Do you want to add them automatically?", MessageDialogStyle.AffirmativeAndNegative);
+            if (result == MessageDialogResult.Affirmative)
+                puzzle_service.FillCandidates();
+            else
+                return;
+        }
+
+        (var commands, var stats) = Solver.Solve(puzzle_service.Grid);
+
+        if (puzzle_service.Grid.IsSolved())
+        {
+            OverlayVM.AddVictoryStatistics(stats);
+            UndoService.Execute(commands); // This will also trigger the PuzzleSolved event, and show the victory overlay
+        }
+        else
+        {
+            UndoService.Execute(commands);
+            WeakReferenceMessenger.Default.Send(new ShowNotificationMessage("Puzzle couldn't be solved!"));
+        }
+    }
 
     [RelayCommand]
     private async Task ShowSolutionCount()
     {
-        IsInputBindingsDisabled = true;
 
         var copy = puzzle_service.Grid.Copy();
         copy.FillCandidates();
@@ -297,9 +349,8 @@ public partial class MainViewModel : ObservableObject
         var sb = new StringBuilder();
         sb.AppendLine($"The puzzle has {solutions.Count} solutions");
         sb.AppendLine($"Execution Time: {stats.ElapsedTime} ms");
-        await DialogCoordinator.Instance.ShowMessageAsync(this, "Solution Count", sb.ToString());
 
-        IsInputBindingsDisabled = false;
+        await ShowMessageAsync("Solution Count", sb.ToString());
     }
 
     [RelayCommand]

@@ -12,9 +12,6 @@ namespace SudokuUI.ViewModels;
 public partial class VictoryViewModel : ObservableObject
 {
     private TaskCompletionSource<VictoryResult> task_completion_source = new();
-    //public event EventHandler RequestNewGame = null!;
-    //public event EventHandler RequestClearGame = null!;
-    //public event EventHandler RequestRestartGame = null!;
 
     [ObservableProperty]
     private bool isOpen = false;

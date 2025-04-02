@@ -160,7 +160,7 @@
                                 ToolTip="Hint"
                                 Focusable="False"/>
 
-                        <!--<Button Content="{icon:Lucide Kind=WandSparkles, Height=24, Width=24}"
+                        <Button Content="{icon:Lucide Kind=WandSparkles, Height=24, Width=24}"
                                 Command="{Binding SolveNakedSinglesCommand}"
                                 Margin="0 5 0 0"
                                 ToolTip="Solver naked singles"
@@ -170,7 +170,7 @@
                                 Command="{Binding RunSolverCommand}"
                                 Margin="0 5 0 0"
                                 ToolTip="Solve the puzzle"
-                                Focusable="False"/>-->
+                                Focusable="False"/>
 
                         <Button Content="{icon:Lucide Kind=Hash, Height=24, Width=24}"
                                 Command="{Binding ShowSolutionCountCommand}"

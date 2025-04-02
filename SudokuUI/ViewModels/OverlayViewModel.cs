@@ -51,6 +51,8 @@ public partial class OverlayViewModel : ObservableObject
 
     public OverlayScope GetScope(bool show_spinner = false) => new(this, show_spinner);
 
+    public void AddVictoryStatistics(Statistics stats) => VictoryVM.AddStatistics(stats);
+
     public Task<Difficulty?> ShowNewGame()
     {
         Show();
