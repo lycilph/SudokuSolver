@@ -124,10 +124,7 @@ public partial class MainViewModel : ObservableObject
 
     private async Task OnPuzzleSolved(object? sender, EventArgs e)
     {
-        // If this is triggered while the user is in the hints view, cancel it here
-        await OverlayVM.CancelHints();
-
-        var victory_result = await OverlayVM.ShowVictory(puzzle_service.GetElapsedTime());
+        var victory_result = await OverlayVM.ShowVictory(puzzle_service.Source, puzzle_service.GetElapsedTime());
 
         switch (victory_result.Result)
         {

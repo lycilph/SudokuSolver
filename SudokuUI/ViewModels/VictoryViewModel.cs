@@ -17,7 +17,7 @@ public partial class VictoryViewModel : ObservableObject
     private bool isActive = false;
 
     [ObservableProperty]
-    public ObservableCollection<Cell> cells;
+    public ObservableCollection<Cell> cells = [];
 
     [ObservableProperty]
     private TimeSpan elapsed = TimeSpan.FromSeconds(0);
@@ -28,16 +28,13 @@ public partial class VictoryViewModel : ObservableObject
     [ObservableProperty]
     private bool showStatistics = false;
 
-    public VictoryViewModel(PuzzleService puzzle_service)
-    {
-        Cells = puzzle_service.Grid.Cells.ToObservableCollection();
-    }
-
-    public Task<VictoryResult> Activate(TimeSpan time)
+    public Task<VictoryResult> Activate(string puzzle_source, TimeSpan time)
     {
         task_completion_source = new TaskCompletionSource<VictoryResult>();
         Elapsed = time;
-        IsActive = true; 
+        IsActive = true;
+
+        Cells = new Grid().Load(puzzle_source).Cells.ToObservableCollection();
 
         return task_completion_source.Task;
     }

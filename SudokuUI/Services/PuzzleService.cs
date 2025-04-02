@@ -22,8 +22,8 @@ public class PuzzleService : ObservableRecipient, IRecipient<ResetMessage>, IRec
     private readonly Stopwatch stopwatch;
 
     private readonly string empty_source = ".................................................................................";
-    private string source = string.Empty;
-
+    
+    public string Source { get; private set; } = string.Empty;
     public Grid Grid { get; private set; } = new Grid();
 
     public event EventHandler<GridValuesChangedEventArgs> ValuesChanged = null!;
@@ -95,7 +95,7 @@ public class PuzzleService : ObservableRecipient, IRecipient<ResetMessage>, IRec
         task.ContinueWith(task =>
         {
             logger.Info("Generated puzzle: {0}", task.Result);
-            source = task.Result;
+            Source = task.Result;
             WeakReferenceMessenger.Default.Send(new ResetMessage());
         }, TaskScheduler.FromCurrentSynchronizationContext());
 
@@ -105,7 +105,7 @@ public class PuzzleService : ObservableRecipient, IRecipient<ResetMessage>, IRec
     public void Clear()
     {
         logger.Info("Clearing the grid");
-        source = empty_source;
+        Source = empty_source;
         WeakReferenceMessenger.Default.Send(new ResetMessage());
     }
 
@@ -113,7 +113,7 @@ public class PuzzleService : ObservableRecipient, IRecipient<ResetMessage>, IRec
     {
         logger.Info($"Importing the puzzle: {puzzle}");
 
-        source = puzzle;
+        Source = puzzle;
         WeakReferenceMessenger.Default.Send(new ResetMessage());
     }
 
@@ -183,12 +183,12 @@ public class PuzzleService : ObservableRecipient, IRecipient<ResetMessage>, IRec
         logger.Info("Received a reset message");
         try
         {
-            Grid.Load(source);
+            Grid.Load(Source);
         }
         catch (ArgumentException ae)
         {
-            source = empty_source;
-            Grid.Load(source);
+            Source = empty_source;
+            Grid.Load(Source);
             WeakReferenceMessenger.Default.Send(new ShowNotificationMessage(ae.Message));
         }
         stopwatch.Restart();

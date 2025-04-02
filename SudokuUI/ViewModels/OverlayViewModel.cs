@@ -66,7 +66,7 @@ public partial class OverlayViewModel : ObservableObject
 
     public async Task<Difficulty?> ShowNewGame()
     {
-        Show();
+        _ = Show();
         var difficulty = await NewGameVM.Activate();
         
         Hide();
@@ -75,10 +75,17 @@ public partial class OverlayViewModel : ObservableObject
         return difficulty;
     }
 
-    public async Task<VictoryResult> ShowVictory(TimeSpan time)
+    public async Task<VictoryResult> ShowVictory(string puzzle_source, TimeSpan time)
     {
-        Show();
-        var result = await VictoryVM.Activate(time);
+        // If this is triggered while the user is in the hints view, cancel it here
+        if (HintsVM.IsActive)
+        {
+            HintsVM.Cancel();
+            await close_animation_completion_source.Task;
+        }
+
+        _ = Show();
+        var result = await VictoryVM.Activate(puzzle_source, time);
 
         Hide();
         await close_animation_completion_source.Task;
@@ -88,16 +95,10 @@ public partial class OverlayViewModel : ObservableObject
 
     public async Task ShowHint(BaseCommand? cmd)
     {
-        Show();
+        _ = Show();
         await HintsVM.Activate(cmd);
 
         Hide();
-        await close_animation_completion_source.Task;
-    }
-
-    public async Task CancelHints()
-    {
-        HintsVM.Cancel();
         await close_animation_completion_source.Task;
     }
 }
