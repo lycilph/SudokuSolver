@@ -10,18 +10,18 @@ using SudokuUI.Infrastructure;
 using SudokuUI.Messages;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Reflection;
 
 namespace SudokuUI.Services;
 
 public class PuzzleService : ObservableRecipient, IRecipient<ResetMessage>, IRecipient<MainWindowLoadedMessage>
 {
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-
+    
     private readonly UndoRedoService undo_service;
     private readonly Stopwatch stopwatch;
-
     private readonly string empty_source = ".................................................................................";
+    
+    public readonly string filename = "puzzle.txt";
     
     public string Source { get; private set; } = string.Empty;
     public Grid Grid { get; private set; } = new Grid();
@@ -178,6 +178,19 @@ public class PuzzleService : ObservableRecipient, IRecipient<ResetMessage>, IRec
         undo_service.Execute(new ClearCandidatesCommand(cells));
     }
 
+    public void Serialize()
+    {
+        var grid = puzzle_service.Grid;
+
+        if (!grid.IsSolved() && !grid.IsEmpty())
+            grid.Serialize(puzzle_service.filename);
+    }
+
+    public void Deserialize()
+    {
+        Grid.Deserialize(filename);
+    }
+
     public void Receive(ResetMessage message)
     {
         logger.Info("Received a reset message");
@@ -198,10 +211,13 @@ public class PuzzleService : ObservableRecipient, IRecipient<ResetMessage>, IRec
     {
         logger.Info("Received the main window loaded message");
 
-        var assembly = Assembly.GetExecutingAssembly();
-        var mode = BuildModeDetector.GetBuildMode(assembly);
+        // Try to load last puzzle here
+        
 
-        if (mode == BuildModeDetector.BuildMode.Debug)
-            New(Difficulty.Easy());
+        //var assembly = Assembly.GetExecutingAssembly();
+        //var mode = BuildModeDetector.GetBuildMode(assembly);
+
+        //if (mode == BuildModeDetector.BuildMode.Debug)
+        //    New(Difficulty.Easy());
     }
 }

@@ -1,13 +1,21 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using ControlzEx.Theming;
+using NLog;
+using SudokuUI.Infrastructure;
+using System.IO;
+using System.Text.Json;
 
 namespace SudokuUI.Services;
 
 public partial class SettingsService : ObservableObject
 {
+    private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
     public static readonly string Light = "Light";
     public static readonly string Dark = "Dark";
     public static readonly string DefaultColorScheme = "Steel";
+
+    public readonly string settings_file = "settings.json";
 
     [ObservableProperty]
     private bool isOpen = false;
@@ -27,11 +35,54 @@ public partial class SettingsService : ObservableObject
     {
         var base_color_scheme = light ? Light : Dark;
         ThemeManager.Current.ChangeThemeBaseColor(App.Current, base_color_scheme);
+        SaveSettings();
     }
 
     public void SetColorScheme(string color_scheme)
     {
         ThemeManager.Current.ChangeThemeColorScheme(App.Current, color_scheme);
+        SaveSettings();
+    }
+
+    public void LoadSettings()
+    {
+        try
+        {
+            if (File.Exists(settings_file))
+            {
+                string json = File.ReadAllText(settings_file);
+                var settings = JsonSerializer.Deserialize<Settings>(json);
+
+                if (settings != null)
+                {
+                    // Apply the saved theme
+                    ThemeManager.Current.ChangeTheme(App.Current, settings.BaseColorScheme, settings.ColorScheme);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.Error($"Error loading theme settings: {ex.Message}");
+        }
+    }
+
+    public void SaveSettings()
+    {
+        var settings = new Settings
+        {
+            BaseColorScheme = GetBaseColorScheme(),
+            ColorScheme = GetColorScheme(),
+        };
+
+        try
+        {
+            string json = JsonSerializer.Serialize(settings);
+            File.WriteAllText(settings_file, json);
+        }
+        catch (Exception ex)
+        {
+            logger.Error($"Error saving theme settings: {ex.Message}");
+        }
     }
 
     public void Show() => IsOpen = true;

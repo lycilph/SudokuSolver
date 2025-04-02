@@ -65,6 +65,7 @@ public class Grid
     public IEnumerable<Cell> EmptyCells() => Cells.Where(c => c.IsEmpty);
     public int ClueCount() => Cells.Count(c => c.IsClue);
     public bool IsSolved() => Cells.All(c => c.IsFilled);
+    public bool IsEmpty() => Cells.All(c => c.IsEmpty);
 
     private static int[] GetRowIndices(int row)
     {

@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using Core.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using NLog;
 using SudokuUI.Services;
@@ -57,10 +58,20 @@ public partial class App : Application
         // These needs to be instantiated somewhere to initialize properly...
         var highlighter = Services.GetService<HighlightService>();
 
+        // Load settings
+        var settings_service = Services.GetRequiredService<SettingsService>();
+        settings_service.LoadSettings();
+
         // Initialize main window
         var vm = Services.GetService<MainViewModel>();
         var win = new MainWindow { DataContext = vm };
 
         win.Show();
+    }
+
+    private void Application_Exit(object sender, ExitEventArgs e)
+    {
+        var puzzle_service = Services.GetRequiredService<PuzzleService>();
+        puzzle_service.Serialize();
     }
 }

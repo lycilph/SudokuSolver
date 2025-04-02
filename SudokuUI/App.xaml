@@ -4,7 +4,8 @@
              xmlns:vm="clr-namespace:SudokuUI.ViewModels" 
              xmlns:v="clr-namespace:SudokuUI.Views"
              xmlns:conv="clr-namespace:SudokuUI.Converters"
-             Startup="Application_Startup">
+             Startup="Application_Startup"
+             Exit="Application_Exit">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

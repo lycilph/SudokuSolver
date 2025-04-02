@@ -1,5 +1,7 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Text.Json;
+using System.Text.RegularExpressions;
 using Core.Models;
+using Core.Serialization;
 
 namespace Core.Extensions;
 
@@ -35,6 +37,49 @@ public static class GridExtensions
     {
         var str = grid.ToSimpleString();
         return new Grid().Load(str, fill_candidates);
+    }
+
+    public static void Serialize(this Grid grid, string filename)
+    {
+        var list = grid.Cells.Select(c => new CellDTO(c)).ToList();
+
+        try
+        {
+            string json = JsonSerializer.Serialize(list);
+            File.WriteAllText(filename, json);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+    public static Grid Deserialize(this Grid grid, string filename)
+    {
+        try
+        {
+            if (File.Exists(filename))
+            {
+                string json = File.ReadAllText(filename);
+                var list = JsonSerializer.Deserialize<List<CellDTO>>(json);
+
+                if (list != null)
+                {
+                    for (int i = 0; i < list.Count; i++)
+                    {
+                        grid[i].Value = list[i].Value;
+                        grid[i].IsClue = list[i].IsClue;
+                        grid[i].Candidates.AddRange(list[i].Candidates);
+                    }
+                }
+            }
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+
+        return grid;
     }
 
     public static Link? GetLink(this Grid grid, Unit unit, int value)
