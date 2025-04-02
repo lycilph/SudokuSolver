@@ -29,12 +29,12 @@ public partial class HintsViewModel : ObservableObject
         this.solver_service = solver_service;
     }
 
-    public void Show()
+    public void Show(BaseCommand? cmd)
     {
         task_completion_source = new TaskCompletionSource();
         IsOpen = true;
 
-        Command = solver_service.NextCommand();
+        Command = cmd ?? solver_service.NextCommand();
         if (Command != null )
             solver_service.ShowVisualization(Command);
     }
@@ -65,5 +65,9 @@ public partial class HintsViewModel : ObservableObject
     }
 
     [RelayCommand]
-    public void Cancel() => task_completion_source.SetResult();
+    public void Cancel()
+    {
+        if (!Task.IsCompleted)
+            task_completion_source.SetResult(); 
+    }
 }

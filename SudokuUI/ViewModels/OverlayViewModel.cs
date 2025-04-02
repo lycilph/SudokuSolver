@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Core.Commands;
 using Core.Engine;
 using SudokuUI.Infrastructure;
-using System.Windows.Input;
 
 namespace SudokuUI.ViewModels;
 
@@ -23,7 +23,7 @@ public partial class OverlayViewModel : ObservableObject
     private HintsViewModel hintsVM;
 
     [ObservableProperty]
-    private ICommand escapeCommand = null!;
+    private System.Windows.Input.ICommand escapeCommand = null!;
 
     public OverlayViewModel(NewGameViewModel newGameVM, VictoryViewModel victoryVM, HintsViewModel hintsVM)
     {
@@ -42,9 +42,6 @@ public partial class OverlayViewModel : ObservableObject
     {
         if (NewGameVM.IsOpen)
             NewGameVM.Cancel();
-
-        //if (HintsVM.IsOpen)
-        //    HintsVM.Cancel();
 
         IsOpen = false;
         ShowSpinner = false;
@@ -82,10 +79,10 @@ public partial class OverlayViewModel : ObservableObject
             });
     }
 
-    public Task ShowHint()
+    public Task ShowHint(BaseCommand? cmd)
     {
         Show();
-        HintsVM.Show();
+        HintsVM.Show(cmd);
 
         return HintsVM.Task
             .ContinueWith(t =>
@@ -94,5 +91,10 @@ public partial class OverlayViewModel : ObservableObject
                 Hide();
                 return t;
             }, TaskScheduler.FromCurrentSynchronizationContext());
+    }
+
+    public void CancelHints()
+    {
+        HintsVM.Cancel();
     }
 }

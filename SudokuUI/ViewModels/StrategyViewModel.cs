@@ -9,8 +9,8 @@ public partial class StrategyViewModel : ObservableObject
 {
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-    public event EventHandler<IStrategy> ExecuteCommandRequest = null!;
-    public event EventHandler<IStrategy> VisualizeCommandRequest = null!;
+    public event EventHandler<IStrategy> ExecuteStrategyRequest = null!;
+    public event EventHandler<IStrategy> VisualizeStrategyRequest = null!;
 
     [ObservableProperty]
     private IStrategy wrappedObject;
@@ -24,19 +24,13 @@ public partial class StrategyViewModel : ObservableObject
     private void Execute()
     {
         logger.Info($"Executing strategy {WrappedObject.Name}");
-        ExecuteCommandRequest?.Invoke(this, WrappedObject);
+        ExecuteStrategyRequest?.Invoke(this, WrappedObject);
    }
 
     [RelayCommand]
     private void Visualize()
     {
         logger.Info($"Visualizing strategy {WrappedObject.Name}");
-        VisualizeCommandRequest?.Invoke(this, WrappedObject);
-
-        //if (WrappedObject.Plan(puzzle_service.Grid) is BaseCommand command)
-        //{
-        //    solver_service.SetHint(command);
-        //    solver_service.Show();
-        //}
+        VisualizeStrategyRequest?.Invoke(this, WrappedObject);
     }
 }

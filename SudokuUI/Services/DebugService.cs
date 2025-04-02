@@ -2,6 +2,7 @@
 using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
+using Core.Commands;
 using Microsoft.Extensions.DependencyInjection;
 using NLog;
 using SudokuUI.Infrastructure;
@@ -19,7 +20,7 @@ public partial class DebugService : ObservableRecipient, IRecipient<MainWindowLo
 
     public DebugService()
     {
-        IsActive = true;
+        WeakReferenceMessenger.Default.RegisterAll(this);
     }
 
     public void ToggleDebugWindow()

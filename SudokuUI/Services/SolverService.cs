@@ -21,6 +21,8 @@ public partial class SolverService : ObservableObject
     public ObservableCollection<IStrategy> Strategies { get; private set; } = [];
     public Dictionary<Type, IStrategyVisualizer> Visualizers { get; private set; } = [];
 
+    public event EventHandler<BaseCommand> VisualizeCommandRequest = null!;
+
     public SolverService(PuzzleService puzzle_service,
                          HighlightService highlight_service,
                          VisualizationService visualization_service,
@@ -36,6 +38,8 @@ public partial class SolverService : ObservableObject
         Strategies = Solver.KnownStrategies.ToObservableCollection();
         Visualizers = StrategyMapper.GetVisualizerMap(Strategies);
     }
+
+    public void VisualizeCommand(BaseCommand command) => VisualizeCommandRequest?.Invoke(this, command);
 
     public bool HasNextHint()
     {

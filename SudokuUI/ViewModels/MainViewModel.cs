@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Core.Commands;
 using Core.DancingLinks;
 using Core.Extensions;
 using MahApps.Metro.Controls.Dialogs;
@@ -94,6 +95,9 @@ public partial class MainViewModel : ObservableObject
         // Handle the puzzle solved event
         puzzle_service.PuzzleSolved += async (s, e) => await OnPuzzleSolved(s, e);
 
+        // Handle the request to visualize a command
+        solver_service.VisualizeCommandRequest += async (s, e) => await ShowHint(e);
+
         var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(100) };
         timer.Tick += (s, e) => Elapsed = puzzle_service.GetElapsedTime();
         timer.Start();
@@ -103,7 +107,9 @@ public partial class MainViewModel : ObservableObject
 
     private async Task OnPuzzleSolved(object? sender, EventArgs e)
     {
-        //SolverOverlayVM.Close();
+        // If this is triggered while the user is in the hints view, cancel it here
+        OverlayVM.CancelHints();
+        await Task.Delay(500);
 
         var victory_result = await OverlayVM.ShowVictory(puzzle_service.GetElapsedTime());
 
@@ -249,7 +255,7 @@ public partial class MainViewModel : ObservableObject
     // Right side buttons
 
     [RelayCommand]
-    private async Task ShowHint()
+    private async Task ShowHint(BaseCommand? cmd = null)
     {
         var any_candidates = puzzle_service.Grid.Cells.Any(c => c.Count() > 0);
         if (!any_candidates)
@@ -266,10 +272,10 @@ public partial class MainViewModel : ObservableObject
                 return;
         }
 
-        if (solver_service.HasNextHint())
+        if (cmd != null || solver_service.HasNextHint())
         {
             selection_service.Clear();
-            await OverlayVM.ShowHint();
+            await OverlayVM.ShowHint(cmd);
         }
         else
         {

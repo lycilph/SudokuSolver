@@ -16,11 +16,13 @@ public partial class DebugViewModel : ObservableObject
 {
     private readonly PuzzleService puzzle_service;
     private readonly UndoRedoService undo_service;
+    private readonly SolverService solver_service;
 
     public NotifyCollectionChangedSynchronizedViewList<ICommand> UndoStack { get; private set; }
     public NotifyCollectionChangedSynchronizedViewList<ICommand> RedoStack { get; private set; }
 
     public ObservableCollection<StrategyViewModel> Strategies { get; private set; }
+
 
     [ObservableProperty]
     private ICommand? selected;
@@ -65,6 +67,7 @@ public partial class DebugViewModel : ObservableObject
     {
         this.puzzle_service = puzzle_service;
         this.undo_service = undo_service;
+        this.solver_service = solver_service;
 
         UndoStack = undo_service.UndoStack.ToNotifyCollectionChanged();
         RedoStack = undo_service.RedoStack.ToNotifyCollectionChanged();
@@ -74,7 +77,10 @@ public partial class DebugViewModel : ObservableObject
         SelectedPuzzle = Puzzles.First();
 
         foreach (var strategy in Strategies)
-            strategy.ExecuteCommandRequest += (s, e) => ExecuteStrategy(e);
+        {
+            strategy.ExecuteStrategyRequest += (s, e) => ExecuteStrategy(e);
+            strategy.VisualizeStrategyRequest += (s, e) => VisualizeStrategy(e);
+        }
     }
 
     private void ExecuteStrategy(IStrategy strategy)
@@ -83,6 +89,12 @@ public partial class DebugViewModel : ObservableObject
             undo_service.Execute(command);
         else
             WeakReferenceMessenger.Default.Send(new ShowNotificationMessage($"Cannot execute strategy {strategy.Name}"));
+    }
+
+    private void VisualizeStrategy(IStrategy e)
+    {
+        if (e.Plan(puzzle_service.Grid) is BaseCommand cmd)
+            solver_service.VisualizeCommand(cmd);
     }
 
     [RelayCommand]
