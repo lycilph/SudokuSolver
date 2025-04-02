@@ -90,7 +90,10 @@ public partial class MainViewModel : ObservableObject
         settings_service.PropertyChanged += (s, e) =>
         {
             if (e.PropertyName == nameof(SettingsService.IsOpen))
-                OverlayVM.IsOpen = settings_service.IsOpen;
+                if (settings_service.IsOpen)
+                    overlayVM.Show();
+                else
+                    overlayVM.Hide();
         };
 
         // Handle the puzzle solved event
