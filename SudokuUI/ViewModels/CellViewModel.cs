@@ -17,6 +17,7 @@ public partial class CellViewModel : ObservableObject
 
     private readonly PuzzleService puzzle_service;
     private readonly SelectionService selection_service;
+    private readonly Brush error_highlight_color;
     private readonly Brush default_highlight_color;
     private readonly Brush default_background_color;
 
@@ -39,6 +40,7 @@ public partial class CellViewModel : ObservableObject
     {
         puzzle_service = App.Current.Services.GetRequiredService<PuzzleService>();
         selection_service = App.Current.Services.GetRequiredService<SelectionService>();
+        error_highlight_color = App.Current.Resources["cell_error_color"] as Brush ?? Brushes.Black;
         default_highlight_color = App.Current.Resources["cell_highlight_color"] as Brush ?? Brushes.Black;
         default_background_color = App.Current.Resources["cell_background_color"] as Brush ?? Brushes.Black;
 
@@ -96,5 +98,11 @@ public partial class CellViewModel : ObservableObject
         Highlight = false;
         HighlightColor = default_highlight_color;
         BackgroundColor = default_background_color;
+    }
+
+    internal void MarkError()
+    {
+        Highlight = true;
+        HighlightColor = error_highlight_color;
     }
 }

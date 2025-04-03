@@ -13,6 +13,7 @@
     <SolidColorBrush x:Key="cell_positive_color" Color="ForestGreen"/>
     <SolidColorBrush x:Key="cell_negative_color" Color="IndianRed"/>
     <SolidColorBrush x:Key="cell_information_color" Color="Yellow"/>
+    <SolidColorBrush x:Key="cell_error_color" Color="Red"/>
     <SolidColorBrush x:Key="cell_background_color" Color="Transparent"/>
 
     <SolidColorBrush x:Key="strong_link_color" Color="Blue"/>

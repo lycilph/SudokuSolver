@@ -273,6 +273,13 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<MainWindowL
         await ShowDialogAsync(vm, view, "Solution Information");
     }
 
+    [RelayCommand]
+    private void ValidateSolution()
+    {
+        selection_service.Clear();
+        HighlightService.ValidateGrid();
+    }
+
     // Right side buttons
 
     [RelayCommand]

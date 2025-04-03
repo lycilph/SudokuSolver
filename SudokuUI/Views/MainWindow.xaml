@@ -145,6 +145,12 @@
                                 Margin="0 20 0 0"
                                 ToolTip="Count # of solutions"
                                 Focusable="False"/>
+
+                        <Button Content="{icon:Lucide Kind=CircleCheckBig, Height=24, Width=24}"
+                                Command="{Binding ValidateSolutionCommand}"
+                                Margin="0 5 0 0"
+                                ToolTip="Validates the current solutions"
+                                Focusable="False"/>
                     </StackPanel>
 
                     <Grid Grid.Column="1"
