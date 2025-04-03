@@ -11,6 +11,18 @@
              d:DataContext="{d:DesignInstance Type=vm:HintsViewModel, IsDesignTimeCreatable=False}">
     <DockPanel Margin="25 5"
                VerticalAlignment="Bottom">
+        <StackPanel DockPanel.Dock="Left"
+                    Margin="0 0 5 0">
+            <Button Content="{icon:Lucide Kind=RotateCcw}"
+                    Command="{Binding ResetCommand}"/>
+            <Button Content="{icon:Lucide Kind=ArrowBigUp}"
+                    Command="{Binding PreviousCommandElementCommand}"
+                    Margin="0 5 0 0"/>
+            <Button Content="{icon:Lucide Kind=ArrowBigDown}"
+                    Command="{Binding NextCommandElementCommand}"
+                    Margin="0 5 0 0"/>
+        </StackPanel>
+        
         <StackPanel DockPanel.Dock="Right"
                     Margin="5 0 0 0">
             <Button Content="{icon:Lucide Kind=Play}"

@@ -16,12 +16,15 @@ public class NakedSinglesVisualizer : IStrategyVisualizer<NakedSinglesCommand>
     public void Show(GridViewModel vm, NakedSinglesCommand command)
     {
         foreach (var element in command.Elements)
-        {
-            var cell_vm = vm.Map(element.Cell);
-            var candidate_vm = cell_vm.Candidates[element.Number - 1];
+            Show(vm, element);
+    }
 
-            candidate_vm.HighlightColor = color;
-            candidate_vm.Highlight = true;
-        }
+    public void Show(GridViewModel vm, CommandElement element)
+    {
+        var cell_vm = vm.Map(element.Cell);
+        var candidate_vm = cell_vm.Candidates[element.Number - 1];
+
+        candidate_vm.HighlightColor = color;
+        candidate_vm.Highlight = true;
     }
 }

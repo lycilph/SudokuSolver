@@ -1,6 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Core.Commands;
+using SudokuUI.Messages;
 using SudokuUI.Services;
 
 namespace SudokuUI.ViewModels;
@@ -17,10 +19,15 @@ public partial class HintsViewModel : ObservableObject
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(ApplyCommand))]
     [NotifyCanExecuteChangedFor(nameof(ApplyAndNextCommand))]
+    [NotifyCanExecuteChangedFor(nameof(ResetCommand))]
+    [NotifyCanExecuteChangedFor(nameof(PreviousCommandElementCommand))]
+    [NotifyCanExecuteChangedFor(nameof(NextCommandElementCommand))]
     private BaseCommand? command = null;
 
     private bool CanApply => Command != null;
     private bool CanApplyAndNext => Command != null;
+
+    private bool CanChangeCommandElements => Command?.Elements.Count > 1;
 
     public HintsViewModel(SolverService solver_service)
     {
@@ -44,6 +51,24 @@ public partial class HintsViewModel : ObservableObject
         task_completion_source.SetResult();
         solver_service.ClearVisualization();
         IsActive = false; 
+    }
+
+    [RelayCommand(CanExecute = nameof(CanChangeCommandElements))]
+    private void Reset()
+    {
+        WeakReferenceMessenger.Default.Send(new ShowNotificationMessage("Reset command"));
+    }
+
+    [RelayCommand(CanExecute = nameof(CanChangeCommandElements))]
+    private void PreviousCommandElement()
+    {
+        WeakReferenceMessenger.Default.Send(new ShowNotificationMessage("Previous Command Element"));
+    }
+
+    [RelayCommand(CanExecute = nameof(CanChangeCommandElements))]
+    private void NextCommandElement()
+    {
+        WeakReferenceMessenger.Default.Send(new ShowNotificationMessage("Next Command Element"));
     }
 
     [RelayCommand(CanExecute = nameof(CanApply))]
