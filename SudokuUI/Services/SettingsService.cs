@@ -35,16 +35,16 @@ public partial class SettingsService : ObservableObject
     {
         var base_color_scheme = light ? Light : Dark;
         ThemeManager.Current.ChangeThemeBaseColor(App.Current, base_color_scheme);
-        SaveSettings();
+        Save();
     }
 
     public void SetColorScheme(string color_scheme)
     {
         ThemeManager.Current.ChangeThemeColorScheme(App.Current, color_scheme);
-        SaveSettings();
+        Save();
     }
 
-    public void LoadSettings()
+    public void Load()
     {
         try
         {
@@ -66,7 +66,7 @@ public partial class SettingsService : ObservableObject
         }
     }
 
-    public void SaveSettings()
+    public void Save()
     {
         var settings = new Settings
         {

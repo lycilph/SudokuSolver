@@ -60,7 +60,7 @@ public partial class App : Application
 
         // Load settings
         var settings_service = Services.GetRequiredService<SettingsService>();
-        settings_service.LoadSettings();
+        settings_service.Load();
 
         // Initialize main window
         var vm = Services.GetService<MainViewModel>();
@@ -69,9 +69,14 @@ public partial class App : Application
         win.Show();
     }
 
-    private void Application_Exit(object sender, ExitEventArgs e)
-    {
-        var puzzle_service = Services.GetRequiredService<PuzzleService>();
-        puzzle_service.Serialize();
-    }
+    //private void Application_Exit(object sender, ExitEventArgs e)
+    //{
+    //    var puzzle_service = Services.GetRequiredService<PuzzleService>();
+    //    puzzle_service.Serialize();
+    //}
+
+    //private void Application_SessionEnding(object sender, SessionEndingCancelEventArgs e)
+    //{
+    //    logger.Info("Got here");
+    //}
 }

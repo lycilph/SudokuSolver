@@ -6,6 +6,7 @@ using Core.DancingLinks;
 using Core.Engine;
 using Core.Extensions;
 using MahApps.Metro.Controls.Dialogs;
+using NLog;
 using SudokuUI.Dialogs;
 using SudokuUI.Infrastructure;
 using SudokuUI.Messages;
@@ -15,8 +16,10 @@ using System.Windows.Threading;
 
 namespace SudokuUI.ViewModels;
 
-public partial class MainViewModel : ObservableObject
+public partial class MainViewModel : ObservableRecipient, IRecipient<MainWindowLoadedMessage>
 {
+    private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
     private readonly PuzzleService puzzle_service;
     private readonly SolverService solver_service;
     private readonly SettingsService settings_service;
@@ -105,6 +108,8 @@ public partial class MainViewModel : ObservableObject
         var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(100) };
         timer.Tick += (s, e) => Elapsed = puzzle_service.GetElapsedTime();
         timer.Start();
+
+        WeakReferenceMessenger.Default.RegisterAll(this);
     }
 
     // Misc general methods
@@ -358,5 +363,19 @@ public partial class MainViewModel : ObservableObject
     private void ClearCandidates()
     {
         puzzle_service.ClearCandidates();
+    }
+
+    // Message handling
+
+    public async void Receive(MainWindowLoadedMessage message)
+    {
+        logger.Info("Received the main window loaded message");
+
+        // Try to load and old puzzle first
+        if (!puzzle_service.Load())
+        {
+            // Getting here means that there were no old puzzle to load, so show the new game overlay instead
+            await NewPuzzle();
+        }
     }
 }

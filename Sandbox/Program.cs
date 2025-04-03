@@ -15,7 +15,7 @@ internal class Program
         //BasicEliminationStrategy.PlanAndExecute(grid);
         //grid.Serialize("test.txt");
 
-        var grid = new Grid().Deserialize("test.txt");
+        var grid = new Grid().Load("test.txt");
         Console.WriteLine(grid.ToString());
         Console.WriteLine(grid.ToSimpleString());
         Console.WriteLine(grid.CandidatesToString());

@@ -8,20 +8,24 @@ using NLog;
 using ObservableCollections;
 using SudokuUI.Infrastructure;
 using SudokuUI.Messages;
+using SudokuUI.Serialization;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
+using System.Reflection;
+using System.Text.Json;
 
 namespace SudokuUI.Services;
 
-public class PuzzleService : ObservableRecipient, IRecipient<ResetMessage>, IRecipient<MainWindowLoadedMessage>
+public class PuzzleService : ObservableRecipient, IRecipient<ResetMessage>, IRecipient<MainWindowClosingMessage>
 {
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
     
     private readonly UndoRedoService undo_service;
     private readonly Stopwatch stopwatch;
+
+    private readonly string filename = "puzzle.txt";
     private readonly string empty_source = ".................................................................................";
-    
-    public readonly string filename = "puzzle.txt";
     
     public string Source { get; private set; } = string.Empty;
     public Grid Grid { get; private set; } = new Grid();
@@ -178,17 +182,59 @@ public class PuzzleService : ObservableRecipient, IRecipient<ResetMessage>, IRec
         undo_service.Execute(new ClearCandidatesCommand(cells));
     }
 
-    public void Serialize()
+    public void Save()
     {
-        var grid = puzzle_service.Grid;
+        var is_solved = Grid.IsSolved();
+        var is_empty = Grid.IsEmpty();
+        logger.Info("Serializing the puzzle service, grid status: solved: {0}, empty {1}", is_solved, is_empty);
 
-        if (!grid.IsSolved() && !grid.IsEmpty())
-            grid.Serialize(puzzle_service.filename);
+        if (is_solved || is_empty)
+        {
+            // Delete save file
+            if (File.Exists(filename))
+                File.Delete(filename);
+        }
+        else
+        {
+            var dto = new PuzzleDTO(Source, Grid.Serialize());
+
+            try
+            {
+                string json = JsonSerializer.Serialize(dto);
+                File.WriteAllText(filename, json);
+            }
+            catch (Exception e)
+            {
+                logger.Error("Saving the current puzzle gave an error: {0}", e.Message);
+            }
+        }
     }
 
-    public void Deserialize()
+    public bool Load()
     {
-        Grid.Deserialize(filename);
+        logger.Info("Deserializing old puzzle (if found)");
+
+        try
+        {
+            if (File.Exists(filename))
+            {
+                string json = File.ReadAllText(filename);
+                var dto = JsonSerializer.Deserialize<PuzzleDTO>(json);
+
+                if (dto != null)
+                {
+                    Source = dto.Source;
+                    Grid.Load(dto.Cells);
+                    return true;
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            logger.Error("Loading the old puzzle gave an error: {0}", e.Message);
+        }
+
+        return false;
     }
 
     public void Receive(ResetMessage message)
@@ -207,17 +253,10 @@ public class PuzzleService : ObservableRecipient, IRecipient<ResetMessage>, IRec
         stopwatch.Restart();
     }
 
-    public void Receive(MainWindowLoadedMessage message)
+    public void Receive(MainWindowClosingMessage message)
     {
-        logger.Info("Received the main window loaded message");
+        logger.Info("Received the main window closing message");
 
-        // Try to load last puzzle here
-        
-
-        //var assembly = Assembly.GetExecutingAssembly();
-        //var mode = BuildModeDetector.GetBuildMode(assembly);
-
-        //if (mode == BuildModeDetector.BuildMode.Debug)
-        //    New(Difficulty.Easy());
+        Save();
     }
 }

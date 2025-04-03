@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.ComponentModel;
+using System.Windows;
 using CommunityToolkit.Mvvm.Messaging;
 using SudokuUI.Messages;
 
@@ -10,6 +11,13 @@ public partial class MainWindow
     {
         InitializeComponent();
         Loaded += MainWindowLoaded;
+        Closing += MainWindowClosing;
+    }
+
+    private void MainWindowClosing(object? sender, CancelEventArgs e)
+    {
+        Closing -= MainWindowClosing;
+        WeakReferenceMessenger.Default.Send(new MainWindowClosingMessage());
     }
 
     private void MainWindowLoaded(object sender, RoutedEventArgs e)

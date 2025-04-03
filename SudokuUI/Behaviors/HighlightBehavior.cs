@@ -3,6 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using Microsoft.Xaml.Behaviors;
+using NLog;
 using SudokuUI.Services;
 using SudokuUI.ViewModels;
 using SudokuUI.Visualizers.Misc;
@@ -11,6 +12,8 @@ namespace SudokuUI.Behaviors;
 
 public class HighlightBehavior : Behavior<Canvas>
 {
+    private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
     public HighlightService Service
     {
         get { return (HighlightService)GetValue(ServiceProperty); }
@@ -31,7 +34,7 @@ public class HighlightBehavior : Behavior<Canvas>
     {
         if (obj is HighlightBehavior behavior)
         {
-            System.Diagnostics.Debug.WriteLine("Visualizer was changed");
+            logger.Debug("Service was changed");
 
             behavior.Service.Links.CollectionChanged += (s,e) => 
                 UpdateLines(behavior.ViewModel, behavior.Service, behavior.AssociatedObject);
@@ -40,7 +43,7 @@ public class HighlightBehavior : Behavior<Canvas>
 
     private static void UpdateLines(GridViewModel vm, HighlightService service, Canvas canvas)
     {
-        System.Diagnostics.Debug.WriteLine("Lines changed");
+        logger.Debug("Lines changed");
         canvas.Children.Clear();
 
         foreach (var link in service.Links) 

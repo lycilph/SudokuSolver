@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using Core.Models;
 using Core.Serialization;
 
@@ -33,53 +32,29 @@ public static class GridExtensions
         return grid;
     }
 
+    public static Grid Load(this Grid grid, List<CellDTO> cells)
+    {
+        grid.Reset();
+
+        for (int i = 0; i < cells.Count; i++)
+        {
+            grid[i].Value = cells[i].Value;
+            grid[i].IsClue = cells[i].IsClue;
+            grid[i].Candidates.AddRange(cells[i].Candidates);
+        }
+
+        return grid;
+    }
+
     public static Grid Copy(this Grid grid, bool fill_candidates = false)
     {
         var str = grid.ToSimpleString();
         return new Grid().Load(str, fill_candidates);
     }
 
-    public static void Serialize(this Grid grid, string filename)
+    public static List<CellDTO> Serialize(this Grid grid)
     {
-        var list = grid.Cells.Select(c => new CellDTO(c)).ToList();
-
-        try
-        {
-            string json = JsonSerializer.Serialize(list);
-            File.WriteAllText(filename, json);
-        }
-        catch (Exception)
-        {
-            throw;
-        }
-    }
-
-    public static Grid Deserialize(this Grid grid, string filename)
-    {
-        try
-        {
-            if (File.Exists(filename))
-            {
-                string json = File.ReadAllText(filename);
-                var list = JsonSerializer.Deserialize<List<CellDTO>>(json);
-
-                if (list != null)
-                {
-                    for (int i = 0; i < list.Count; i++)
-                    {
-                        grid[i].Value = list[i].Value;
-                        grid[i].IsClue = list[i].IsClue;
-                        grid[i].Candidates.AddRange(list[i].Candidates);
-                    }
-                }
-            }
-        }
-        catch (Exception)
-        {
-            throw;
-        }
-
-        return grid;
+        return grid.Cells.Select(c => new CellDTO(c)).ToList();
     }
 
     public static Link? GetLink(this Grid grid, Unit unit, int value)
