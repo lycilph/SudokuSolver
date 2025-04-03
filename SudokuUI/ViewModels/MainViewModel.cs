@@ -2,16 +2,14 @@
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Core.Commands;
-using Core.DancingLinks;
 using Core.Engine;
-using Core.Extensions;
 using MahApps.Metro.Controls.Dialogs;
 using NLog;
 using SudokuUI.Dialogs;
 using SudokuUI.Infrastructure;
 using SudokuUI.Messages;
 using SudokuUI.Services;
-using System.Text;
+using System.Windows.Controls;
 using System.Windows.Threading;
 
 namespace SudokuUI.ViewModels;
@@ -113,16 +111,29 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<MainWindowL
     }
 
     // Misc general methods
-    private Task<MessageDialogResult> ShowMessageAsync(string title, string message, MessageDialogStyle style = MessageDialogStyle.Affirmative)
+
+    private async Task<MessageDialogResult> ShowMessageAsync(string title, string message, MessageDialogStyle style = MessageDialogStyle.Affirmative)
     {
         IsInputBindingsDisabled = true;
+        var result = await DialogCoordinator.Instance.ShowMessageAsync(this, title, message, style);
+        IsInputBindingsDisabled = false;
+        
+        return result;
+    }
 
-        return DialogCoordinator.Instance.ShowMessageAsync(this, title, message, style)
-            .ContinueWith(t =>
-            {
-                IsInputBindingsDisabled = false;
-                return t.Result;
-            }, TaskScheduler.FromCurrentSynchronizationContext());
+    private async Task<T> ShowDialogAsync<T>(IDialogViewModel<T> vm, UserControl view, string title)
+    {
+        IsInputBindingsDisabled = true;
+        
+        var dialog = new CustomDialog { Title = title, Content = view };
+
+        await DialogCoordinator.Instance.ShowMetroDialogAsync(this, dialog);
+        var result = await vm.DialogResult;
+        await DialogCoordinator.Instance.HideMetroDialogAsync(this, dialog);
+
+        IsInputBindingsDisabled = false;
+
+        return result;
     }
 
     // General event handlers
@@ -235,36 +246,31 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<MainWindowL
     [RelayCommand]
     private async Task Import()
     {
-        IsInputBindingsDisabled = true;
-
         var vm = new ImportDialogViewModel();
         var view = new ImportDialogView { DataContext = vm };
-        var dialog = new CustomDialog { Title = "Import Puzzle", Content = view };
 
-        await DialogCoordinator.Instance.ShowMetroDialogAsync(this, dialog);
-        var result = await vm.DialogResult;
-        await DialogCoordinator.Instance.HideMetroDialogAsync(this, dialog);
+        var result = await ShowDialogAsync(vm, view, "Import Puzzle");
 
         if (!string.IsNullOrWhiteSpace(result))
             puzzle_service.Import(result);
-
-        IsInputBindingsDisabled = false;
     }
 
     [RelayCommand]
     private async Task Export()
     {
-        IsInputBindingsDisabled = true;
-
         var vm = new ExportDialogViewModel { Puzzle = puzzle_service.Export() };
         var view = new ExportDialogView { DataContext = vm };
-        var dialog = new CustomDialog { Title = "Export Puzzle", Content = view };
+        
+        await ShowDialogAsync(vm, view, "Export Puzzle");
+    }
 
-        await DialogCoordinator.Instance.ShowMetroDialogAsync(this, dialog);
-        await vm.DialogResult;
-        await DialogCoordinator.Instance.HideMetroDialogAsync(this, dialog);
+    [RelayCommand]
+    private async Task ShowSolutionCount()
+    {
+        var vm = new SolutionInformationDialogViewModel(puzzle_service.Source);
+        var view = new SolutionInformationDialogView { DataContext = vm };
 
-        IsInputBindingsDisabled = false;
+        await ShowDialogAsync(vm, view, "Solution Information");
     }
 
     // Right side buttons
@@ -336,21 +342,6 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<MainWindowL
             UndoService.Execute(commands);
             WeakReferenceMessenger.Default.Send(new ShowNotificationMessage("Puzzle couldn't be solved!"));
         }
-    }
-
-    [RelayCommand]
-    private async Task ShowSolutionCount()
-    {
-        var copy = puzzle_service.Grid.Copy();
-        copy.FillCandidates();
-
-        (var solutions, var stats) = DancingLinksSolver.Solve(copy, true);
-
-        var sb = new StringBuilder();
-        sb.AppendLine($"The puzzle has {solutions.Count} solutions");
-        sb.AppendLine($"Execution Time: {stats.ElapsedTime} ms");
-
-        await ShowMessageAsync("Solution Count", sb.ToString());
     }
 
     [RelayCommand]

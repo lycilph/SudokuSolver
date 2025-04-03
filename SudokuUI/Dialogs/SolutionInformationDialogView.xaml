@@ -1,0 +1,37 @@
+﻿<UserControl x:Class="SudokuUI.Dialogs.SolutionInformationDialogView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:dia="clr-namespace:SudokuUI.Dialogs"
+             mc:Ignorable="d" 
+             d:DesignHeight="250" d:DesignWidth="500"
+             d:DataContext="{d:DesignInstance Type=dia:SolutionInformationDialogViewModel, IsDesignTimeCreatable=False}">
+    <StackPanel Orientation="Vertical">
+
+        <TextBlock Text="{Binding Puzzle, StringFormat=Puzzle: {0}}"
+                   Margin="8 8 8 0"/>
+        <TextBlock Text="{Binding SolutionCount, StringFormat='Solution Count: {0}'}"
+                   Margin="8 4 8 0"/>
+        <TextBlock Text="{Binding ElapsedTime, StringFormat='Execution time: {0}'}"
+                   Margin="8 0 8 8"/>
+       
+        <TextBlock Margin="8 4 8 0">
+            <Run Text="{Binding Grade.Difficulty, StringFormat=Difficulty: {0}}"/>
+            <Run Text="{Binding GradeName, StringFormat=[{0}]}"/>
+        </TextBlock>
+        <TextBlock Text="{Binding Grade.Effort, StringFormat=Effort: {0}}"
+                   Margin="8 0 8 8"/>
+
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+            <Button Content="OK"
+                    Command="{Binding OkCommand}"
+                    IsDefault="True"
+                    IsCancel="True"
+                    Style="{DynamicResource MahApps.Styles.Button.Dialogs.Accent}"
+                    MinWidth="80"
+                    Margin="8 8"/>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

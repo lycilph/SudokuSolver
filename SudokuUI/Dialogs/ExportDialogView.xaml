@@ -37,7 +37,7 @@
                     IsCancel="True"
                     Style="{DynamicResource MahApps.Styles.Button.Dialogs.Accent}"
                     MinWidth="80"
-                    Margin="8 8"/>
+                    Margin="8"/>
         </StackPanel>
     </StackPanel>
 </UserControl>

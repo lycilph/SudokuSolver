@@ -4,24 +4,24 @@ using System.Windows;
 
 namespace SudokuUI.Dialogs;
 
-public partial class ExportDialogViewModel : ObservableObject
+public partial class ExportDialogViewModel : ObservableObject, IDialogViewModel<bool>
 {
-    private readonly TaskCompletionSource _taskCompletionSource;
+    private readonly TaskCompletionSource<bool> task_completion_source;
 
     [ObservableProperty]
     private string puzzle = string.Empty;
 
-    public Task DialogResult => _taskCompletionSource.Task;
+    public Task<bool> DialogResult => task_completion_source.Task;
 
     public ExportDialogViewModel()
     {
-        _taskCompletionSource = new TaskCompletionSource();
+        task_completion_source = new TaskCompletionSource<bool>();
     }
 
     [RelayCommand]
     private void Ok()
     {
-        _taskCompletionSource.SetResult();
+        task_completion_source.SetResult(true);
     }
 
     [RelayCommand]

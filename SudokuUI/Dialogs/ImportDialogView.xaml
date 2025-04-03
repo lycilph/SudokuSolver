@@ -10,7 +10,7 @@
     <StackPanel Orientation="Vertical">
         <Label Content="Paste puzzle here:" />
         <TextBox Text="{Binding Puzzle}"
-                 Margin="8 8"/>
+                 Margin="8"/>
 
         <StackPanel Orientation="Horizontal"
                     HorizontalAlignment="Right">
@@ -19,14 +19,14 @@
                     IsDefault="True"
                     Style="{DynamicResource MahApps.Styles.Button.Dialogs.Accent}"
                     MinWidth="80"
-                    Margin="8 8"/>
+                    Margin="8"/>
 
             <Button Content="Cancel"
                     Command="{Binding CancelCommand}"
                     IsCancel="True"
                     Style="{DynamicResource MahApps.Styles.Button.Dialogs}"
                     MinWidth="80"
-                    Margin="8 8"/>
+                    Margin="8"/>
         </StackPanel>
     </StackPanel>
 </UserControl>

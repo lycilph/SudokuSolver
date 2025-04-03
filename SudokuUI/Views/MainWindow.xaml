@@ -139,6 +139,12 @@
                                 Margin="0 5 0 0"
                                 ToolTip="Export"
                                 Focusable="False"/>
+                        
+                        <Button Content="{icon:Lucide Kind=Hash, Height=24, Width=24}"
+                                Command="{Binding ShowSolutionCountCommand}"
+                                Margin="0 20 0 0"
+                                ToolTip="Count # of solutions"
+                                Focusable="False"/>
                     </StackPanel>
 
                     <Grid Grid.Column="1"
@@ -170,12 +176,6 @@
                                 Command="{Binding RunSolverCommand}"
                                 Margin="0 5 0 0"
                                 ToolTip="Solve the puzzle"
-                                Focusable="False"/>
-
-                        <Button Content="{icon:Lucide Kind=Hash, Height=24, Width=24}"
-                                Command="{Binding ShowSolutionCountCommand}"
-                                Margin="0 20 0 0"
-                                ToolTip="Count # of solutions"
                                 Focusable="False"/>
 
                         <Button Content="{icon:Lucide Kind=Grid2x2, Height=24, Width=24}"

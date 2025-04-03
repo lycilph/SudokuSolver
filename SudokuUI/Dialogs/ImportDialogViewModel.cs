@@ -3,29 +3,29 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace SudokuUI.Dialogs;
 
-public partial class ImportDialogViewModel : ObservableObject
+public partial class ImportDialogViewModel : ObservableObject, IDialogViewModel<string?>
 {
-    private readonly TaskCompletionSource<string?> _taskCompletionSource;
+    private readonly TaskCompletionSource<string?> task_completion_source;
 
     [ObservableProperty]
     private string puzzle = string.Empty;
 
-    public Task<string?> DialogResult => _taskCompletionSource.Task;
+    public Task<string?> DialogResult => task_completion_source.Task;
 
     public ImportDialogViewModel()
     {
-        _taskCompletionSource = new TaskCompletionSource<string?>();
+        task_completion_source = new TaskCompletionSource<string?>();
     }
 
     [RelayCommand]
     private void Ok()
     {
-        _taskCompletionSource.SetResult(Puzzle); // Return the input text as the result   
+        task_completion_source.SetResult(Puzzle); // Return the input text as the result   
     }
 
     [RelayCommand]
     private void Cancel()
     {
-        _taskCompletionSource.SetResult(null); // Return null to indicate cancellation
+        task_completion_source.SetResult(null); // Return null to indicate cancellation
     }
 }
