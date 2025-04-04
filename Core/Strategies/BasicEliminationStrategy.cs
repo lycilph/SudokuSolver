@@ -24,12 +24,12 @@ public class BasicEliminationStrategy : BaseStrategy<BasicEliminationStrategy>
 
             if (peers.Count > 0)
             {
-                command.CellsToVisualize.Add(cell);
                 command.Add(new CommandElement
                 {
                     Description = $"Cell {cell.Index} eliminates candidate {cell.Value} from cell(s): {string.Join(',', peers.Select(c => c.Index))}",
                     Numbers = [cell.Value],
-                    Cells = peers
+                    Cells = peers,
+                    CellsToVisualize = [cell]
                 });
             }
         }

@@ -18,29 +18,32 @@ public class HiddenPairsVisualizer : IStrategyVisualizer<HiddenPairsCommand>
     public void Show(GridViewModel vm, HiddenPairsCommand command)
     {
         foreach (var element in command.Elements)
+            Show(vm, element);
+    }
+
+    public void Show(GridViewModel vm, CommandElement element)
+    {
+        // Mark candidates to eliminate
+        var cell_vm = vm.Map(element.Cell);
+        foreach (var candidate_vm in cell_vm.Candidates)
         {
-            // Mark candidates to eliminate
-            var cell_vm = vm.Map(element.Cell);
+            if (candidate_vm.IsVisible && candidate_vm.Value == element.Number)
+            {
+                candidate_vm.HighlightColor = eliminated_candidates_color;
+                candidate_vm.Highlight = true;
+            }
+        }
+
+        // Mark the pair here
+        foreach (var cell in element.CellsToVisualize)
+        {
+            cell_vm = vm.Map(cell);
             foreach (var candidate_vm in cell_vm.Candidates)
             {
-                if (candidate_vm.IsVisible && candidate_vm.Value == element.Number)
+                if (candidate_vm.IsVisible && element.NumbersToVisualize.Contains(candidate_vm.Value))
                 {
-                    candidate_vm.HighlightColor = eliminated_candidates_color;
+                    candidate_vm.HighlightColor = hidden_pair_color;
                     candidate_vm.Highlight = true;
-                }
-            }
-
-            // Mark the pair here
-            foreach (var cell in element.CellsToVisualize)
-            {
-                cell_vm = vm.Map(cell);
-                foreach (var candidate_vm in cell_vm.Candidates)
-                {
-                    if (candidate_vm.IsVisible && element.NumbersToVisualize.Contains(candidate_vm.Value))
-                    {
-                        candidate_vm.HighlightColor = hidden_pair_color;
-                        candidate_vm.Highlight = true;
-                    }
                 }
             }
         }

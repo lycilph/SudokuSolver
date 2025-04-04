@@ -106,7 +106,7 @@
             </StatusBar>
 
             <StackPanel Orientation="Vertical"
-                    Margin="10">
+                        Margin="10">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>

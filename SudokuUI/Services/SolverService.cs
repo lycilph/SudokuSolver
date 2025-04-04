@@ -77,7 +77,7 @@ public partial class SolverService : ObservableObject
         }
     }
 
-    public void ShowVisualization(BaseCommand cmd)
+    public void ShowVisualization(BaseCommand cmd, int index = -1)
     {
         // Needs to clear (potentially old) stuff
         ClearVisualization();
@@ -85,8 +85,11 @@ public partial class SolverService : ObservableObject
         var type = cmd.GetType();
         var visualizer = Visualizers[type];
 
-        // Show visualization here
-        visualizer.Show(gridVM, cmd);
+        if (index >= 0)
+            visualizer.Show(gridVM, cmd.Elements[index]);
+        else
+            // Show visualization here
+            visualizer.Show(gridVM, cmd);
     }
 
     public void ClearVisualization()

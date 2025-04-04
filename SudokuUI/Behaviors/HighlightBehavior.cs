@@ -43,7 +43,7 @@ public class HighlightBehavior : Behavior<Canvas>
 
     private static void UpdateLines(GridViewModel vm, HighlightService service, Canvas canvas)
     {
-        logger.Debug("Lines changed");
+        logger.Trace("Updating lines");
         canvas.Children.Clear();
 
         foreach (var link in service.Links) 

@@ -30,41 +30,44 @@ public class SkyscraperVisualizer : IStrategyVisualizer<SkyscraperCommand>
     public void Show(GridViewModel vm, SkyscraperCommand command)
     {
         foreach (var element in command.Elements)
+            Show(vm, element);
+    }
+
+    public void Show(GridViewModel vm, CommandElement element)
+    {
+        // Skyscraper links
+        var link1 = element.LinksToVisualize[0];
+        var link2 = element.LinksToVisualize[1];
+        var base_link = element.LinksToVisualize[2];
+        service.Add(link1, strong_link_color);
+        service.Add(link2, strong_link_color);
+        service.Add(base_link, weak_link_color, LinkVisualizer.LineType.Dotted);
+
+        // Mark skyscraper here
+        foreach (var cell in link1.Cells.Concat(link2.Cells))
         {
-            // Skyscraper links
-            var link1 = element.LinksToVisualize[0];
-            var link2 = element.LinksToVisualize[1];
-            var base_link = element.LinksToVisualize[2];
-            service.Add(link1, strong_link_color);
-            service.Add(link2, strong_link_color);
-            service.Add(base_link, weak_link_color, LinkVisualizer.LineType.Dotted);
+            var cell_vm = vm.Map(cell);
+            var candidate_vm = cell_vm.Candidates[element.Number - 1];
 
-            // Mark skyscraper here
-            foreach (var cell in link1.Cells.Concat(link2.Cells))
-            {
-                var cell_vm = vm.Map(cell);
-                var candidate_vm = cell_vm.Candidates[element.Number - 1];
+            candidate_vm.HighlightColor = skyscraper_color;
+            candidate_vm.Highlight = true;
+        }
 
-                candidate_vm.HighlightColor = skyscraper_color;
-                candidate_vm.Highlight = true;
-            }
+        // Mark the overlap cells here
+        foreach (var cell in element.CellsToVisualize)
+        {
+            var cell_vm = vm.Map(cell);
+            cell_vm.BackgroundColor = overlap_color;
+        }
 
-            // Mark the overlap cells here
-            foreach (var cell in element.CellsToVisualize)
-            {
-                var cell_vm = vm.Map(cell);
-                cell_vm.BackgroundColor = overlap_color;
-            }
+        // Mark eliminations here
+        foreach (var cell in element.Cells)
+        {
+            var cell_vm = vm.Map(cell);
+            var candidate_vm = cell_vm.Candidates[element.Number - 1];
 
-            // Mark eliminations here
-            foreach (var cell in element.Cells)
-            {
-                var cell_vm = vm.Map(cell);
-                var candidate_vm = cell_vm.Candidates[element.Number - 1];
-
-                candidate_vm.HighlightColor = eliminated_candidates_color;
-                candidate_vm.Highlight = true;
-            }
+            candidate_vm.HighlightColor = eliminated_candidates_color;
+            candidate_vm.Highlight = true;
         }
     }
 }

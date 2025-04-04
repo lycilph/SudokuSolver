@@ -1,5 +1,4 @@
-﻿using Core.Models;
-using Core.Strategies;
+﻿using Core.Strategies;
 
 namespace Core.Commands;
 
@@ -9,8 +8,6 @@ namespace Core.Commands;
 
 public class BasicEliminationCommand(IStrategy strategy) : BaseCommand(strategy)
 {
-    public List<Cell> CellsToVisualize { get; private set; } = [];
-
     public override void Do()
     {
         foreach (var element in Elements)

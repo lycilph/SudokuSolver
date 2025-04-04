@@ -17,28 +17,30 @@ public class XWingVisualizer : IStrategyVisualizer<XWingCommand>
 
     public void Show(GridViewModel vm, XWingCommand command)
     {
-        // These are the candidates eliminated by the cells above
         foreach (var element in command.Elements)
+            Show(vm, element);
+    }
+
+    public void Show(GridViewModel vm, CommandElement element)
+    {
+        // These are the x-wing cells
+        foreach (var cell in element.CellsToVisualize)
         {
-            // These are the x-wing cells
-            foreach (var cell in element.CellsToVisualize)
-            {
-                var cell_vm = vm.Map(cell);
-                var candidate_vm = cell_vm.Candidates[element.Number - 1];
+            var cell_vm = vm.Map(cell);
+            var candidate_vm = cell_vm.Candidates[element.Number - 1];
 
-                candidate_vm.HighlightColor = cell_color;
-                candidate_vm.Highlight = true;
-            }
+            candidate_vm.HighlightColor = cell_color;
+            candidate_vm.Highlight = true;
+        }
 
-            // These are the candidates eliminated by the cells above
-            foreach (var cell in element.Cells)
-            {
-                var cell_vm = vm.Map(cell);
-                var candidate_vm = cell_vm.Candidates[element.Number - 1];
+        // These are the candidates eliminated by the cells above
+        foreach (var cell in element.Cells)
+        {
+            var cell_vm = vm.Map(cell);
+            var candidate_vm = cell_vm.Candidates[element.Number - 1];
 
-                candidate_vm.HighlightColor = candidate_color;
-                candidate_vm.Highlight = true;
-            }
+            candidate_vm.HighlightColor = candidate_color;
+            candidate_vm.Highlight = true;
         }
     }
 }

@@ -18,25 +18,28 @@ public class NakedPairsVisualizer : IStrategyVisualizer<NakedPairsCommand>
     public void Show(GridViewModel vm, NakedPairsCommand command)
     {
         foreach (var element in command.Elements)
+            Show(vm, element);
+    }
+
+    public void Show(GridViewModel vm, CommandElement element)
+    {
+        // These are the pair cells, which eliminate candidates in the other boxes
+        foreach (var cell in element.CellsToVisualize)
         {
-            // These are the pair cells, which eliminate candidates in the other boxes
-            foreach (var cell in element.CellsToVisualize)
-            {
-                var cell_vm = vm.Map(cell);
-                var candidate_vm = cell_vm.Candidates[element.Number - 1];
+            var cell_vm = vm.Map(cell);
+            var candidate_vm = cell_vm.Candidates[element.Number - 1];
 
-                candidate_vm.HighlightColor = pair_color;
-                candidate_vm.Highlight = true;
-            }
+            candidate_vm.HighlightColor = pair_color;
+            candidate_vm.Highlight = true;
+        }
 
-            foreach (var cell in element.Cells)
-            {
-                var cell_vm = vm.Map(cell);
-                var candidate_vm = cell_vm.Candidates[element.Number - 1];
+        foreach (var cell in element.Cells)
+        {
+            var cell_vm = vm.Map(cell);
+            var candidate_vm = cell_vm.Candidates[element.Number - 1];
 
-                candidate_vm.HighlightColor = eliminated_color;
-                candidate_vm.Highlight = true;
-            }
+            candidate_vm.HighlightColor = eliminated_color;
+            candidate_vm.Highlight = true;
         }
     }
 }

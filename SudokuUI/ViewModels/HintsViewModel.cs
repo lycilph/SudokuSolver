@@ -1,8 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
 using Core.Commands;
-using SudokuUI.Messages;
 using SudokuUI.Services;
 
 namespace SudokuUI.ViewModels;
@@ -12,6 +10,9 @@ public partial class HintsViewModel : ObservableObject
     private TaskCompletionSource task_completion_source = new();
 
     private readonly SolverService solver_service;
+
+    private bool showing_elements;
+    private int element_index;
 
     [ObservableProperty]
     private bool isActive = false;
@@ -24,10 +25,11 @@ public partial class HintsViewModel : ObservableObject
     [NotifyCanExecuteChangedFor(nameof(NextCommandElementCommand))]
     private BaseCommand? command = null;
 
-    private bool CanApply => Command != null;
-    private bool CanApplyAndNext => Command != null;
+    [ObservableProperty]
+    private string description = string.Empty;
 
-    private bool CanChangeCommandElements => Command?.Elements.Count > 1;
+    private bool HasCommand => Command != null;
+    private bool HasCommandElements => Command?.Elements.Count > 1;
 
     public HintsViewModel(SolverService solver_service)
     {
@@ -40,38 +42,86 @@ public partial class HintsViewModel : ObservableObject
         IsActive = true;
 
         Command = cmd ?? solver_service.NextCommand();
-        if (Command != null )
+        if (Command != null)
             solver_service.ShowVisualization(Command);
+
+        showing_elements = false;
+        UpdateDescription();
 
         return task_completion_source.Task;
     }
 
-    private void Complete() 
-    { 
+    private void Complete()
+    {
         task_completion_source.SetResult();
         solver_service.ClearVisualization();
-        IsActive = false; 
+        IsActive = false;
     }
 
-    [RelayCommand(CanExecute = nameof(CanChangeCommandElements))]
+    private void UpdateDescription()
+    {
+        if (showing_elements)
+            Description = Command?.Elements[element_index].Description ?? "No element found";
+        else
+            Description = Command?.Description ?? "No hints found";
+    }
+
+    [RelayCommand(CanExecute = nameof(HasCommandElements))]
     private void Reset()
     {
-        WeakReferenceMessenger.Default.Send(new ShowNotificationMessage("Reset command"));
+        if (Command == null)
+            return;
+
+        solver_service.ShowVisualization(Command);
+        showing_elements = false;
+        UpdateDescription();
     }
 
-    [RelayCommand(CanExecute = nameof(CanChangeCommandElements))]
+    [RelayCommand(CanExecute = nameof(HasCommandElements))]
     private void PreviousCommandElement()
     {
-        WeakReferenceMessenger.Default.Send(new ShowNotificationMessage("Previous Command Element"));
+        if (Command == null)
+            return;
+
+        if (!showing_elements)
+        {
+            showing_elements = true;
+            element_index = 0;
+        }
+        else
+        {
+            element_index--;
+            if (element_index < 0)
+                element_index = Command.Elements.Count - 1;
+        }
+
+        solver_service.ShowVisualization(Command, element_index);
+        UpdateDescription();
     }
 
-    [RelayCommand(CanExecute = nameof(CanChangeCommandElements))]
+    [RelayCommand(CanExecute = nameof(HasCommandElements))]
     private void NextCommandElement()
     {
-        WeakReferenceMessenger.Default.Send(new ShowNotificationMessage("Next Command Element"));
+        if (Command == null)
+            return;
+
+        if (!showing_elements)
+        {
+            showing_elements = true;
+            element_index = 0;
+        }
+        else
+        {
+            element_index++;
+            if (element_index >= Command.Elements.Count)
+                element_index = 0;
+        }
+
+        solver_service.ShowVisualization(Command, element_index);
+        UpdateDescription();
     }
 
-    [RelayCommand(CanExecute = nameof(CanApply))]
+    [RelayCommand(CanExecute = nameof(HasCommand))]
     private void Apply()
     {
         if (Command != null)
@@ -82,7 +132,7 @@ public partial class HintsViewModel : ObservableObject
             Complete();
     }
 
-    [RelayCommand(CanExecute = nameof(CanApplyAndNext))]
+    [RelayCommand(CanExecute = nameof(HasCommand))]
     private void ApplyAndNext()
     {
         if (Command != null)
@@ -91,6 +141,9 @@ public partial class HintsViewModel : ObservableObject
         Command = solver_service.NextCommand();
         if (Command != null)
             solver_service.ShowVisualization(Command);
+
+        showing_elements = false;
+        UpdateDescription();
     }
 
     [RelayCommand]

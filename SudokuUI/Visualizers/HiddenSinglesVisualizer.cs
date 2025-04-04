@@ -18,15 +18,18 @@ public class HiddenSinglesVisualizer : IStrategyVisualizer<HiddenSinglesCommand>
     public void Show(GridViewModel vm, HiddenSinglesCommand command)
     {
         foreach (var element in command.Elements)
+            Show(vm, element);
+    }
+
+    public void Show(GridViewModel vm, CommandElement element)
+    {
+        var cell_vm = vm.Map(element.Cell);
+        foreach (var candidate_vm in cell_vm.Candidates)
         {
-            var cell_vm = vm.Map(element.Cell);
-            foreach (var candidate_vm in cell_vm.Candidates)
+            if (candidate_vm.IsVisible)
             {
-                if (candidate_vm.IsVisible)
-                {
-                    candidate_vm.HighlightColor = candidate_vm.Value == element.Number ? hidden_single_color : eliminated_candidates_color;
-                    candidate_vm.Highlight = true;
-                }
+                candidate_vm.HighlightColor = candidate_vm.Value == element.Number ? hidden_single_color : eliminated_candidates_color;
+                candidate_vm.Highlight = true;
             }
         }
     }

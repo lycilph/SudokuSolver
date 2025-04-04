@@ -54,11 +54,14 @@ public partial class OverlayViewModel : ObservableObject
         if (NewGameVM.IsActive)
             NewGameVM.Cancel();
 
+        if (HintsVM.IsActive)
+            HintsVM.Cancel();
+
         IsOpen = false;
         ShowSpinner = false;
     }
 
-    public bool CanHide() => !ShowSpinner && !VictoryVM.IsActive && !HintsVM.IsActive;
+    public bool CanHide() => !ShowSpinner && !VictoryVM.IsActive;
 
     public OverlayScope GetWaitingSpinnerScope(bool show_spinner = false) => new(this, show_spinner);
 

@@ -27,27 +27,31 @@ public class TwoStringKiteVisualizer : IStrategyVisualizer<TwoStringKiteCommand>
 
     public void Show(GridViewModel vm, TwoStringKiteCommand command)
     {
-        // These are the candidates eliminated by the kite
+        
         foreach (var element in command.Elements)
+            Show(vm, element);
+    }
+
+    public void Show(GridViewModel vm, CommandElement element)
+    {
+        var cell_vm = vm.Map(element.Cell);
+        var candidate_vm = cell_vm.Candidates[element.Number - 1];
+
+        // These are the candidates eliminated by the kite
+        candidate_vm.HighlightColor = candidate_color;
+        candidate_vm.Highlight = true;
+
+        foreach (var cell in element.CellsToVisualize)
         {
-            var cell_vm = vm.Map(element.Cell);
-            var candidate_vm = cell_vm.Candidates[element.Number - 1];
+            cell_vm = vm.Map(cell);
+            candidate_vm = cell_vm.Candidates[element.Number - 1];
 
-            candidate_vm.HighlightColor = candidate_color;
+            candidate_vm.HighlightColor = kite_color;
             candidate_vm.Highlight = true;
-
-            foreach (var cell in element.CellsToVisualize)
-            {
-                cell_vm = vm.Map(cell);
-                candidate_vm = cell_vm.Candidates[element.Number - 1];
-                
-                candidate_vm.HighlightColor = kite_color;
-                candidate_vm.Highlight = true;
-            }
-
-            service.Add(element.LinksToVisualize[0], strong_link_color);
-            service.Add(element.LinksToVisualize[1], strong_link_color);
-            service.Add(element.LinksToVisualize[2], weak_link_color, LinkVisualizer.LineType.Dotted);
         }
+
+        service.Add(element.LinksToVisualize[0], strong_link_color);
+        service.Add(element.LinksToVisualize[1], strong_link_color);
+        service.Add(element.LinksToVisualize[2], weak_link_color, LinkVisualizer.LineType.Dotted);
     }
 }

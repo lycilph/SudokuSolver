@@ -6,6 +6,7 @@ namespace SudokuUI.Visualizers;
 public interface IStrategyVisualizer
 {
     void Show(GridViewModel vm, BaseCommand command);
+    void Show(GridViewModel vm, CommandElement element);
 }
 
 public interface IStrategyVisualizer<T> : IStrategyVisualizer where T : BaseCommand

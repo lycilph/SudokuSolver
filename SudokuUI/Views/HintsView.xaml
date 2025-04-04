@@ -35,12 +35,15 @@
                     Margin="0 5 0 0"/>
         </StackPanel>
 
-        <TextBox Text="{Binding Command.Description, 
-                                Mode=OneWay, 
-                                FallbackValue='No hints found'}"
-                 Height="100"
-                 IsReadOnly="True"
-                 Focusable="False"
-                 TextWrapping="Wrap"/>
+        <Grid>
+            <!-- The border is used to make sure the textbox doesn't change its width if the text gets too long -->
+            <Border x:Name="border_to_fix_width"/>
+            <TextBox Text="{Binding Description}"
+                     Width="{Binding ElementName=border_to_fix_width, Path=ActualWidth}"
+                     Height="100"
+                     IsReadOnly="True"
+                     Focusable="False"
+                     TextWrapping="Wrap"/>
+        </Grid>
     </DockPanel>
 </UserControl>

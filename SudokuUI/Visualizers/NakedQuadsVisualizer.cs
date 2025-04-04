@@ -18,28 +18,31 @@ public class NakedQuadsVisualizer : IStrategyVisualizer<NakedQuadsCommand>
     public void Show(GridViewModel vm, NakedQuadsCommand command)
     {
         foreach (var element in command.Elements)
+            Show(vm, element);
+    }
+
+    public void Show(GridViewModel vm, CommandElement element)
+    {
+        // These are the triple cells, which eliminate candidates in the other boxes
+        foreach (var cell in element.CellsToVisualize)
         {
-            // These are the triple cells, which eliminate candidates in the other boxes
-            foreach (var cell in element.CellsToVisualize)
+            var cell_vm = vm.Map(cell);
+            var candidate_vm = cell_vm.Candidates[element.Number - 1];
+            if (candidate_vm.IsVisible)
             {
-                var cell_vm = vm.Map(cell);
-                var candidate_vm = cell_vm.Candidates[element.Number - 1];
-                if (candidate_vm.IsVisible)
-                {
-                    candidate_vm.HighlightColor = quad_color;
-                    candidate_vm.Highlight = true;
-                }
-                
-            }
-
-            foreach (var cell in element.Cells)
-            {
-                var cell_vm = vm.Map(cell);
-                var candidate_vm = cell_vm.Candidates[element.Number - 1];
-
-                candidate_vm.HighlightColor = eliminated_color;
+                candidate_vm.HighlightColor = quad_color;
                 candidate_vm.Highlight = true;
             }
+
+        }
+
+        foreach (var cell in element.Cells)
+        {
+            var cell_vm = vm.Map(cell);
+            var candidate_vm = cell_vm.Candidates[element.Number - 1];
+
+            candidate_vm.HighlightColor = eliminated_color;
+            candidate_vm.Highlight = true;
         }
     }
 }
