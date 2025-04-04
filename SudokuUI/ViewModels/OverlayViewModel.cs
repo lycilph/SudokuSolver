@@ -26,13 +26,20 @@ public partial class OverlayViewModel : ObservableObject
     private HintsViewModel hintsVM;
 
     [ObservableProperty]
+    private SettingsViewModel settingsVM;
+
+    [ObservableProperty]
     private System.Windows.Input.ICommand escapeCommand = null!;
 
-    public OverlayViewModel(NewGameViewModel newGameVM, VictoryViewModel victoryVM, HintsViewModel hintsVM)
+    public OverlayViewModel(NewGameViewModel newGameVM,
+                            VictoryViewModel victoryVM,
+                            HintsViewModel hintsVM,
+                            SettingsViewModel settingsVM)
     {
         NewGameVM = newGameVM;
         VictoryVM = victoryVM;
         HintsVM = hintsVM;
+        SettingsVM = settingsVM;
     }
 
     public void OnOpenAnimationCompleted() => open_animation_completion_source.SetResult();
@@ -57,11 +64,15 @@ public partial class OverlayViewModel : ObservableObject
         if (HintsVM.IsActive)
             HintsVM.Cancel();
 
+        if (SettingsVM.IsActive)
+            SettingsVM.Hide();
+
         IsOpen = false;
         ShowSpinner = false;
     }
 
     public bool CanHide() => !ShowSpinner && !VictoryVM.IsActive;
+    public bool CanToggleSettings() => !ShowSpinner && !NewGameVM.IsActive && !VictoryVM.IsActive && !HintsVM.IsActive;
 
     public OverlayScope GetWaitingSpinnerScope(bool show_spinner = false) => new(this, show_spinner);
 
@@ -103,5 +114,11 @@ public partial class OverlayViewModel : ObservableObject
 
         Hide();
         await close_animation_completion_source.Task;
+    }
+
+    public void ShowSettings()
+    {
+        Show();
+        SettingsVM.Show();
     }
 }

@@ -1,5 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using ControlzEx.Theming;
+﻿using ControlzEx.Theming;
 using NLog;
 using SudokuUI.Infrastructure;
 using System.IO;
@@ -7,7 +6,7 @@ using System.Text.Json;
 
 namespace SudokuUI.Services;
 
-public partial class SettingsService : ObservableObject
+public class SettingsService
 {
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
@@ -16,9 +15,6 @@ public partial class SettingsService : ObservableObject
     public static readonly string DefaultColorScheme = "Steel";
 
     public readonly string settings_file = "settings.json";
-
-    [ObservableProperty]
-    private bool isOpen = false;
 
     public List<Theme> Themes { get; private set; }
 
@@ -84,7 +80,4 @@ public partial class SettingsService : ObservableObject
             logger.Error($"Error saving theme settings: {ex.Message}");
         }
     }
-
-    public void Show() => IsOpen = true;
-    public void Hide() => IsOpen = false;
 }

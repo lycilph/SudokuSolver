@@ -32,7 +32,7 @@
         <KeyBinding Key="Space" Command="{Binding ToggleInputModeCommand}"/>
         <KeyBinding Key="Tab" Command="{Binding NextDigitCommand}"/>
         <KeyBinding Key="Tab" Modifiers="Shift" Command="{Binding PreviousDigitCommand}"/>
-        <KeyBinding Key="F1" Command="{Binding ShowSettingsCommand}"/>
+        <KeyBinding Key="F1" Command="{Binding ToggleSettingsCommand}"/>
         <KeyBinding Key="D" Modifiers="Ctrl" Command="{Binding ShowDebugWindowCommand}"/>
         <KeyBinding Key="Z" Modifiers="Ctrl" Command="{Binding UndoService.UndoCommand}"/>
         <KeyBinding Key="Y" Modifiers="Ctrl" Command="{Binding UndoService.RedoCommand}"/>
@@ -45,6 +45,7 @@
             <be:DisableKeyboardInputBehavior.IgnoredKeys>
                 <infra:KeyCollection>
                     <Key>Escape</Key>
+                    <Key>F1</Key>
                 </infra:KeyCollection>
             </be:DisableKeyboardInputBehavior.IgnoredKeys>
         </be:DisableKeyboardInputBehavior>
@@ -69,7 +70,7 @@
                     Focusable="False"/>
 
             <Button Content="{icon:Lucide Kind=Settings}"
-                    Command="{Binding ShowSettingsCommand}"
+                    Command="{Binding ToggleSettingsCommand}"
                     ToolTip="Settings (F1)"
                     Focusable="False"/>
         </mah:WindowCommands>
@@ -81,7 +82,8 @@
                         Theme="Adapt"
                         Position="Right" 
                         Width="250"
-                        IsOpen="{Binding SettingsVM.IsOpen}">
+                        IsOpen="{Binding SettingsVM.IsActive}"
+                        CloseCommand="{Binding ToggleSettingsCommand}">
                 <ContentControl Content="{Binding SettingsVM}"/>
             </mah:Flyout>
 

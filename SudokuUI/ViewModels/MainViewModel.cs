@@ -88,15 +88,6 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<MainWindowL
                 IsKeyboardDisabled = OverlayVM.IsOpen;
         };
 
-        settings_service.PropertyChanged += (s, e) =>
-        {
-            if (e.PropertyName == nameof(SettingsService.IsOpen))
-                if (settings_service.IsOpen)
-                    overlayVM.Show();
-                else
-                    overlayVM.Hide();
-        };
-
         // Handle the puzzle solved event
         puzzle_service.PuzzleSolved += async (s, e) => await OnPuzzleSolved(s, e);
 
@@ -166,9 +157,15 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<MainWindowL
     // Window commands (ie. buttons in the title bar)
 
     [RelayCommand]
-    private void ShowSettings()
+    private void ToggleSettings()
     {
-        settings_service.Show();
+        if (!OverlayVM.CanToggleSettings())
+            return;
+
+        if (SettingsVM.IsActive)
+            OverlayVM.Hide();
+        else
+            OverlayVM.ShowSettings();
     }
 
     // Input binding commands
@@ -183,13 +180,7 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<MainWindowL
     [RelayCommand]
     private void Escape()
     {
-        if (settings_service.IsOpen)
-        {
-            settings_service.Hide();
-            return;
-        }
-
-        // The overlay cannot be cancelled if the spinner is shown (ie. it is working)
+        // The overlay cannot be cancelled if eg the spinner is shown (ie. it is working)
         if (OverlayVM.IsOpen && OverlayVM.CanHide())
         {
             OverlayVM.Hide();

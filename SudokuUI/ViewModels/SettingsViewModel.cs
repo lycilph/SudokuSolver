@@ -10,11 +10,8 @@ public partial class SettingsViewModel : ObservableObject
 {
     private readonly SettingsService settings_service;
 
-    public bool IsOpen
-    {
-        get => settings_service.IsOpen;
-        set => settings_service.IsOpen = value;
-    }
+    [ObservableProperty]
+    private bool isActive = false;
 
     [ObservableProperty]
     private bool isLight = true;
@@ -31,14 +28,11 @@ public partial class SettingsViewModel : ObservableObject
         ApplicationColors = settings_service.Themes.ToObservableCollection();
         IsLight = settings_service.GetBaseColorScheme() == SettingsService.Light;
         SelectedApplicationColor = ApplicationColors.First(t => t.ColorScheme == settings_service.GetColorScheme());
-
-        settings_service.PropertyChanged += (s, e) =>
-        {
-            if (e.PropertyName == nameof(SettingsService.IsOpen))
-                OnPropertyChanged(nameof(IsOpen));
-        };
     }
 
     partial void OnIsLightChanged(bool value) => settings_service.SetBaseColorScheme(value);
     partial void OnSelectedApplicationColorChanged(Theme value) => settings_service.SetColorScheme(value.ColorScheme);
+
+    public void Show() => IsActive = true;
+    public void Hide() => IsActive = false;
 }
