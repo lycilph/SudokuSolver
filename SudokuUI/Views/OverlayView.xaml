@@ -47,7 +47,7 @@
         </Grid.InputBindings>
         
         <Rectangle Fill="Gray"
-                   Opacity="0.50"/>
+                   Opacity="{Binding OverlayOpacity}"/>
 
         <mah:ProgressRing IsActive="{Binding ShowSpinner}"
                           Foreground="{DynamicResource MahApps.Brushes.Accent}"

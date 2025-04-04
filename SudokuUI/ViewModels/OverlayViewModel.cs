@@ -7,6 +7,9 @@ namespace SudokuUI.ViewModels;
 
 public partial class OverlayViewModel : ObservableObject
 {
+    private readonly double standard_opacity = 0.75;
+    private readonly double hints_view_opacity = 0.1;
+
     private TaskCompletionSource open_animation_completion_source = new();
     private TaskCompletionSource close_animation_completion_source = new();
 
@@ -15,6 +18,9 @@ public partial class OverlayViewModel : ObservableObject
 
     [ObservableProperty]
     private bool showSpinner = false;
+
+    [ObservableProperty]
+    private double overlayOpacity = 0.5;
 
     [ObservableProperty]
     private NewGameViewModel newGameVM;
@@ -109,11 +115,15 @@ public partial class OverlayViewModel : ObservableObject
 
     public async Task ShowHint(BaseCommand? cmd)
     {
+        OverlayOpacity = hints_view_opacity;
+
         _ = Show();
         await HintsVM.Activate(cmd);
 
         Hide();
         await close_animation_completion_source.Task;
+
+        OverlayOpacity = standard_opacity;
     }
 
     public void ShowSettings()
