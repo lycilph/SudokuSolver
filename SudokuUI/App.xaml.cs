@@ -36,13 +36,13 @@ public partial class App : Application
         services.AddSingleton<SolverService>();
         services.AddSingleton<DebugService>();
 
-        // The grid view model is a singleton because it is used by multiple view models
+        // These view models are singletons because they are used by multiple view models
         services.AddSingleton<GridViewModel>();
+        services.AddSingleton<SettingsViewModel>();
 
         // Register view models
         services.AddTransient<MainViewModel>();
         services.AddTransient<DigitSelectionViewModel>();
-        services.AddTransient<SettingsViewModel>();
         services.AddTransient<OverlayViewModel>();
         services.AddTransient<VictoryViewModel>();
         services.AddTransient<HintsViewModel>();
