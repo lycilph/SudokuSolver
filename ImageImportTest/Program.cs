@@ -1,28 +1,26 @@
-﻿using System.Diagnostics.Metrics;
-using System.Drawing;
+﻿using System.Drawing;
 using Emgu.CV;
+using Emgu.CV.OCR;
 using Emgu.CV.Structure;
 using Emgu.CV.Util;
-using static System.Net.Mime.MediaTypeNames;
 using CvEnum = Emgu.CV.CvEnum;
 
 namespace ImageImportTest;
 
 internal class Program
 {
+    static Tesseract tesseract = null!;
+
     static void Main(string[] args)
     {
-        /*
-        Processing file C:\Users\Morten Lang\source\repos\SudokuSolver\ImageImportTest\Data\IMG_20250410_114443.jpg
-         * Error, found 12 cells with 1 iterations
-         * Error, found 71 cells with 3 iterations
-         * Error, found 75 cells with 5 iterations
-         * Error, found 76 cells with 7 iterations
-         * !!! Failed to extracted cells from
-         */
+        tesseract = new Tesseract("tessdata", "eng", OcrEngineMode.LstmOnly, "123456789")
+        {
+            PageSegMode = PageSegMode.SingleChar
+        };
+        Console.WriteLine($"Version: {Tesseract.Version}");
 
-        ProcessAll();
-        //ProcessSingle("C:\\Users\\Morten Lang\\source\\repos\\SudokuSolver\\ImageImportTest\\Data\\IMG_20250410_114443.jpg", 5);
+        //ProcessAll();
+        ProcessSingle("C:\\Users\\Morten Lang\\source\\repos\\SudokuSolver\\ImageImportTest\\Data\\IMG_20250330_101246.jpg", 3);
     }
 
     private static void ProcessSingle(string filename, int iterations)
@@ -30,8 +28,9 @@ internal class Program
         // Loop over all images in folder
         var img = new Image<Rgb, byte>(filename);
         var grid = ExtractGrid(img, false);
-        //(var cells, var cells_count) = ExtractCells(grid, iterations, true);
-        ExtractCellsNaive(grid);
+        (var cells_image, var cells, var cells_count) = ExtractCells(grid, 5, iterations, false);
+        foreach (var cell in cells)
+            ExtractDigit(cell);
     }
 
     private static void ProcessAll()
@@ -51,59 +50,110 @@ internal class Program
             var grid = ExtractGrid(img);
             CvInvoke.Imwrite(grid_filename, grid);
 
-            var cells = ExtractCellsNaive(grid);
-            CvInvoke.Imwrite(cells_filename, cells);
+            Image<Rgb, byte> cells_image = null!;
+            List<Image<Rgb, byte>> cells = [];
+            int cells_count = 0;
+            for (int threshold = 5; threshold >= 2; threshold--)
+            {
+                for (int i = 1; i <= 7; i += 2)
+                {
+                    (cells_image, cells, cells_count) = ExtractCells(grid, threshold, i);
 
+                    if (cells_count != 81)
+                        Console.WriteLine($" * Error, found {cells_count} cells with {i} iterations and threshold {threshold}");
+                    else
+                        break;
+                }
+                if (cells_count == 81)
+                    break;
+            }
 
-            //Image<Gray, byte> cells = null!;
-            //int cells_count = 0;
-            //for (int i = 1; i <= 7; i += 2)
-            //{
-            //    (cells, cells_count) = ExtractCells(grid, i);
+            if (cells_count == 81)
+                Console.WriteLine($" * Successfully extracted cells from, saving image");
+            else
+                Console.WriteLine($" * !!! Failed to extracted cells from");
 
-            //    if (cells_count != 81)
-            //        Console.WriteLine($" * Error, found {cells_count} cells with {i} iterations");
-            //    else
-            //        break;
-            //}
+            // if it still fails here, try the ExtractCellsNaive method
 
-            //if (cells_count == 81)
-            //    Console.WriteLine($" * Successfully extracted cells from, saving image");
-            //else
-            //    Console.WriteLine($" * !!! Failed to extracted cells from");
-
-            //CvInvoke.Imwrite(cells_filename, cells);
+            CvInvoke.Imwrite(cells_filename, cells_image);
         }
         Console.WriteLine("Press any key to continue!");
         Console.ReadKey();
     }
 
-    private static Image<Rgb, byte> ExtractCellsNaive(Image<Rgb, byte> source)
-    {
-        var size = (int)(source.Size.Width / 9.0);
-        var img = source.Clone();
+    //private static Image<Rgb, byte> ExtractCellsNaive(Image<Rgb, byte> source)
+    //{
+    //    var size = (int)(source.Size.Width / 9.0);
+    //    var img = source.Clone();
 
-        for (int y = 0; y < 9; y++)
-        {
-            for (int x = 0; x < 9; x++)
-            {
-                CvInvoke.Rectangle(img, new Rectangle(x*size, y*size, size, size), new MCvScalar(0,0,255),3);
-            }
-        }
-        //CvInvoke.Imshow("Cells", img.Resize(0.4, CvEnum.Inter.Cubic));
-        //CvInvoke.WaitKey();
+    //    List<Image<Rgb, byte>> cells = [];
+    //    for (int y = 0; y < 9; y++)
+    //    {
+    //        for (int x = 0; x < 9; x++)
+    //        {
+    //            var rect = new Rectangle(x * size, y * size, size, size);
+    //            CvInvoke.Rectangle(img, rect, new MCvScalar(0,0,255),3);
 
-        return img;
-    }
+    //            var cell = img.Copy(rect);
+    //            cells.Add(cell);
+    //            ExtractDigit(cell);
+    //        }
+    //    }
+    //    //CvInvoke.Imshow("Cells", img.Resize(0.4, CvEnum.Inter.Cubic));
+    //    //CvInvoke.Imshow("Cell0", cells[0]);
+    //    //CvInvoke.WaitKey();
 
-    private static (Image<Gray, byte>, int) ExtractCells(Image<Rgb, byte> source, int iterations = 1, bool show_debug = false)
+    //    return img;
+    //}
+
+    public static void ExtractDigit(Image<Rgb, byte> source)
     {
         // Basic preprocessing of the image
         var img = source.Convert<Gray, byte>();
         img._GammaCorrect(0.8);
         img = img.SmoothGaussian(7);
         img = img.ThresholdAdaptive(new Gray(255), CvEnum.AdaptiveThresholdType.GaussianC, CvEnum.ThresholdType.BinaryInv, 55, new Gray(5));
+        
+        // Filter out small elements
+        VectorOfVectorOfPoint contours = new();
+        CvInvoke.FindContours(img, contours, null, CvEnum.RetrType.Tree, CvEnum.ChainApproxMethod.ChainApproxSimple);
+        for (int i = 0; i < contours.Size; i++)
+        {
+            var area = CvInvoke.ContourArea(contours[i]);
+            Console.WriteLine($"Area {area}");
+            if (area < 200)
+                CvInvoke.DrawContours(img, contours, i, new MCvScalar(0, 0, 0), -1);
+        }
+        Console.WriteLine($"Found {contours.Size} contours");
 
+        var filled_percent = img.CountNonzero()[0] / (double)(source.Width * source.Height);
+        Console.WriteLine($"Cells was filled {filled_percent} percentage");
+
+        if (filled_percent > 0.02)
+        {
+            Console.WriteLine("Found a potential digit");
+
+            // Apparently a border makes the OCR work better (https://stackoverflow.com/questions/52823336/why-do-i-get-such-poor-results-from-tesseract-for-simple-single-character-recogn)
+            CvInvoke.Rectangle(img, new Rectangle(0, 0, img.Width, img.Height), new MCvScalar(255, 255, 255), 5);
+
+            tesseract.SetImage(img);
+            tesseract.Recognize();
+
+            var digit = tesseract.GetUTF8Text().TrimEnd();
+            Console.WriteLine($"Recognized word for cell: {digit}");
+
+            CvInvoke.Imshow("Source", img);
+            CvInvoke.WaitKey();
+        }
+    }
+
+    private static (Image<Rgb, byte>, List<Image<Rgb, byte>>, int) ExtractCells(Image<Rgb, byte> source, int lower_threshold = 5, int iterations = 1, bool show_debug = false)
+    {
+        // Basic preprocessing of the image
+        var img = source.Convert<Gray, byte>();
+        img._GammaCorrect(0.8);
+        img = img.SmoothGaussian(7);
+        img = img.ThresholdAdaptive(new Gray(255), CvEnum.AdaptiveThresholdType.GaussianC, CvEnum.ThresholdType.BinaryInv, 55, new Gray(lower_threshold));
 
         var kernel = CvInvoke.GetStructuringElement(CvEnum.ElementShape.Rectangle, new Size(9, 9), new Point(-1, -1));
         CvInvoke.MorphologyEx(img, img, CvEnum.MorphOp.Dilate, kernel, new Point(-1, -1), 1, CvEnum.BorderType.Default, new MCvScalar(0, 0, 0));
@@ -152,6 +202,7 @@ internal class Program
         var approx_cell_size_max = (source.Width * source.Height / 81.0) * (1 + buffer);
         var approx_image_size = (source.Width * source.Height) *(1.0 - buffer);
         var cells_count = 0;
+        List<Image<Rgb, byte>> cells = [];
         CvInvoke.FindContours(img, contours, null, CvEnum.RetrType.Tree, CvEnum.ChainApproxMethod.ChainApproxSimple);
         for (int i = 0; i < contours.Size; i++)
         {
@@ -168,6 +219,26 @@ internal class Program
             {
                 CvInvoke.DrawContours(cells_image, contours, i, new MCvScalar(0, 0, 255), 3);
                 cells_count++;
+
+                // Shrink bounding rect until all points are inside the contour
+                var rect = CvInvoke.BoundingRectangle(contours[i]);
+                var pts = new Point[]
+                {
+                    new Point(rect.X, rect.Y),
+                    new Point(rect.X + rect.Width, rect.Y),
+                    new Point(rect.X, rect.Y + rect.Height),
+                    new Point(rect.X + rect.Width, rect.Y + rect.Height)
+                };
+                var dists = pts.Select(p => CvInvoke.PointPolygonTest(contours[i], p, true));
+                var max_dist = (int)dists.Select(d => Math.Ceiling(Math.Abs(d))).Max();
+
+                // Update bounding rect and cut out the cell
+                rect.X += max_dist;
+                rect.Y += max_dist;
+                rect.Width -= 2 * max_dist;
+                rect.Height -= 2 * max_dist;
+
+                cells.Add(source.Copy(rect));
             }
             else if (area <  approx_cell_size_min)
                 CvInvoke.DrawContours(cells_image, contours, i, new MCvScalar(0, 255, 0), 3);
@@ -185,7 +256,7 @@ internal class Program
             CvInvoke.WaitKey();
         }
 
-        return (img, cells_count);
+        return (cells_image, cells, cells_count);
     }
 
     private static Image<Rgb, byte> ExtractGrid(Image<Rgb, byte> source, bool show_debug = false)
