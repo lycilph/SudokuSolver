@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SudokuBlazorUI", "SudokuBla
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageImportTest", "ImageImportTest\ImageImportTest.csproj", "{1BF3AAC8-0001-4DCF-BE64-B9006446EECE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageImportUI", "ImageImportUI\ImageImportUI.csproj", "{646B542C-BFC5-4076-9EF1-958D9A75A53E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{1BF3AAC8-0001-4DCF-BE64-B9006446EECE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1BF3AAC8-0001-4DCF-BE64-B9006446EECE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1BF3AAC8-0001-4DCF-BE64-B9006446EECE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{646B542C-BFC5-4076-9EF1-958D9A75A53E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{646B542C-BFC5-4076-9EF1-958D9A75A53E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{646B542C-BFC5-4076-9EF1-958D9A75A53E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{646B542C-BFC5-4076-9EF1-958D9A75A53E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

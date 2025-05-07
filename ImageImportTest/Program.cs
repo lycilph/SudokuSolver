@@ -27,8 +27,8 @@ internal class Program
     {
         // Loop over all images in folder
         var img = new Image<Rgb, byte>(filename);
-        var grid = ExtractGrid(img, false);
-        (var cells_image, var cells, var cells_count) = ExtractCells(grid, 5, iterations, false);
+        var grid = ExtractGrid(img, true);
+        (var cells_image, var cells, var cells_count) = ExtractCells(grid, 5, iterations, true);
         foreach (var cell in cells)
             ExtractDigit(cell);
     }
