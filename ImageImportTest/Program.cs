@@ -20,7 +20,21 @@ internal class Program
         Console.WriteLine($"Version: {Tesseract.Version}");
 
         //ProcessAll();
-        ProcessSingle("C:\\Users\\Morten Lang\\source\\repos\\SudokuSolver\\ImageImportTest\\Data\\IMG_20250330_101246.jpg", 3);
+        //ProcessSingle("C:\\Users\\Morten Lang\\source\\repos\\SudokuSolver\\ImageImportTest\\Data\\IMG_20250330_101246.jpg", 3);
+
+        RecognizeDigit("test.png");
+    }
+
+    private static void RecognizeDigit(string filename)
+    {
+        var img = new Image<Gray, byte>(filename);
+        tesseract.SetImage(img);
+        tesseract.Recognize();
+
+        Console.WriteLine($"Recognized word for cell: {tesseract.GetHOCRText()}");
+        Console.WriteLine($"Recognized word for cell: {tesseract.GetUTF8Text()}");
+        Console.WriteLine($"Recognized word for cell: {tesseract.GetBoxText()}");
+        Console.ReadKey();
     }
 
     private static void ProcessSingle(string filename, int iterations)

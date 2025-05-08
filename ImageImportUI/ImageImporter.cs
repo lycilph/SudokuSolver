@@ -17,6 +17,50 @@ public class ImageImporter
         tesseract = new Tesseract("tessdata", "eng", OcrEngineMode.LstmOnly, "123456789") { PageSegMode = PageSegMode.SingleChar };
     }
 
+    public void CleanupCell(Cell cell, int lower_threshold, int kernel_size)
+    {
+        // Basic preprocessing of the image
+        var img = cell.Image.Convert<Gray, byte>();
+        img._GammaCorrect(0.8);
+        img = img.SmoothGaussian(7);
+        img = img.ThresholdAdaptive(new Gray(255), CvEnum.AdaptiveThresholdType.GaussianC, CvEnum.ThresholdType.BinaryInv, 55, new Gray(lower_threshold));
+
+        // Filter out small elements
+        VectorOfVectorOfPoint contours = new();
+        CvInvoke.FindContours(img, contours, null, CvEnum.RetrType.Tree, CvEnum.ChainApproxMethod.ChainApproxSimple);
+        for (int i = 0; i < contours.Size; i++)
+        {
+            var area = CvInvoke.ContourArea(contours[i]);
+            if (area < 200)
+                CvInvoke.DrawContours(img, contours, i, new MCvScalar(0, 0, 0), -1);
+        }
+
+        var kernel = CvInvoke.GetStructuringElement(CvEnum.ElementShape.Ellipse, new Size(kernel_size, kernel_size), new Point(-1, -1));
+        CvInvoke.MorphologyEx(img, img, CvEnum.MorphOp.Erode, kernel, new Point(-1, -1), 1, CvEnum.BorderType.Default, new MCvScalar(0, 0, 0));
+
+        var filled_percent = img.CountNonzero()[0] / (double)(cell.Image.Width * cell.Image.Height);
+
+        if (filled_percent > 0.02)
+        {
+            // Apparently a border makes the OCR work better (https://stackoverflow.com/questions/52823336/why-do-i-get-such-poor-results-from-tesseract-for-simple-single-character-recogn)
+            CvInvoke.Rectangle(img, new Rectangle(0, 0, img.Width, img.Height), new MCvScalar(255, 255, 255), 5);
+
+            img = img.Resize(5, CvEnum.Inter.Cubic);
+            img = img.Not();
+
+            tesseract.SetImage(img);
+            var temp = tesseract.Recognize();
+
+            cell.Digit = tesseract.GetUTF8Text().TrimEnd();
+            Debug.WriteLine($"Recognized word for cell: {cell.Digit}");
+
+            if (string.IsNullOrWhiteSpace(cell.Digit))
+                cell.RecognitionFailed = true;
+        }
+
+        cell.Processed = img;
+    }
+
     public int ExtractDigits(List<Cell> cells)
     {
         int recognition_failures = 0;
@@ -32,7 +76,6 @@ public class ImageImporter
         img._GammaCorrect(0.8);
         img = img.SmoothGaussian(7);
         img = img.ThresholdAdaptive(new Gray(255), CvEnum.AdaptiveThresholdType.GaussianC, CvEnum.ThresholdType.BinaryInv, 55, new Gray(5));
-        cell.Processed = img;
 
         // Filter out small elements
         VectorOfVectorOfPoint contours = new();
@@ -51,6 +94,10 @@ public class ImageImporter
         {
             // Apparently a border makes the OCR work better (https://stackoverflow.com/questions/52823336/why-do-i-get-such-poor-results-from-tesseract-for-simple-single-character-recogn)
             CvInvoke.Rectangle(img, new Rectangle(0, 0, img.Width, img.Height), new MCvScalar(255, 255, 255), 5);
+            
+            // Resize and invert to improve recognition
+            img = img.Resize(5, CvEnum.Inter.Cubic);
+            img = img.Not();
 
             tesseract.SetImage(img);
             tesseract.Recognize();
@@ -59,8 +106,13 @@ public class ImageImporter
             Debug.WriteLine($"Recognized word for cell: {cell.Digit}");
 
             if (string.IsNullOrWhiteSpace(cell.Digit))
+            {
+                cell.RecognitionFailed = true;
                 failures++;
+            }
         }
+
+        cell.Processed = img;
     }
 
     public (Image<Rgb, byte>, List<Cell>, int) ExtractCells(Image<Rgb, byte> source, int lower_threshold, int iterations, bool show_debug)

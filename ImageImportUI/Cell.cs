@@ -10,4 +10,5 @@ public class Cell
     public Image<Gray, byte> Processed { get; set; } = null!;
     public Point Center { get; set; } = new Point(0, 0);
     public string Digit { get; set; } = string.Empty;
+    public bool RecognitionFailed { get; set; } = false;
 }

@@ -4,10 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ImageImportUI"
+        xmlns:mvvm="clr-namespace:ImageImportUI.MVVM"
         mc:Ignorable="d"
-        Title="MainWindow" Height="800" Width="1400">
+        Title="MainWindow" Height="800" Width="1400"
+        d:DataContext="{d:DesignInstance Type=mvvm:MainViewModel}">
     <Window.Resources>
         <local:ImageToBitmapConverter x:Key="image_to_bitmap_converter"/>
+        <local:RecognitionToBorderConverter x:Key="recognition_to_border_converter"/>
     </Window.Resources>
     
     <Grid>
@@ -23,13 +26,13 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             
-            <TextBlock Grid.Row="0" Text="{Binding SelectedImage}"/>
-            <ListBox Grid.Row="1" ItemsSource="{Binding Images}" SelectedItem="{Binding SelectedImage}" Grid.Column="0"/>
+            <TextBlock Grid.Row="0" Text="{Binding SelectedImageFilename}"/>
+            <ListBox Grid.Row="1" ItemsSource="{Binding ImageFilenames}" SelectedItem="{Binding SelectedImageFilename}" Grid.Column="0"/>
         </Grid>
 
         <!-- Tab panel with tab per operation -->
-        <TabControl Grid.Column="1" SelectedIndex="0">
-            <TabItem Header="Grid">
+        <TabControl Grid.Column="1" SelectedIndex="2">
+            <TabItem Header="Grid" DataContext="{Binding GridViewModel}">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -42,8 +45,8 @@
                     
                     <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal">
                         <TextBlock Text="Margin"/>
-                        <TextBox Text="{Binding GridMargin}" Width="50" Margin="10 0 0 0"/>
-                        <Button Content="Update" Click="UpdateButtonClick" Margin="10 0 0 0"/>
+                        <TextBox Text="{Binding Margin}" Width="50" Margin="10 0 0 0"/>
+                        <Button Content="Update" Command="{Binding UpdateCommand}" Margin="10 0 0 0"/>
                     </StackPanel>
                     
                     <Image Source="{Binding InputImage, Converter={StaticResource image_to_bitmap_converter}}" Grid.Row="1" Grid.Column="0"/>
@@ -51,7 +54,7 @@
                 </Grid>
             </TabItem>
             
-            <TabItem Header="Cells">
+            <TabItem Header="Cells" DataContext="{Binding CellsViewModel}">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -68,40 +71,71 @@
                         <TextBox Text="{Binding LowerThreshold}" Width="50" Margin="10 0 0 0"/>
                         <TextBlock Text="Iterations"/>
                         <TextBox Text="{Binding Iterations}" Width="50" Margin="10 0 0 0"/>
-                        <Button Content="Update" Click="UpdateButtonClick" Margin="10 0 0 0"/>
+                        <Button Content="Update" Command="{Binding UpdateCommand}" Margin="10 0 0 0"/>
                     </StackPanel>
 
-                    <Image Source="{Binding GridImage, Converter={StaticResource image_to_bitmap_converter}}" Grid.Row="1" Grid.Column="0"/>
+                    <Image Source="{Binding GridVM.GridImage, Converter={StaticResource image_to_bitmap_converter}}" Grid.Row="1" Grid.Column="0"/>
                     <Image Source="{Binding CellsImage, Converter={StaticResource image_to_bitmap_converter}}" Grid.Row="1" Grid.Column="1"/>
 
                     <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal">
                         <TextBlock Text="{Binding CellsCount, StringFormat=Cells: {0}}"/>
                     </StackPanel>
                 </Grid>
-
             </TabItem>
             
-            <TabItem Header="Digits">
+            <TabItem Header="Digits" DataContext="{Binding DigitsViewModel}">
                 <StackPanel>
                     <TextBlock Text="{Binding RecognitionFailures, StringFormat=Failures: {0}}"/>
 
-                    <ItemsControl ItemsSource="{Binding Cells}">
-                        <ItemsControl.ItemsPanel>
+                    <ListBox ItemsSource="{Binding Cells}" SelectedItem="{Binding SelectedCell}">
+                        <ListBox.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <UniformGrid Columns="9" Rows="9"/>
                             </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
+                        </ListBox.ItemsPanel>
+                        <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <Image Source="{Binding Image, Converter={StaticResource image_to_bitmap_converter}}" Height="50" Width="50" Margin="5"/>
-                                    <Image Source="{Binding Processed, Converter={StaticResource image_to_bitmap_converter}}" Height="50" Width="50" Margin="5"/>
-                                    <TextBlock Text="{Binding Digit}" VerticalAlignment="Center" FontSize="24"/>
-                                </StackPanel>
+                                <Border BorderBrush="Red"
+                                        BorderThickness="{Binding RecognitionFailed, Converter={StaticResource recognition_to_border_converter}}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="{Binding Image, Converter={StaticResource image_to_bitmap_converter}}" Height="50" Width="50" Margin="5"/>
+                                        <Image Source="{Binding Processed, Converter={StaticResource image_to_bitmap_converter}}" Height="50" Width="50" Margin="5"/>
+                                        <TextBlock Text="{Binding Digit}" VerticalAlignment="Center" FontSize="24"/>
+                                    </StackPanel>
+                                </Border>
                             </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
                 </StackPanel>
+            </TabItem>
+
+            <TabItem Header="Digit" DataContext="{Binding RecognizeViewModel}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal">
+                        <TextBlock Text="Lower threshold"/>
+                        <TextBox Text="{Binding LowerThreshold}" Width="50" Margin="10 0 0 0"/>
+                        <TextBlock Text="Kernel size"/>
+                        <TextBox Text="{Binding KernelSize}" Width="50" Margin="10 0 0 0"/>
+                        <Button Content="Update" Command="{Binding UpdateCommand}" Margin="10 0 0 0"/>
+                    </StackPanel>
+                    
+                    <Image Source="{Binding Image, Converter={StaticResource image_to_bitmap_converter}}" Grid.Row="1" Grid.Column="0"/>
+                    <Image Source="{Binding Processed, Converter={StaticResource image_to_bitmap_converter}}" Grid.Row="1" Grid.Column="1"/>
+                    
+                    <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal">
+                        <TextBlock Text="{Binding Digit, StringFormat=Digit: {0}}"/>
+                    </StackPanel>
+                </Grid>
             </TabItem>
         </TabControl>
     </Grid>
