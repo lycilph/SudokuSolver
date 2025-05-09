@@ -33,7 +33,7 @@ public partial class MainViewModel : ObservableObject
         CellsViewModel = new ExtractCellsViewModel(GridViewModel, importer);
         DigitsViewModel = new ExtractDigitsViewModel(cellsViewModel, importer);
         RecognizeViewModel = new RecognizeDigitViewModel(digitsViewModel, importer);
-        
+
         ImageFilenames = [.. Directory
             .EnumerateFiles(path)
             .Select(s => Path.GetFileName(s))];

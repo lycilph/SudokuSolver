@@ -40,7 +40,10 @@ public partial class ExtractDigitsViewModel : ObservableObject
         Cells = CellsVM.Cells;
         RecognitionFailures = importer.ExtractDigits(Cells);
 
-        if (RecognitionFailures > 0 && Cells.Count > 0)
+        if (Cells.Count == 0)
+            return;
+
+        if (RecognitionFailures > 0)
             SelectedCell = Cells.First(c => c.RecognitionFailed);
         else
             SelectedCell = Cells.First();

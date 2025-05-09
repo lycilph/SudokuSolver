@@ -7,6 +7,7 @@ namespace ImageImportUI.MVVM;
 
 public partial class ExtractGridViewModel : ObservableObject
 {
+    private readonly MainViewModel mainVM;
     private readonly ImageImporter importer;
 
     [ObservableProperty]
@@ -18,15 +19,16 @@ public partial class ExtractGridViewModel : ObservableObject
     [ObservableProperty]
     private int margin = 0;
 
-    public ExtractGridViewModel(MainViewModel main, ImageImporter importer)
+    public ExtractGridViewModel(MainViewModel mainVM, ImageImporter importer)
     {
+        this.mainVM = mainVM;
         this.importer = importer;
 
-        main.PropertyChanged += (s, e) =>
+        mainVM.PropertyChanged += (s, e) =>
         {
             if (e.PropertyName == nameof(MainViewModel.SelectedImageFilename))
             {
-                InputImage = new Image<Rgb, byte>(MainViewModel.path + main.SelectedImageFilename);
+                InputImage = new Image<Rgb, byte>(MainViewModel.path + mainVM.SelectedImageFilename);
                 Update();
             }
         };
