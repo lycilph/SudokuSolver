@@ -126,6 +126,10 @@
                         <TextBox Text="{Binding LowerThreshold}" Width="50" Margin="10 0 0 0"/>
                         <TextBlock Text="Kernel size"/>
                         <TextBox Text="{Binding KernelSize}" Width="50" Margin="10 0 0 0"/>
+                        <TextBlock Text="Iterations"/>
+                        <TextBox Text="{Binding Iterations}" Width="50" Margin="10 0 0 0"/>
+                        <TextBlock Text="Operation"/>
+                        <TextBox Text="{Binding Operation}" Width="50" Margin="10 0 0 0"/>
                         <Button Content="Update" Command="{Binding UpdateCommand}" Margin="10 0 0 0"/>
                     </StackPanel>
                     

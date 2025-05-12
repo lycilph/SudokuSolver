@@ -22,10 +22,16 @@ public partial class RecognizeDigitViewModel : ObservableObject
     private string digit = string.Empty;
 
     [ObservableProperty]
-    private int kernelSize = 5;
+    private int kernelSize = 1;
     
     [ObservableProperty]
     private int lowerThreshold = 5;
+
+    [ObservableProperty]
+    private int iterations = 1;
+
+    [ObservableProperty]
+    private int operation = 1;
 
     public RecognizeDigitViewModel(ExtractDigitsViewModel digitsVM, ImageImporter importer)
     {
@@ -40,7 +46,7 @@ public partial class RecognizeDigitViewModel : ObservableObject
         if (DigitsVM.SelectedCell == null)
             return;
 
-        importer.CleanupCell(DigitsVM.SelectedCell, LowerThreshold, KernelSize);
+        importer.CleanupCell(DigitsVM.SelectedCell, LowerThreshold, KernelSize, Iterations, Operation);
         Image = DigitsVM.SelectedCell.Image;
         Processed = DigitsVM.SelectedCell.Processed;
         Digit = DigitsVM.SelectedCell.Digit;

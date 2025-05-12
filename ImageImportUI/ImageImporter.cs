@@ -17,7 +17,7 @@ public class ImageImporter
         tesseract = new Tesseract("tessdata", "eng", OcrEngineMode.LstmOnly, "123456789") { PageSegMode = PageSegMode.SingleChar };
     }
 
-    public void CleanupCell(Cell cell, int lower_threshold, int kernel_size)
+    public void CleanupCell(Cell cell, int lower_threshold, int kernel_size, int iterations, int operation)
     {
         // Basic preprocessing of the image
         var img = cell.Image.Convert<Gray, byte>();
@@ -36,7 +36,10 @@ public class ImageImporter
         }
 
         var kernel = CvInvoke.GetStructuringElement(CvEnum.ElementShape.Ellipse, new Size(kernel_size, kernel_size), new Point(-1, -1));
-        CvInvoke.MorphologyEx(img, img, CvEnum.MorphOp.Erode, kernel, new Point(-1, -1), 1, CvEnum.BorderType.Default, new MCvScalar(0, 0, 0));
+        if (operation == 1)
+            CvInvoke.MorphologyEx(img, img, CvEnum.MorphOp.Erode, kernel, new Point(-1, -1), iterations, CvEnum.BorderType.Default, new MCvScalar(0, 0, 0));
+        else if (operation == 2)
+            CvInvoke.MorphologyEx(img, img, CvEnum.MorphOp.Close, kernel, new Point(-1, -1), iterations, CvEnum.BorderType.Default, new MCvScalar(0, 0, 0));
 
         var filled_percent = img.CountNonzero()[0] / (double)(cell.Image.Width * cell.Image.Height);
 
