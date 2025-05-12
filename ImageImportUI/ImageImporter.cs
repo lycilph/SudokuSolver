@@ -52,7 +52,7 @@ public class ImageImporter
             img = img.Not();
 
             tesseract.SetImage(img);
-            var temp = tesseract.Recognize();
+            tesseract.Recognize();
 
             cell.Digit = tesseract.GetUTF8Text().TrimEnd();
             Debug.WriteLine($"Recognized word for cell: {cell.Digit}");

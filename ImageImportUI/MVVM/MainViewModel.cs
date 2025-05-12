@@ -5,7 +5,7 @@ namespace ImageImportUI.MVVM;
 
 public partial class MainViewModel : ObservableObject
 {
-    public static string path = "C:\\Users\\Morten Lang\\source\\repos\\SudokuSolver\\ImageImportTest\\Data\\";
+    public static string path = "C:\\Users\\Morten Lang\\source\\repos\\SudokuSolver\\ImageImportUI\\Data\\";
 
     private readonly ImageImporter importer = new();
 
