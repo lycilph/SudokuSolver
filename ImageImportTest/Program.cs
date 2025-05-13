@@ -64,6 +64,7 @@ internal class Program
             
             // Extracting digits
             var extract_digit_results = importer.ExtractDigits(extract_cells_result.Cells);
+            this is not returning the correct results...
             /*var recognition_failures = cells.Count(c => c.RecognitionFailed);
             var digits_found = cells.Count(c => !string.IsNullOrWhiteSpace(c.Digit));
             Console.WriteLine($" * Found {digits_found} and failed recognizing {recognition_failures} cells");
