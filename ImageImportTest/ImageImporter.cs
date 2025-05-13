@@ -17,7 +17,7 @@ public class ImageImporter
     {
         tesseract = new Tesseract("tessdata", "eng", OcrEngineMode.LstmOnly, "123456789") { PageSegMode = PageSegMode.SingleChar };
     }
-
+    /*
     public void CleanupCell(Cell cell, int lower_threshold, int kernel_size, int iterations, int operation)
     {
         // Basic preprocessing of the image
@@ -66,18 +66,21 @@ public class ImageImporter
         }
 
         cell.Processed = img;
-    }
+    }*/
 
-    public int ExtractDigits(List<Cell> cells)
+    public List<ExtractDigitResult> ExtractDigits(List<Cell> cells)
     {
-        int recognition_failures = 0;
+        var result = new List<ExtractDigitResult>();
         foreach (Cell cell in cells)
-            ExtractDigit(cell, ref recognition_failures);
-        return recognition_failures;
+            result.Add(ExtractDigit(cell));
+        return result;
     }
 
-    public void ExtractDigit(Cell cell, ref int failures)
+    public ExtractDigitResult ExtractDigit(Cell cell)
     {
+        var result = new ExtractDigitResult(cell);
+        var sb = new StringBuilder();
+
         // Basic preprocessing of the image
         var img = cell.Image.Convert<Gray, byte>();
         img._GammaCorrect(0.8);
@@ -95,7 +98,7 @@ public class ImageImporter
         }
         
         var filled_percent = img.CountNonzero()[0] / (double)(cell.Image.Width * cell.Image.Height);
-        //Console.WriteLine($"Cells was filled {filled_percent} percentage");
+        sb.AppendLine($"Cell was filled {filled_percent} percentage");
 
         if (filled_percent > 0.02)
         {
@@ -109,17 +112,14 @@ public class ImageImporter
             tesseract.SetImage(img);
             tesseract.Recognize();
 
-            cell.Digit = tesseract.GetUTF8Text().TrimEnd();
-            Debug.WriteLine($"Recognized word for cell: {cell.Digit}");
-
-            if (string.IsNullOrWhiteSpace(cell.Digit))
-            {
-                cell.RecognitionFailed = true;
-                failures++;
-            }
+            result.Digit = tesseract.GetUTF8Text().TrimEnd();
+            result.RecognitionSuccess = !string.IsNullOrWhiteSpace(result.Digit);
+            sb.AppendLine($"Recognized word for cell: {result.Digit} (success={result.RecognitionSuccess})");
         }
 
-        cell.Processed = img;
+        result.Processed = img;
+
+        return result;
     }
 
     public ExtractCellsResult ExtractCells(Image<Rgb, byte> source, int lower_threshold, int iterations)
