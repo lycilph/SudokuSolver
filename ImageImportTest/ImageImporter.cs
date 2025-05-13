@@ -1,16 +1,17 @@
 ﻿using System.Diagnostics;
 using System.Drawing;
+using System.Text;
 using Emgu.CV;
 using Emgu.CV.OCR;
 using Emgu.CV.Structure;
 using Emgu.CV.Util;
 using CvEnum = Emgu.CV.CvEnum;
 
-namespace ImageImportUI;
+namespace ImageImportTest;
 
 public class ImageImporter
 {
-    static Tesseract tesseract = null!;
+    private readonly Tesseract tesseract = null!;
 
     public ImageImporter()
     {
@@ -55,10 +56,13 @@ public class ImageImporter
             tesseract.Recognize();
 
             cell.Digit = tesseract.GetUTF8Text().TrimEnd();
-            Debug.WriteLine($"Recognized word for cell: {cell.Digit}");
+            cell.RecognitionFailed = string.IsNullOrWhiteSpace(cell.Digit);
 
-            if (string.IsNullOrWhiteSpace(cell.Digit))
-                cell.RecognitionFailed = true;
+            if (!cell.RecognitionFailed)
+            {
+                cell.Confidence = tesseract.GetWords().First().Confident;
+                //Console.WriteLine($"Recognized word for cell: {cell.Digit} (confidence {cell.Confidence})");
+            }
         }
 
         cell.Processed = img;
@@ -118,8 +122,11 @@ public class ImageImporter
         cell.Processed = img;
     }
 
-    public (Image<Rgb, byte>, List<Cell>, int) ExtractCells(Image<Rgb, byte> source, int lower_threshold, int iterations, bool show_debug)
+    public ExtractCellsResult ExtractCells(Image<Rgb, byte> source, int lower_threshold, int iterations)
     {
+        var result = new ExtractCellsResult();
+        var sb = new StringBuilder();
+
         // Basic preprocessing of the image
         var img = source.Convert<Gray, byte>();
         img._GammaCorrect(0.8);
@@ -135,21 +142,22 @@ public class ImageImporter
         CvInvoke.FindContours(img, contours, null, CvEnum.RetrType.Tree, CvEnum.ChainApproxMethod.ChainApproxSimple);
         var image_area = source.Size.Height * source.Size.Width;
         var area_threshold = image_area * 0.00006;
+        var small_element_count = 0;
         for (int i = 0; i < contours.Size; i++)
         {
             var area = CvInvoke.ContourArea(contours[i]);
-            if (show_debug)
-                Debug.WriteLine($"Area {area}");
             if (area < area_threshold)
+            {
                 CvInvoke.DrawContours(img, contours, i, new MCvScalar(0, 0, 0), -1);
+                small_element_count++;
+            }
         }
-        if (show_debug)
-            Debug.WriteLine($"Found {contours.Size}");
+        sb.AppendLine($"Elements smaller than {area_threshold} is discarded (found {small_element_count} of these)");
 
         CvInvoke.MorphologyEx(img, img, CvEnum.MorphOp.Dilate, kernel, new Point(-1, -1), iterations, CvEnum.BorderType.Default, new MCvScalar(0, 0, 0));
         CvInvoke.MorphologyEx(img, img, CvEnum.MorphOp.Erode, kernel, new Point(-1, -1), iterations, CvEnum.BorderType.Default, new MCvScalar(0, 0, 0));
 
-        // Draw a fake border (incase not all of it is present)
+        // Draw a fake border (in case not all of it is present)
         var border = new Rectangle(0, 0, source.Width, source.Height);
         CvInvoke.Rectangle(img, border, new MCvScalar(255, 255, 255), 3);
 
@@ -157,9 +165,9 @@ public class ImageImporter
         var cells_image = source.Clone();
         contours = new();
         var buffer = 0.5;
-        var approx_cell_size_min = (source.Width * source.Height / 81.0) * (1 - buffer);
-        var approx_cell_size_max = (source.Width * source.Height / 81.0) * (1 + buffer);
-        var approx_image_size = (source.Width * source.Height) * (1.0 - buffer);
+        var approx_cell_size_min = source.Width * source.Height / 81.0 * (1 - buffer);
+        var approx_cell_size_max = source.Width * source.Height / 81.0 * (1 + buffer);
+        var approx_image_size = source.Width * source.Height * (1.0 - buffer);
         var cells_count = 0;
         List<Cell> cells = [];
         CvInvoke.FindContours(img, contours, null, CvEnum.RetrType.Tree, CvEnum.ChainApproxMethod.ChainApproxSimple);
@@ -170,11 +178,8 @@ public class ImageImporter
             var bound = CvInvoke.BoundingRectangle(contours[i]);
             var aspect_ratio = bound.Width / (double)bound.Height;
 
-            if (show_debug)
-                Debug.WriteLine($"Area of contour {i} is {area} and aspect ratio is {aspect_ratio}");
-
-            if ((area > approx_cell_size_min && area < approx_cell_size_max) &&
-                (aspect_ratio > 0.6 && aspect_ratio < 1.4))
+            if (area > approx_cell_size_min && area < approx_cell_size_max &&
+                aspect_ratio > 0.6 && aspect_ratio < 1.4) 
             {
                 CvInvoke.DrawContours(cells_image, contours, i, new MCvScalar(0, 0, 255), 3);
                 cells_count++;
@@ -209,8 +214,7 @@ public class ImageImporter
             else
                 CvInvoke.DrawContours(cells_image, contours, i, new MCvScalar(255, 255, 0), 3);
         }
-        if (show_debug)
-            Debug.WriteLine($"Found {contours.Size} contours and {cells_count} cells (approx cell size is estimated to be between {approx_cell_size_min} and {approx_cell_size_max})");
+        sb.AppendLine($"Found {contours.Size} contours and {cells_count} cells (approx cell size is estimated to be between {approx_cell_size_min} and {approx_cell_size_max})");
 
         // Sort cells here...
         cells = cells
@@ -218,12 +222,19 @@ public class ImageImporter
             .Chunk(9)
             .SelectMany(c => c.OrderBy(c => c.Center.X))
             .ToList();
-        
-        return (cells_image, cells, cells_count);
+
+        result.OutputImage = cells_image;
+        result.Cells = cells;
+        result.Log = sb.ToString();
+
+        return result;
     }
 
-    public Image<Rgb, byte> ExtractGrid(Image<Rgb, byte> source, int margin, bool show_debug)
+    public ExtractGridResult ExtractGrid(Image<Rgb, byte> source, int margin)
     {
+        var result = new ExtractGridResult();
+        var sb = new StringBuilder();
+
         // Basic preprocessing of the image
         var img = source.Convert<Gray, byte>();
         img._GammaCorrect(0.8);
@@ -238,10 +249,6 @@ public class ImageImporter
         for (int i = 0; i < contours.Size; i++)
         {
             var area = CvInvoke.ContourArea(contours[i]);
-
-            if (show_debug)
-                Debug.WriteLine($"Contour {i} area {area}");
-
             if (area > max_area)
             {
                 max_area = area;
@@ -250,8 +257,8 @@ public class ImageImporter
         }
         var source_area = source.Width * source.Height;
         var contour_area_percentage_of_image_size = max_area / source_area * 100;
-        if (show_debug)
-            Debug.WriteLine($"Largest area is {max_area} ({contour_area_percentage_of_image_size}% of image) for contour {max_area_index}");
+        sb.AppendLine($"Found {contours.Size} contours in the image");
+        sb.AppendLine($"Largest area is {max_area} ({contour_area_percentage_of_image_size}% of image) for contour {max_area_index}");
 
         // Find the bounding rectangle around the largest contour
         var bound = CvInvoke.BoundingRectangle(contours[max_area_index]);
@@ -266,8 +273,7 @@ public class ImageImporter
         // Approximate contour
         var bound_approx = new VectorOfPoint();
         CvInvoke.ApproxPolyDP(contours[max_area_index], bound_approx, 5, true);
-        if (show_debug)
-            Debug.WriteLine($"Grid poly {bound_approx.Size}");
+        sb.AppendLine($"Approximating grid with a {bound_approx.Size}-polygon");
 
         // Find closest points on approximated largest contour
         var grid_pts = bound_pts.Select(p => GetClosestPoint(p, bound_approx)).ToList();
@@ -286,9 +292,12 @@ public class ImageImporter
         // Warp perspective
         var source_perspective_corrected = new Image<Rgb, byte>(size, size);
         CvInvoke.WarpPerspective(source, source_perspective_corrected, perspective, source_perspective_corrected.Size, CvEnum.Inter.Cubic, CvEnum.Warp.Default, CvEnum.BorderType.Default);
-        
+
         // Return img with perspective corrected
-        return source_perspective_corrected;
+        result.OutputImage = source_perspective_corrected;
+        result.Log = sb.ToString();
+
+        return result;
     }
 
     private static Point GetClosestPoint(Point p, VectorOfPoint points)
