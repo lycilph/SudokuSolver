@@ -9,11 +9,11 @@ internal class Program
     static void Main()
     {
         string path = "C:\\Users\\Morten Lang\\source\\repos\\SudokuSolver\\ImageImportTest\\Data\\";
-        //List<string> image_files =
-        //    Directory
-        //    .EnumerateFiles(path)
-        //    .ToList();
-        List<string> image_files = ["C:\\Users\\Morten Lang\\source\\repos\\SudokuSolver\\ImageImportTest\\Data\\IMG_20250330_101246.jpg"];
+        List<string> image_files =
+            Directory
+            .EnumerateFiles(path)
+            .ToList();
+        //List<string> image_files = ["C:\\Users\\Morten Lang\\source\\repos\\SudokuSolver\\ImageImportTest\\Data\\IMG_20250330_101246.jpg"];
         Console.WriteLine($"Found {image_files.Count} image files to process");
 
         var importer = new ImageImporter();
@@ -64,10 +64,15 @@ internal class Program
             
             // Extracting digits
             var extract_digit_results = importer.ExtractDigits(extract_cells_result.Cells);
-            this is not returning the correct results...
-            /*var recognition_failures = cells.Count(c => c.RecognitionFailed);
-            var digits_found = cells.Count(c => !string.IsNullOrWhiteSpace(c.Digit));
+            var recognition_failures = extract_digit_results.Count(r => r.RecognitionFailure);
+            var digits_found = extract_digit_results.Count(r => !string.IsNullOrWhiteSpace(r.Digit));
+            //extract_digit_results.ForEach(r => Console.WriteLine($" * {r.Log}"));
             Console.WriteLine($" * Found {digits_found} and failed recognizing {recognition_failures} cells");
+
+            // Get a list of known digits
+            var known_digits = extract_digit_results
+                .Select(r => new { Id = r.Input.Id, Cell = r.Input, Digit = r.Digit, Confidence = r.Confidence })
+                .ToList();
 
             // Cleaning up digits
             var digit_parameters = new[]
@@ -78,25 +83,29 @@ internal class Program
                 new { Threshold = 1, KernelSize = 5, Iterations = 1, Operation = 1 },
                 new { Threshold = 5, KernelSize = 5, Iterations = 1, Operation = 2 }
             }.ToList();
-            var failed_cells = cells.Where(c => c.RecognitionFailed).ToList();
-            foreach (var cell in failed_cells)
+            var failed_cell_results = extract_digit_results.Where(c => c.RecognitionFailure).ToList();
+            foreach ( var cell_result in failed_cell_results)
             {
-                foreach (var parameter in digit_parameters)
-                {
-                    importer.CleanupCell(cell, parameter.Threshold, parameter.KernelSize, parameter.Iterations, parameter.Operation);
-                    if (!cell.RecognitionFailed)
-                    {
-                        Console.WriteLine($" * Recognized digit {cell.Digit} (confidence={cell.Confidence}, parameters: threshold={parameter.Threshold}, kernel size={parameter.KernelSize}, iterations={parameter.Iterations}, operations={parameter.Operation})");
-                        break;
-                    }
-                }
-                if (cell.RecognitionFailed)
-                    Console.WriteLine($" * !!!Couldn't recognize any digits in the cell (skipping cell)!!!");
+                var results = digit_parameters
+                    .Select(p => importer.CleanupCell(cell_result.Input, p.Threshold, p.KernelSize, p.Iterations, p.Operation))
+                    .ToList();
+
+                // Check if any of the attempts above resulted in a match
+                var best_match = results
+                    .Where(r => !r.RecognitionFailure)
+                    .OrderByDescending(r => r.Confidence)
+                    .FirstOrDefault();
+
+                if (best_match != null )
+                    known_digits[cell_result.Input.Id] = new { Id = best_match.Input.Id, Cell = best_match.Input, Digit = best_match.Digit, Confidence = best_match.Confidence };
             }
-            recognition_failures = cells.Count(c => c.RecognitionFailed);
-            if (recognition_failures > 0)
-                Console.WriteLine($" * !!!A total of {recognition_failures} cells were not recognized!!!");
-            */
+            var final_digits_found = known_digits.Count(d => !string.IsNullOrWhiteSpace(d.Digit));
+            Console.WriteLine($" * After clean up {final_digits_found} was recognized");
+
+            // Write out all recognized digits
+            foreach (var digit in known_digits.Where(d => !string.IsNullOrWhiteSpace(d.Digit)))
+                Console.WriteLine($" * Found digit {digit.Digit} in cell {digit.Id} with confidence {digit.Confidence}");
+
             // Statistics
             stop_watch.Stop();
             Console.WriteLine($" * Processing image took: {stop_watch.ElapsedMilliseconds}ms");

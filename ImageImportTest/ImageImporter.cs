@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Text;
 using Emgu.CV;
 using Emgu.CV.OCR;
@@ -17,9 +16,12 @@ public class ImageImporter
     {
         tesseract = new Tesseract("tessdata", "eng", OcrEngineMode.LstmOnly, "123456789") { PageSegMode = PageSegMode.SingleChar };
     }
-    /*
-    public void CleanupCell(Cell cell, int lower_threshold, int kernel_size, int iterations, int operation)
+
+    public ExtractDigitResult CleanupCell(Cell cell, int lower_threshold, int kernel_size, int iterations, int operation)
     {
+        var result = new ExtractDigitResult(cell);
+        var sb = new StringBuilder();
+
         // Basic preprocessing of the image
         var img = cell.Image.Convert<Gray, byte>();
         img._GammaCorrect(0.8);
@@ -49,24 +51,25 @@ public class ImageImporter
             // Apparently a border makes the OCR work better (https://stackoverflow.com/questions/52823336/why-do-i-get-such-poor-results-from-tesseract-for-simple-single-character-recogn)
             CvInvoke.Rectangle(img, new Rectangle(0, 0, img.Width, img.Height), new MCvScalar(255, 255, 255), 5);
 
+            // Resize and invert image (gives slightly better recognition results)
             img = img.Resize(5, CvEnum.Inter.Cubic);
             img = img.Not();
 
             tesseract.SetImage(img);
             tesseract.Recognize();
 
-            cell.Digit = tesseract.GetUTF8Text().TrimEnd();
-            cell.RecognitionFailed = string.IsNullOrWhiteSpace(cell.Digit);
-
-            if (!cell.RecognitionFailed)
-            {
-                cell.Confidence = tesseract.GetWords().First().Confident;
-                //Console.WriteLine($"Recognized word for cell: {cell.Digit} (confidence {cell.Confidence})");
-            }
+            result.Digit = tesseract.GetUTF8Text().TrimEnd();
+            result.RecognitionFailure = string.IsNullOrWhiteSpace(result.Digit);
+            if (!string.IsNullOrWhiteSpace(result.Digit))
+                result.Confidence = tesseract.GetWords().First().Confident;
+            sb.AppendLine($"Recognized word for cell {cell.Id}: {result.Digit} (confidence={result.Confidence}, failure={result.RecognitionFailure})");
         }
 
-        cell.Processed = img;
-    }*/
+        result.Processed = img;
+        result.Log = sb.ToString();
+
+        return result;
+    }
 
     public List<ExtractDigitResult> ExtractDigits(List<Cell> cells)
     {
@@ -113,11 +116,14 @@ public class ImageImporter
             tesseract.Recognize();
 
             result.Digit = tesseract.GetUTF8Text().TrimEnd();
-            result.RecognitionSuccess = !string.IsNullOrWhiteSpace(result.Digit);
-            sb.AppendLine($"Recognized word for cell: {result.Digit} (success={result.RecognitionSuccess})");
+            result.RecognitionFailure = string.IsNullOrWhiteSpace(result.Digit);
+            if (!string.IsNullOrWhiteSpace(result.Digit))
+                result.Confidence = tesseract.GetWords().First().Confident;
+            sb.AppendLine($"Recognized word for cell {cell.Id}: {result.Digit} (confidence={result.Confidence}, failure={result.RecognitionFailure})");
         }
 
         result.Processed = img;
+        result.Log = sb.ToString();
 
         return result;
     }
@@ -222,6 +228,9 @@ public class ImageImporter
             .Chunk(9)
             .SelectMany(c => c.OrderBy(c => c.Center.X))
             .ToList();
+
+        for (int i = 0; i < cells.Count; i++)
+            cells[i].Id = i;
 
         result.OutputImage = cells_image;
         result.Cells = cells;
