@@ -68,7 +68,7 @@ public partial class SelectionService : ObservableRecipient, IRecipient<ResetMes
         logger.Debug($"Selected digit is now {value}");
     }
 
-    public void Receive(ResetMessage message)
+    public void ReceiveAsync(ResetMessage message)
     {
         logger.Info("Received a reset message");
         Clear();

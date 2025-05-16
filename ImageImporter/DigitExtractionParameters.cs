@@ -1,4 +1,5 @@
 ﻿namespace ImageImporter;
+
 public struct DigitExtractionParameters(int threshold, int kernel_size, int iterations, int operation)
 {
     public int Threshold = threshold;

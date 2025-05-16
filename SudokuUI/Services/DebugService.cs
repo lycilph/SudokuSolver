@@ -72,7 +72,7 @@ public partial class DebugService : ObservableRecipient, IRecipient<MainWindowLo
         PositionDebugWindow(sender as Window);
     }
 
-    public void Receive(MainWindowLoadedMessage message)
+    public void ReceiveAsync(MainWindowLoadedMessage message)
     {
         logger.Info("Received the main window loaded message");
 

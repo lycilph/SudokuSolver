@@ -23,7 +23,7 @@ public partial class NotificationViewModel : ObservableRecipient, IRecipient<Sho
         Message = text;
     }
 
-    public void Receive(ShowNotificationMessage message)
+    public void ReceiveAsync(ShowNotificationMessage message)
     {
         Show(message.Notification);
     }
