@@ -147,7 +147,7 @@ public class ImageImporter
             if (cells.Count == 81)
             {
                 current_cells_extraction_parameters = parameters;
-                sb.Append($"Found {cells.Count} cells in the image ({current_cells_extraction_parameters})");
+                sb.AppendLine($"Found {cells.Count} cells in the image ({current_cells_extraction_parameters})");
                 break;
             }
         }
@@ -329,8 +329,13 @@ public class ImageImporter
 
             digit.Digit = tesseract.GetUTF8Text().TrimEnd();
             digit.RecognitionFailure = string.IsNullOrWhiteSpace(digit.Digit);
+
             if (!string.IsNullOrWhiteSpace(digit.Digit))
                 digit.Confidence = tesseract.GetWords().First().Confident;
+
+            if (digit.Digit.Length > 1)
+                digit.RecognitionFailure = true;
+
             sb.AppendLine($"Recognized word for cell {cell.Id}: {digit.Digit} (confidence={digit.Confidence}, failure={digit.RecognitionFailure})");
         }
 
@@ -351,6 +356,7 @@ public class ImageImporter
 
             var best = alternatives
                 .Where(d => !string.IsNullOrWhiteSpace(d.Digit))
+                .Where(d => !d.RecognitionFailure)
                 .OrderByDescending(d => d.Confidence)
                 .FirstOrDefault();
 

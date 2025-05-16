@@ -8,12 +8,13 @@ internal class Program
     static void Main(string[] args)
     {
         string path = "C:\\Users\\Morten Lang\\source\\repos\\SudokuSolver\\ImageImportTest\\Data\\";
-        //List<string> image_files =
-        //    Directory
-        //    .EnumerateFiles(path)
-        //    .ToList();
-        //List<string> image_files = [$"{path}image1005.jpg"];
-        List<string> image_files = [$"{path}IMG_20250330_101246.jpg"];
+        List<string> image_files =
+            Directory
+            .EnumerateFiles(path)
+            .Where(f => Path.GetExtension(f) == ".jpg")
+            .ToList();
+        //List<string> image_files = [$"{path}image1009.jpg"];
+        //List<string> image_files = [$"{path}IMG_20250410_114337.jpg"];
         Console.WriteLine($"Found {image_files.Count} image files to process");
 
         var importer = new ImageImporter();
@@ -40,11 +41,7 @@ internal class Program
             Console.WriteLine($"Processing image took: {stop_watch.ElapsedMilliseconds}ms");
             Console.WriteLine($"Imported puzzle: {imported_puzzle}");
             Console.WriteLine($"  Actual puzzle: {puzzle}");
-            Console.WriteLine($"    differences: {differences}");
-            Console.WriteLine($"Differences count: {differences_count}");
-            // Check for differences
-
-
+            Console.WriteLine($"    differences: {differences} (count {differences_count})");
         }
 
         Console.WriteLine("Press any key to continue...");
