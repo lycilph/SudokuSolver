@@ -4,6 +4,8 @@ using System.Text;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Emgu.CV;
+using Emgu.CV.Structure;
 using ImageImporter;
 
 namespace ImageImporterUI.MVVM;
@@ -18,7 +20,19 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<string>
     private List<string> imageFilenames;
 
     [ObservableProperty]
-    private string selectedImageFilename;
+    private string selectedImageFilename = string.Empty;
+
+    [ObservableProperty]
+    private Image<Rgb, byte> inputImage = null!;
+
+    [ObservableProperty]
+    private Image<Rgb, byte> gridImage = null!;
+
+    [ObservableProperty]
+    private Image<Rgb, byte> cellsImage = null!;
+
+    [ObservableProperty]
+    private List<Digit> digits;
 
     [ObservableProperty]
     private string log = string.Empty;
@@ -32,7 +46,6 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<string>
             .EnumerateFiles(path)
             .Where(f => Path.GetExtension(f) == ".jpg")
             .Select(s => Path.GetFileName(s))];
-        //SelectedImageFilename = ImageFilenames.First();
 
         IsActive = true; // Needed to recieve messages
     }
@@ -81,6 +94,11 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<string>
         sb.AppendLine($"    differences: {differences} (count {differences_count})");
 
         Log = sb.ToString();
+
+        InputImage = importer.InputImage;
+        GridImage = importer.GridImage;
+        CellsImage = importer.CellsImage;
+        Digits = importer.Digits;
 
         IsBusy = false;
     }

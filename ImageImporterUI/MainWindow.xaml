@@ -12,6 +12,7 @@
         d:DataContext="{d:DesignInstance Type=mvvm:MainViewModel}">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="conv"/>
+        <local:ImageToBitmapConverter x:Key="image_to_bitmap_converter"/>
     </Window.Resources>
     
     <Grid>
@@ -45,17 +46,36 @@
                         Grid.RowSpan="2"
                         Margin="0 10 10 10">
                 <TabItem Header="Log">
-                    <!--<ScrollViewer>-->
-                        <TextBox IsReadOnly="True" 
-                                 Text="{Binding Log}"
-                                 FontFamily="Courier New"
-                                 local:TextBoxUtils.ScrollToEnd="True"
-                                 VerticalScrollBarVisibility="Auto"/>
-                    <!--</ScrollViewer>-->
-              
+                    <TextBox IsReadOnly="True" 
+                             Text="{Binding Log}"
+                             FontFamily="Courier New"
+                             VerticalScrollBarVisibility="Auto"
+                             local:TextBoxUtils.ScrollToEnd="True"/>
                 </TabItem>
-                <TabItem Header="Grid"></TabItem>
-                <TabItem Header="Cells"></TabItem>
+                <TabItem Header="Grid">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                       
+                        <Image Source="{Binding InputImage, Converter={StaticResource image_to_bitmap_converter}}" Grid.Column="0"/>
+                        <Image Source="{Binding GridImage, Converter={StaticResource image_to_bitmap_converter}}" Grid.Column="1"/>
+                    </Grid>
+                </TabItem>
+                
+                <TabItem Header="Cells">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <Image Source="{Binding GridImage, Converter={StaticResource image_to_bitmap_converter}}" Grid.Column="0"/>
+                        <Image Source="{Binding CellsImage, Converter={StaticResource image_to_bitmap_converter}}" Grid.Column="1"/>
+                    </Grid>
+                </TabItem>
+                
                 <TabItem Header="Digits"></TabItem>
                 <TabItem Header="Digit"></TabItem>
             </TabControl>

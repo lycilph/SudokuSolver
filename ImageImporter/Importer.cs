@@ -29,6 +29,10 @@ public class Importer
     public List<DigitExtractionParameters> DigitExtractionParameters { get; set; } = [new(5, 1, 1, 0), new(5, 1, 1, 1), new(5, 2, 1, 1), new(2, 3, 1, 1), new(3, 1, 1, 1), new(1, 5, 1, 1), new(5, 5, 1, 2)];
 
     public string Log => sb.ToString();
+    public Image<Rgb, byte> InputImage => input_image;
+    public Image<Rgb, byte> GridImage => grid_image;
+    public Image<Rgb, byte> CellsImage => cells_image;
+    public List<Digit> Digits => digits;
 
     public Importer()
     {

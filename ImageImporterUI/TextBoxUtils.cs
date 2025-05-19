@@ -41,11 +41,6 @@ public static class TextBoxUtils
     private static void TextChanged(object sender, TextChangedEventArgs e)
     {
         if (sender is TextBox tb)
-        {
             tb.ScrollToEnd();
-            // set selection to end of document
-            //tb.SelectionStart = int.MaxValue;
-            //tb.SelectionLength = 0;
-        }
     }
 }
