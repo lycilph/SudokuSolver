@@ -80,7 +80,7 @@ public partial class UndoRedoService : ObservableRecipient, IRecipient<ResetMess
         WeakReferenceMessenger.Default.Send(new ResetMessage());
     }
 
-    public void ReceiveAsync(ResetMessage message)
+    public void Receive(ResetMessage message)
     {
         UndoStack.Clear();
         RedoStack.Clear();

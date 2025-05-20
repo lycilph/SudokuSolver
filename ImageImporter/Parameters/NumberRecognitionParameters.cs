@@ -1,6 +1,6 @@
-﻿namespace ImageImporter;
+﻿namespace ImageImporter.Parameters;
 
-public struct DigitExtractionParameters(int threshold, int kernel_size, int iterations, int operation)
+public struct NumberRecognitionParameters(int threshold, int kernel_size, int iterations, int operation)
 {
     public int Threshold = threshold;
     public int KernelSize = kernel_size;

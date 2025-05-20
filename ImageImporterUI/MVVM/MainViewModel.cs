@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using Emgu.CV;
 using Emgu.CV.Structure;
 using ImageImporter;
+using ImageImporter.Models;
 
 namespace ImageImporterUI.MVVM;
 
@@ -32,7 +33,16 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<string>
     private Image<Rgb, byte> cellsImage = null!;
 
     [ObservableProperty]
-    private List<Digit> digits;
+    private List<Number> digits = [];
+
+    [ObservableProperty]
+    private List<Number> digitsWithNumbers = [];
+
+    [ObservableProperty]
+    private Number selectedDigit = null!;
+
+    [ObservableProperty]
+    private Number digitCopy = null!;
 
     [ObservableProperty]
     private string log = string.Empty;
@@ -59,6 +69,14 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<string>
     partial void OnSelectedImageFilenameChanged(string value)
     {
         _ = Import();
+    }
+
+    partial void OnSelectedDigitChanged(Number value)
+    {
+        if (SelectedDigit is null)
+            return;
+
+        DigitCopy = importer.ExtractDigit(SelectedDigit.Cell, SelectedDigit.Parameters);
     }
 
     [RelayCommand]
@@ -99,6 +117,9 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<string>
         GridImage = importer.GridImage;
         CellsImage = importer.CellsImage;
         Digits = importer.Digits;
+        
+        DigitsWithNumbers = Digits.Where(d => d.ContainsNumber).ToList();
+        SelectedDigit = DigitsWithNumbers.First();
 
         IsBusy = false;
     }

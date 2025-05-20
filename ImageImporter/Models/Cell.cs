@@ -3,7 +3,7 @@ using Emgu.CV;
 using System.Diagnostics;
 using System.Drawing;
 
-namespace ImageImporter;
+namespace ImageImporter.Models;
 
 [DebuggerDisplay("Cell {Id}")]
 public class Cell

@@ -4,6 +4,9 @@ using Emgu.CV;
 using Emgu.CV.OCR;
 using Emgu.CV.Structure;
 using Emgu.CV.Util;
+using ImageImporter.Extensions;
+using ImageImporter.Models;
+using ImageImporter.Parameters;
 using CvEnum = Emgu.CV.CvEnum;
 
 namespace ImageImporter;
@@ -12,7 +15,108 @@ public class Importer
 {
     private readonly Tesseract tesseract;
 
-    private StringBuilder sb = new();
+    public Importer()
+    {
+        tesseract = new Tesseract("tessdata", "eng", OcrEngineMode.LstmOnly, "123456789") { PageSegMode = PageSegMode.SingleChar };
+    }
+
+    public Puzzle Import(string filename, ImportParameters parameters)
+    {
+        var puzzle = new Puzzle(filename);
+
+        ReadInputImage(puzzle);
+
+        ExtractGrid(puzzle, parameters.GridParameters);
+
+        //ExtractCells();
+        //if (cells.Count != 81)
+        //    return;
+
+        //ExtractDigits();
+
+        //CleanupDigits();
+
+        return puzzle;
+    }
+
+    private void ReadInputImage(Puzzle puzzle)
+    {
+        if (!File.Exists(puzzle.Filename))
+            throw new InvalidDataException($"The file {puzzle.Filename} doesn't exist");
+
+        puzzle.AppendDebugLog($"* Loading image from file {puzzle.Filename} *");
+        puzzle.InputImage = new Image<Rgb, byte>(puzzle.Filename);
+    }
+
+    public void ExtractGrid(Puzzle puzzle, GridExtractionParameters parameters)
+    {
+        puzzle.AppendDebugLog($"* Extracting grid (margin={parameters.Margin}) *");
+        puzzle.Grid.ParametersUsed = parameters;
+
+        // Basic preprocessing of the image
+        var img = puzzle.InputImage.Convert<Gray, byte>();
+        img._GammaCorrect(0.8);
+        img = img.SmoothGaussian(7);
+        img = img.ThresholdAdaptive(new Gray(255), CvEnum.AdaptiveThresholdType.GaussianC, CvEnum.ThresholdType.BinaryInv, 55, new Gray(5));
+
+        // Find the largest contour in the image
+        VectorOfVectorOfPoint contours = new();
+        CvInvoke.FindContours(img, contours, null, CvEnum.RetrType.External, CvEnum.ChainApproxMethod.ChainApproxSimple);
+        var max_area = 0.0;
+        var max_area_index = -1;
+        for (int i = 0; i < contours.Size; i++)
+        {
+            var area = CvInvoke.ContourArea(contours[i]);
+            if (area > max_area)
+            {
+                max_area = area;
+                max_area_index = i;
+            }
+        }
+        var input_image_area = puzzle.InputImage.Area();
+        var contour_area_percentage_of_image_size = max_area / input_image_area * 100;
+        // Log debug information
+        puzzle.AppendDebugLog($"Found {contours.Size} contours in the image");
+        puzzle.AppendDebugLog($"Largest area is {max_area} ({contour_area_percentage_of_image_size:f2}% of image) for contour {max_area_index}");
+
+        // Find the bounding rectangle around the largest contour
+        var bound = CvInvoke.BoundingRectangle(contours[max_area_index]);
+        var bound_pts = new List<Point>
+        {
+            new(bound.X, bound.Y),
+            new(bound.X + bound.Width, bound.Y),
+            new(bound.X + bound.Width, bound.Y + bound.Height),
+            new(bound.X, bound.Y + bound.Height)
+        };
+
+        // Approximate contour
+        var bound_approx = new VectorOfPoint();
+        CvInvoke.ApproxPolyDP(contours[max_area_index], bound_approx, 5, true);
+        puzzle.AppendDebugLog($"Approximating grid with a {bound_approx.Size}-polygon");
+
+        // Find closest points on approximated largest contour
+        var grid_pts = bound_pts.Select(p => GetClosestPoint(p, bound_approx)).ToList();
+
+        var grid = puzzle.InputImage.Clone();
+        CvInvoke.DrawContours(grid, contours, max_area_index, new MCvScalar(0, 0, 255), 3);
+        CvInvoke.Rectangle(grid, bound, new MCvScalar(255, 0, 0), 3);
+        grid_pts.ForEach(p => CvInvoke.Circle(grid, p, 10, new MCvScalar(0, 255, 0), -1));
+        puzzle.Grid.DebugImage = grid;
+
+        // Get perspective transform
+        var size = parameters.OutputSize;
+        var margin = parameters.Margin;
+        var src = new PointF[] { grid_pts[0], grid_pts[1], grid_pts[2], grid_pts[3] };
+        var dst = new PointF[] { new(margin, margin), new(size - margin, margin), new(size - margin, size - margin), new(margin, size - margin) };
+        var perspective = CvInvoke.GetPerspectiveTransform(src, dst);
+
+        // Warp perspective
+        var output = new Image<Rgb, byte>(size, size);
+        CvInvoke.WarpPerspective(puzzle.InputImage, output, perspective, output.Size, CvEnum.Inter.Cubic, CvEnum.Warp.Default, CvEnum.BorderType.Default);
+        puzzle.Grid.Image = output;
+    }
+
+    /*private StringBuilder sb = new();
     private string image_filename = string.Empty;
 
     // Input/Output variables
@@ -20,19 +124,19 @@ public class Importer
     private Image<Rgb, byte> grid_image = null!;
     private Image<Rgb, byte> cells_image = null!;
     private List<Cell> cells = [];
-    private List<Digit> digits = [];
+    private List<Number> digits = [];
     private CellsExtractionParameters current_cells_extraction_parameters;
 
     // Parameters for the algorithm(s)
     public int GridMargin { get; set; } = 0;
     public List<CellsExtractionParameters> CellsExtractionParameters { get; set; } = [new(5, 1), new(5, 3), new(2, 3)];
-    public List<DigitExtractionParameters> DigitExtractionParameters { get; set; } = [new(5, 1, 1, 0), new(5, 1, 1, 1), new(5, 2, 1, 1), new(2, 3, 1, 1), new(3, 1, 1, 1), new(1, 5, 1, 1), new(5, 5, 1, 2)];
+    public List<NumberRecognitionParameters> DigitExtractionParameters { get; set; } = [new(5, 1, 1, 0), new(5, 1, 1, 1), new(5, 2, 1, 1), new(2, 3, 1, 1), new(3, 1, 1, 1), new(1, 5, 1, 1), new(5, 5, 1, 2)];
 
     public string Log => sb.ToString();
     public Image<Rgb, byte> InputImage => input_image;
     public Image<Rgb, byte> GridImage => grid_image;
     public Image<Rgb, byte> CellsImage => cells_image;
-    public List<Digit> Digits => digits;
+    public List<Number> Digits => digits;
 
     public Importer()
     {
@@ -61,11 +165,6 @@ public class Importer
         ExtractDigits();
 
         CleanupDigits();
-
-        //CvInvoke.Imshow("Input", input_image.Resize(0.5, CvEnum.Inter.Cubic));
-        //CvInvoke.Imshow("Grid", grid_image.Resize(0.8, CvEnum.Inter.Cubic));
-        //CvInvoke.Imshow("Cells", cells_image.Resize(0.8, CvEnum.Inter.Cubic));
-        //CvInvoke.WaitKey();
     }
 
     private void ReadInputImage(string filename)
@@ -278,11 +377,11 @@ public class Importer
         sb.AppendLine($"Found {digits_found} digits ({failures} failures)");
     }
 
-    public Digit ExtractDigit(Cell cell, DigitExtractionParameters parameters)
+    public Number ExtractDigit(Cell cell, NumberRecognitionParameters parameters)
     {
         sb.AppendLine($"* Extracting digit from cell {cell.Id} *");
 
-        var digit = new Digit(cell);
+        var digit = new Number(cell);
 
         // Basic preprocessing of the image
         var img = cell.Image.Convert<Gray, byte>();
@@ -333,6 +432,8 @@ public class Importer
 
             digit.Text = tesseract.GetUTF8Text().TrimEnd();
             digit.RecognitionFailure = string.IsNullOrWhiteSpace(digit.Text);
+            digit.ContainsNumber = true;
+            digit.Parameters = parameters;
 
             if (!string.IsNullOrWhiteSpace(digit.Text))
                 digit.Confidence = tesseract.GetWords().First().Confident;
@@ -369,7 +470,7 @@ public class Importer
             if (best != null)
                 digits[best.Cell.Id] = best;
         }
-    }
+    }*/
 
     private static Point GetClosestPoint(Point p, VectorOfPoint points)
     {

@@ -1,4 +1,4 @@
-﻿namespace ImageImporter;
+﻿namespace ImageImporter.Parameters;
 
 public struct CellsExtractionParameters(int threshold, int iterations)
 {

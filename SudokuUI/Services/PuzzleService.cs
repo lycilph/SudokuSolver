@@ -237,7 +237,7 @@ public class PuzzleService : ObservableRecipient, IRecipient<ResetMessage>, IRec
         return false;
     }
 
-    public void ReceiveAsync(ResetMessage message)
+    public void Receive(ResetMessage message)
     {
         logger.Info("Received a reset message");
         try
@@ -253,7 +253,7 @@ public class PuzzleService : ObservableRecipient, IRecipient<ResetMessage>, IRec
         stopwatch.Restart();
     }
 
-    public void ReceiveAsync(MainWindowClosingMessage message)
+    public void Receive(MainWindowClosingMessage message)
     {
         logger.Info("Received the main window closing message");
 

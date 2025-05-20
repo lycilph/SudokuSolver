@@ -356,7 +356,7 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<MainWindowL
 
     // Message handling
 
-    public async void ReceiveAsync(MainWindowLoadedMessage message)
+    public async void Receive(MainWindowLoadedMessage message)
     {
         logger.Info("Received the main window loaded message");
 
