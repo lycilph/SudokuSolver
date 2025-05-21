@@ -129,8 +129,11 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<string>
     [RelayCommand]
     private void CaptureImage()
     {
-        var capture_image_window = new CaptureImageWindow();
-        capture_image_window.Owner = App.Current.MainWindow;
+        var capture_image_window = new CaptureImageWindow()
+        {
+            Owner = App.Current.MainWindow,
+            DataContext = new CaptureImageViewModel()
+        };
         capture_image_window.ShowDialog();
     }
 }
