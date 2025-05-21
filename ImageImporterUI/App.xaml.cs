@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-using ImageImporterUI.MVVM;
+using ImageImporterUI.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ImageImporterUI;

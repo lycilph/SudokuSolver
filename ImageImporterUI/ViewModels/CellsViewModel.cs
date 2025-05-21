@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ImageImporterUI.MVVM
+namespace ImageImporterUI.MVVMViewModels
 {
-    class GridViewModel
+    class CellsViewModel
     {
     }
 }

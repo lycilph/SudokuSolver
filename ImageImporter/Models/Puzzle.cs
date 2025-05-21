@@ -13,6 +13,7 @@ public class Puzzle(string filename)
 
     public Image<Rgb, byte> InputImage { get; set; } = null!;
     public Grid Grid { get; set; } = new Grid();
+    public CellsExtraction CellsExtraction { get; set; } = new CellsExtraction();
     public List<Cell> Cells { get; set; } = [];
     public List<Number> Numbers { get; set; } = [];
 
@@ -24,6 +25,7 @@ public class Puzzle(string filename)
 
     public string Get()
     {
-        return string.Empty;
+        var chars = Numbers.Select(d => string.IsNullOrWhiteSpace(d.Text) ? "." : d.Text).ToArray();
+        return string.Join("", chars);
     }
 }

@@ -4,17 +4,18 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ImageImporterUI" 
-        xmlns:mvvm="clr-namespace:ImageImporterUI.MVVM" 
+        xmlns:vm="clr-namespace:ImageImporterUI.ViewModels" 
+        xmlns:conv="clr-namespace:ImageImporterUI.Converters"
         Title="MainWindow" Height="1000" Width="1600"
         WindowStartupLocation="CenterScreen"
         Loaded="Window_Loaded"
         mc:Ignorable="d"
-        d:DataContext="{d:DesignInstance Type=mvvm:MainViewModel}">
+        d:DataContext="{d:DesignInstance Type=vm:MainViewModel}">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="bool_to_visibility_converter"/>
-        <local:ImageToBitmapConverter x:Key="image_to_bitmap_converter"/>
-        <local:BoolToBorderConverter x:Key="bool_to_border_converter"/>
-        <local:BoolToOpacityConverter x:Key="bool_to_opacity_converter"/>
+        <conv:ImageToBitmapConverter x:Key="image_to_bitmap_converter"/>
+        <conv:BoolToBorderConverter x:Key="bool_to_border_converter"/>
+        <conv:BoolToOpacityConverter x:Key="bool_to_opacity_converter"/>
     </Window.Resources>
     
     <Grid>
@@ -31,10 +32,10 @@
 
             <Button Grid.Column="0"
                     Grid.Row="0"
-                    Content="Import"
+                    Content="Capture"
                     Margin="10"
                     Padding="10"
-                    Command="{Binding ImportCommand}"/>
+                    Command="{Binding CaptureImageCommand}"/>
 
             <ListBox Grid.Column="0"
                      Grid.Row="1"

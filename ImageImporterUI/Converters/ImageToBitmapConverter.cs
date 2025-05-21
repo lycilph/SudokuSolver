@@ -4,7 +4,7 @@ using System.Windows.Data;
 using Emgu.CV;
 using Emgu.CV.Structure;
 
-namespace ImageImporterUI;
+namespace ImageImporterUI.Converters;
 
 public class ImageToBitmapConverter : IValueConverter
 {
