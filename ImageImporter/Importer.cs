@@ -235,6 +235,9 @@ public class Importer
         puzzle.CellsExtraction.Image = cells_image;
         puzzle.AppendDebugLog($" * Found {contours.Size} contours and {cells_count} cells (approx cell size is estimated to be between {approx_cell_size_min:f2} and {approx_cell_size_max:f2})");
 
+        CvInvoke.Imshow("Cells", cells_image);
+        CvInvoke.WaitKey();
+
         // Sort cells here (first top to bottom, then left to right)
         puzzle.Cells = puzzle.Cells
             .OrderBy(c => c.Center.Y)

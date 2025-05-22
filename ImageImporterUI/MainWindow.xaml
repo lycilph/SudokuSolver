@@ -11,12 +11,12 @@
         Loaded="Window_Loaded"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=vm:MainViewModel}">
-    <Window.Resources>
+    <!--<Window.Resources>
         <BooleanToVisibilityConverter x:Key="bool_to_visibility_converter"/>
         <conv:ImageToBitmapConverter x:Key="image_to_bitmap_converter"/>
         <conv:BoolToBorderConverter x:Key="bool_to_border_converter"/>
         <conv:BoolToOpacityConverter x:Key="bool_to_opacity_converter"/>
-    </Window.Resources>
+    </Window.Resources>-->
     
     <Grid>
         <Grid>
@@ -28,6 +28,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <Button Grid.Column="0"
@@ -47,13 +48,12 @@
             <TabControl Grid.Column="1"
                         Grid.Row="0"
                         Grid.RowSpan="2"
-                        Margin="0 10 10 10">
-                <TabItem Header="Log">
-                    <TextBox IsReadOnly="True" 
-                             Text="{Binding Log}"
-                             FontFamily="Courier New"
-                             VerticalScrollBarVisibility="Auto"
-                             local:TextBoxUtils.ScrollToEnd="True"/>
+                        Margin="0 10 10 10"
+                        ItemsSource="{Binding ViewModels}"
+                        SelectedItem="{Binding SelectedViewModel}"
+                        DisplayMemberPath="Header">
+                <!--<TabItem Header="Log">
+                    
                 </TabItem>
                 <TabItem Header="Grid">
                     <Grid>
@@ -161,9 +161,15 @@
 
                         <Image Grid.Column="1" Source="{Binding DigitCopy.ImageProcessed, Converter={StaticResource image_to_bitmap_converter}}"/>
                     </Grid>
-                </TabItem>
+                </TabItem>-->
             </TabControl>
+            
+            <StatusBar Grid.Row="2"
+                       Grid.ColumnSpan="2">
+                <TextBlock Text="{Binding TimeElapsed}"/>
+            </StatusBar>
         </Grid>
+
 
         <ContentControl Visibility="{Binding IsBusy, Converter={StaticResource bool_to_visibility_converter}}">
             <Grid>

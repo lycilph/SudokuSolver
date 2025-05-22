@@ -1,12 +1,18 @@
-﻿using System.Collections.Generic;
-using System;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
+using ImageImporter.Models;
 
-namespace ImageImporterUI.ViewModels
+namespace ImageImporterUI.ViewModels;
+
+public partial class NumbersViewModel(MainViewModel main) : ObservableObject
 {
-    class NumbersViewModel
+    public string Header { get; private set; } = "Numbers";
+
+    [ObservableProperty]
+    private ObservableCollection<Number> numbers = [];
+
+    public void Update()
     {
+        Numbers = new ObservableCollection<Number>(main.puzzle.Numbers);
     }
 }

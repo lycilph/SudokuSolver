@@ -1,52 +1,43 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
-using System.Text;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Emgu.CV;
-using Emgu.CV.Structure;
 using ImageImporter;
 using ImageImporter.Models;
+using ImageImporter.Parameters;
 using ImageImporterUI.Views;
 
 namespace ImageImporterUI.ViewModels;
 
 public partial class MainViewModel : ObservableRecipient, IRecipient<string>
 {
-    private  static string path = "C:\\Users\\Morten Lang\\source\\repos\\SudokuSolver\\Data\\Importer\\";
+    public static string path = "C:\\Users\\Morten Lang\\source\\repos\\SudokuSolver\\Data\\Importer\\";
 
-    private readonly Importer importer = new();
+    private readonly LogViewModel logViewModel;
+    private readonly GridViewModel gridViewModel;
+    private readonly CellsViewModel cellsViewModel;
+    private readonly NumbersViewModel numbersViewModel;
+
+    public readonly Importer importer = new();
+    public ImportParameters parameters = new();
+    public Puzzle puzzle = new("NA");
 
     [ObservableProperty]
-    private List<string> imageFilenames;
+    private ObservableCollection<string> imageFilenames;
 
     [ObservableProperty]
     private string selectedImageFilename = string.Empty;
 
-    //[ObservableProperty]
-    //private Image<Rgb, byte> inputImage = null!;
+    [ObservableProperty]
+    private ObservableCollection<ObservableObject> viewModels = [];
 
-    //[ObservableProperty]
-    //private Image<Rgb, byte> gridImage = null!;
+    [ObservableProperty]
+    private ObservableObject? selectedViewModel = null;
 
-    //[ObservableProperty]
-    //private Image<Rgb, byte> cellsImage = null!;
-
-    //[ObservableProperty]
-    //private List<Number> digits = [];
-
-    //[ObservableProperty]
-    //private List<Number> digitsWithNumbers = [];
-
-    //[ObservableProperty]
-    //private Number selectedDigit = null!;
-
-    //[ObservableProperty]
-    //private Number digitCopy = null!;
-
-    //[ObservableProperty]
-    //private string log = string.Empty;
+    [ObservableProperty]
+    private string timeElapsed = string.Empty;
 
     [ObservableProperty]
     private bool isBusy = false;
@@ -57,6 +48,12 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<string>
             .EnumerateFiles(path)
             .Where(f => Path.GetExtension(f) == ".jpg")
             .Select(s => Path.GetFileName(s))];
+
+        logViewModel = new LogViewModel(this);
+        gridViewModel = new GridViewModel(this);
+        cellsViewModel = new CellsViewModel(this);
+        numbersViewModel = new NumbersViewModel(this);
+        ViewModels = [logViewModel, gridViewModel, cellsViewModel, numbersViewModel];
 
         IsActive = true; // Needed to recieve messages
     }
@@ -70,70 +67,45 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<string>
 
     partial void OnSelectedImageFilenameChanged(string value)
     {
-        _ = Import();
+        _ = Update();
     }
 
-    //partial void OnSelectedDigitChanged(Number value)
-    //{
-    //    if (SelectedDigit is null)
-    //        return;
-
-    //    DigitCopy = importer.ExtractDigit(SelectedDigit.Cell, SelectedDigit.Parameters);
-    //}
-
-    [RelayCommand]
-    private async Task Import()
+    private async Task Update()
     {
         //IsBusy = true;
+        var stop_watch = Stopwatch.StartNew();
 
-        //var stop_watch = Stopwatch.StartNew();
-        //var sb = new StringBuilder();
-        //sb.AppendLine($"Processing {SelectedImageFilename}");
+        //await Task.Run(() => puzzle = importer.Import(path+SelectedImageFilename, parameters));
+        puzzle = importer.Import(path + SelectedImageFilename, parameters);
 
-        //await Task.Run(() => 
-        //{
-        //    importer.Import(path + SelectedImageFilename);
-        //});
-        //sb.Append(importer.Log);
+        logViewModel.Update();
+        gridViewModel.Update();
+        cellsViewModel.Update();
+        numbersViewModel.Update();
 
-        //var puzzle_filename = Path.ChangeExtension(SelectedImageFilename, ".txt");
-        //var puzzle = File.ReadAllText(path+puzzle_filename);
-        //var imported_puzzle = importer.GetPuzzle();
-
-        //var puzzle_sb = new StringBuilder();
-        //for (int i = 0; i < puzzle.Length; i++)
-        //    puzzle_sb.Append(puzzle[i] == imported_puzzle[i] ? "." : "|");
-        //var differences = puzzle_sb.ToString();
-        //var differences_count = differences.Count(c => c == '|');
-
-        //// Statistics
-        //stop_watch.Stop();
-        //sb.AppendLine($"Processing image took: {stop_watch.ElapsedMilliseconds}ms");
-        //sb.AppendLine($"Imported puzzle: {imported_puzzle}");
-        //sb.AppendLine($"  Actual puzzle: {puzzle}");
-        //sb.AppendLine($"    differences: {differences} (count {differences_count})");
-
-        //Log = sb.ToString();
-
-        //InputImage = importer.InputImage;
-        //GridImage = importer.GridImage;
-        //CellsImage = importer.CellsImage;
-        //Digits = importer.Digits;
-        
-        //DigitsWithNumbers = Digits.Where(d => d.ContainsNumber).ToList();
-        //SelectedDigit = DigitsWithNumbers.First();
-
+        stop_watch.Stop();
+        TimeElapsed = $"Elapsed: {stop_watch.ElapsedMilliseconds:f2}ms";
         //IsBusy = false;
+
+        // Update the viewmodels here
+        SelectedViewModel = ViewModels.FirstOrDefault();
     }
 
     [RelayCommand]
     private void CaptureImage()
     {
+        var vm = new CaptureImageViewModel(path);
         var capture_image_window = new CaptureImageWindow()
         {
             Owner = App.Current.MainWindow,
-            DataContext = new CaptureImageViewModel()
+            DataContext = vm
         };
-        capture_image_window.ShowDialog();
+        var result = capture_image_window.ShowDialog();
+
+        if (result == true)
+        {
+            ImageFilenames.Add(vm.Filename);
+            SelectedImageFilename = vm.Filename;
+        }
     }
 }

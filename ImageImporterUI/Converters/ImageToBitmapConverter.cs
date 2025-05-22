@@ -10,10 +10,10 @@ public class ImageToBitmapConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        if (value is Image<Rgb, byte> rgb)
+        if (value is Image<Rgb, byte> rgb && rgb != null)
             return rgb.ToBitmapSource();
 
-        if (value is Image<Gray, byte> gray)
+        if (value is Image<Gray, byte> gray && gray != null)
             return gray.ToBitmapSource();
 
         return DependencyProperty.UnsetValue;
