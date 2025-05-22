@@ -27,5 +27,9 @@
         <DataTemplate DataType="{x:Type vm:NumbersViewModel}">
             <v:NumbersView/>
         </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:ImproveNumberRecognitionViewModel}">
+            <v:ImproveNumberRecognitionView/>
+        </DataTemplate>
     </Application.Resources>
 </Application>

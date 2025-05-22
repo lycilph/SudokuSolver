@@ -11,12 +11,6 @@
         Loaded="Window_Loaded"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=vm:MainViewModel}">
-    <!--<Window.Resources>
-        <BooleanToVisibilityConverter x:Key="bool_to_visibility_converter"/>
-        <conv:ImageToBitmapConverter x:Key="image_to_bitmap_converter"/>
-        <conv:BoolToBorderConverter x:Key="bool_to_border_converter"/>
-        <conv:BoolToOpacityConverter x:Key="bool_to_opacity_converter"/>
-    </Window.Resources>-->
     
     <Grid>
         <Grid>

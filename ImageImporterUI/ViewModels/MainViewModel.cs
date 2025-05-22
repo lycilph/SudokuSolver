@@ -19,6 +19,7 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<string>
     private readonly GridViewModel gridViewModel;
     private readonly CellsViewModel cellsViewModel;
     private readonly NumbersViewModel numbersViewModel;
+    private readonly ImproveNumberRecognitionViewModel improveNumberRecognitionViewModel;
 
     public readonly Importer importer = new();
     public ImportParameters parameters = new();
@@ -53,7 +54,8 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<string>
         gridViewModel = new GridViewModel(this);
         cellsViewModel = new CellsViewModel(this);
         numbersViewModel = new NumbersViewModel(this);
-        ViewModels = [logViewModel, gridViewModel, cellsViewModel, numbersViewModel];
+        improveNumberRecognitionViewModel = new ImproveNumberRecognitionViewModel(this);
+        ViewModels = [logViewModel, gridViewModel, cellsViewModel, numbersViewModel, improveNumberRecognitionViewModel];
 
         IsActive = true; // Needed to recieve messages
     }
@@ -72,20 +74,20 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<string>
 
     private async Task Update()
     {
-        //IsBusy = true;
+        IsBusy = true;
         var stop_watch = Stopwatch.StartNew();
 
-        //await Task.Run(() => puzzle = importer.Import(path+SelectedImageFilename, parameters));
-        puzzle = importer.Import(path + SelectedImageFilename, parameters);
+        await Task.Run(() => puzzle = importer.Import(path+SelectedImageFilename, parameters));
 
         logViewModel.Update();
         gridViewModel.Update();
         cellsViewModel.Update();
         numbersViewModel.Update();
+        improveNumberRecognitionViewModel.Update();
 
         stop_watch.Stop();
         TimeElapsed = $"Elapsed: {stop_watch.ElapsedMilliseconds:f2}ms";
-        //IsBusy = false;
+        IsBusy = false;
 
         // Update the viewmodels here
         SelectedViewModel = ViewModels.FirstOrDefault();
