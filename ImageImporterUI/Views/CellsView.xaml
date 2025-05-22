@@ -9,13 +9,28 @@
              d:DataContext="{d:DesignInstance Type=vm:CellsViewModel}">
     <Grid>
         <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            
             <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <Image Source="{Binding InputImage, Converter={StaticResource image_to_bitmap_converter}}" Grid.Column="0"/>
-            <Image Source="{Binding CellsImage, Converter={StaticResource image_to_bitmap_converter}}" Grid.Column="1"/>
+            <StackPanel Grid.Row="0"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="3"
+                        Orientation="Horizontal">
+                <ComboBox ItemsSource="{Binding Parameters}"
+                          SelectedItem="{Binding SelectedParameters}"/>
+            </StackPanel>
+
+            <Image Grid.Row="1" Grid.Column="0" Source="{Binding InputImage, Converter={StaticResource image_to_bitmap_converter}}"/>
+            <Image Grid.Row="1" Grid.Column="1" Source="{Binding CellsImage, Converter={StaticResource image_to_bitmap_converter}}"/>
+            <Image Grid.Row="1" Grid.Column="2" Source="{Binding DebugImage, Converter={StaticResource image_to_bitmap_converter}}"/>
         </Grid>
     </Grid>
 </UserControl>

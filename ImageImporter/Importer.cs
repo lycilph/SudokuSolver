@@ -223,7 +223,7 @@ public class Importer
                 rect.Width -= 2 * max_dist;
                 rect.Height -= 2 * max_dist;
 
-                puzzle.Cells.Add(new Cell { Image = puzzle.Grid.Image.Copy(rect), Center = pt });
+                puzzle.Cells.Add(new Cell { Image = puzzle.Grid.Image.Copy(rect), Center = pt, Bounds = rect });
             }
             else if (area < approx_cell_size_min)
                 CvInvoke.DrawContours(cells_image, contours, i, new MCvScalar(0, 255, 0), 3);
@@ -235,6 +235,23 @@ public class Importer
         puzzle.CellsExtraction.Image = cells_image;
         puzzle.AppendDebugLog($" * Found {contours.Size} contours and {cells_count} cells (approx cell size is estimated to be between {approx_cell_size_min:f2} and {approx_cell_size_max:f2})");
 
+        // Sanity check that no 2 cells are on top of each other (ie. that their center of gravity are too close)
+        var invalid_cells = new List<Cell>();
+        foreach (var cell in puzzle.Cells)
+        {
+            foreach (var other in puzzle.Cells)
+            {
+                if (cell != other && 
+                    Dist(cell.Center, other.Center) <= 10 &&
+                    !invalid_cells.Contains(cell) &&
+                    !invalid_cells.Contains(other))
+                    invalid_cells.Add(other);
+            }
+        }
+
+        foreach (var cell in invalid_cells)
+            puzzle.Cells.Remove(cell);
+
         // Sort cells here (first top to bottom, then left to right)
         puzzle.Cells = puzzle.Cells
             .OrderBy(c => c.Center.Y)
@@ -244,6 +261,22 @@ public class Importer
 
         for (int i = 0; i < puzzle.Cells.Count; i++)
             puzzle.Cells[i].Id = i;
+
+        // Debug image
+        var debug = puzzle.Grid.Image.Clone();
+        for (int i = 0; i < puzzle.Cells.Count; i++)
+        {
+            var str = puzzle.Cells[i].Id.ToString();
+            var bound = puzzle.Cells[i].Bounds;
+            var pt = puzzle.Cells[i].Center;
+
+            pt.X -= 75;
+            pt.Y += 50;
+
+            CvInvoke.Rectangle(debug, bound, new MCvScalar(255, 0, 0), 3);
+            CvInvoke.PutText(debug, str, pt, CvEnum.FontFace.HersheyPlain, 10, new MCvScalar(0, 0, 255), 10);
+        }
+        puzzle.CellsExtraction.DebugImage = debug;
     }
 
     public void RecognizeNumbers(Puzzle puzzle, NumberRecognitionParameters parameters)

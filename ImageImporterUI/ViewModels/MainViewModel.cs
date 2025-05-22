@@ -76,21 +76,21 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<string>
     {
         IsBusy = true;
         var stop_watch = Stopwatch.StartNew();
-
+        
+        // Do the entire import + recognition
         await Task.Run(() => puzzle = importer.Import(path+SelectedImageFilename, parameters));
-
+        // Update all individual vms with new puzzle
         logViewModel.Update();
         gridViewModel.Update();
         cellsViewModel.Update();
         numbersViewModel.Update();
         improveNumberRecognitionViewModel.Update();
+        // Update the viewmodels here
+        SelectedViewModel = ViewModels.FirstOrDefault();
 
         stop_watch.Stop();
         TimeElapsed = $"Elapsed: {stop_watch.ElapsedMilliseconds:f2}ms";
         IsBusy = false;
-
-        // Update the viewmodels here
-        SelectedViewModel = ViewModels.FirstOrDefault();
     }
 
     [RelayCommand]
