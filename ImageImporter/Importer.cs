@@ -45,6 +45,8 @@ public class Importer
 
         puzzle.AppendDebugLog($"* Loading image from file {puzzle.Filename} *");
         puzzle.InputImage = new Image<Rgb, byte>(puzzle.Filename);
+
+        puzzle.AppendDebugLog("");
     }
 
     public void ExtractGrid(Puzzle puzzle, GridExtractionParameters parameters)
@@ -115,6 +117,7 @@ public class Importer
         puzzle.Grid.Image = output;
 
         puzzle.AppendResultLog("Grid found");
+        puzzle.AppendDebugLog("");
     }
 
     public void ExtractCells(Puzzle puzzle, List<CellsExtractionParameters> parameters_list)
@@ -135,6 +138,7 @@ public class Importer
             puzzle.AppendDebugLog($"   !!!Couldn't find 81 cells in the image!!!");
 
         puzzle.AppendResultLog($"{puzzle.Cells.Count} cells found");
+        puzzle.AppendDebugLog("");
     }
 
     public void ExtractCells(Puzzle puzzle, CellsExtractionParameters parameters)
@@ -223,7 +227,9 @@ public class Importer
                 rect.Width -= 2 * max_dist;
                 rect.Height -= 2 * max_dist;
 
-                puzzle.Cells.Add(new Cell { Image = puzzle.Grid.Image.Copy(rect), Center = pt, Bounds = rect });
+                // Skip this cell if the bounding rect becomes pathological
+                if (rect.Width > 0 && rect.Height > 0)
+                    puzzle.Cells.Add(new Cell { Image = puzzle.Grid.Image.Copy(rect), Center = pt, Bounds = rect });
             }
             else if (area < approx_cell_size_min)
                 CvInvoke.DrawContours(cells_image, contours, i, new MCvScalar(0, 255, 0), 3);
@@ -277,6 +283,8 @@ public class Importer
             CvInvoke.PutText(debug, str, pt, CvEnum.FontFace.HersheyPlain, 10, new MCvScalar(0, 0, 255), 10);
         }
         puzzle.CellsExtraction.DebugImage = debug;
+
+        puzzle.AppendDebugLog("");
     }
 
     public void RecognizeNumbers(Puzzle puzzle, NumberRecognitionParameters parameters)
@@ -292,6 +300,7 @@ public class Importer
         var recognition_failures = puzzle.Numbers.Count(d => d.RecognitionFailure);
 
         puzzle.AppendResultLog($" * Found {numbers_found} numbers ({recognition_failures} failures)");
+        puzzle.AppendDebugLog("");
     }
 
     public Number RecognizeNumber(Puzzle puzzle, Cell cell, NumberRecognitionParameters parameters)
@@ -359,7 +368,7 @@ public class Importer
         }
         else
             puzzle.AppendDebugLog($" * Cell {filled_percent:f2}% filled (assuming no number in cell");
-
+        
         number.ImageProcessed = img;
         return number;
     }
@@ -389,6 +398,8 @@ public class Importer
             if (best != null)
                 puzzle.Numbers[best.Cell.Id] = best;
         }
+
+        puzzle.AppendDebugLog("");
     }
 
     private static Point GetClosestPoint(Point p, VectorOfPoint points)

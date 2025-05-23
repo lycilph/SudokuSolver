@@ -8,5 +8,5 @@ public class CellsExtraction
 {
     public Image<Rgb, byte> Image { get; set; } = null!;
     public Image<Rgb, byte> DebugImage { get; set; } = null!;
-    public CellsExtractionParameters ParametersUsed { get; set; } = new CellsExtractionParameters();
+    public CellsExtractionParameters ParametersUsed { get; set; } = null!;
 }

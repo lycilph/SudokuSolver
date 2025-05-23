@@ -22,10 +22,33 @@
 
             <StackPanel Grid.Row="0"
                         Grid.Column="0"
-                        Grid.ColumnSpan="3"
                         Orientation="Horizontal">
                 <ComboBox ItemsSource="{Binding Parameters}"
                           SelectedItem="{Binding SelectedParameters}"/>
+                <Button Content="Add"
+                        Margin="10 0 0 0"
+                        Command="{Binding AddCommand}"/>
+            </StackPanel>
+
+            <StackPanel Grid.Row="0"
+                        Grid.Column="1"
+                        Grid.ColumnSpan="2"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+                <TextBlock Text="Threshold"
+                           VerticalAlignment="Center"
+                           Margin="0 0 5 0"/>
+                <TextBox Width="100"
+                         Margin="0 0 10 0"
+                         Text="{Binding Threshold}"/>
+                <TextBlock Text="Iterations"
+                           VerticalAlignment="Center"
+                           Margin="0 0 5 0"/>
+                <TextBox Width="100"
+                         Margin="0 0 10 0"
+                         Text="{Binding Iterations}"/>
+                <Button Content="Run"
+                        Command="{Binding RunCommand}"/>
             </StackPanel>
 
             <Image Grid.Row="1" Grid.Column="0" Source="{Binding InputImage, Converter={StaticResource image_to_bitmap_converter}}"/>

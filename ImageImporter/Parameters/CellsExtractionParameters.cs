@@ -1,9 +1,9 @@
 ﻿namespace ImageImporter.Parameters;
 
-public struct CellsExtractionParameters(int threshold, int iterations)
+public class CellsExtractionParameters(int threshold, int iterations)
 {
     public int Threshold = threshold;
     public int Iterations = iterations;
 
-    public override readonly string ToString() => $"Parameters: Threshold={Threshold}, Iterations={Iterations}";
+    public override string ToString() => $"Parameters: Threshold={Threshold}, Iterations={Iterations}";
 }

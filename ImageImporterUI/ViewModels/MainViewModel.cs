@@ -15,6 +15,8 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<string>
 {
     public static string path = "C:\\Users\\Morten Lang\\source\\repos\\SudokuSolver\\Data\\Importer\\";
 
+    public enum UpdateType { All, Grid, Cells, Numbers };
+
     private readonly LogViewModel logViewModel;
     private readonly GridViewModel gridViewModel;
     private readonly CellsViewModel cellsViewModel;
@@ -69,24 +71,35 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<string>
 
     partial void OnSelectedImageFilenameChanged(string value)
     {
-        _ = Update();
+        _ = Update(UpdateType.All);
     }
 
-    private async Task Update()
+    public async Task Update(UpdateType type)
     {
         IsBusy = true;
         var stop_watch = Stopwatch.StartNew();
-        
-        // Do the entire import + recognition
-        await Task.Run(() => puzzle = importer.Import(path+SelectedImageFilename, parameters));
-        // Update all individual vms with new puzzle
-        logViewModel.Update();
-        gridViewModel.Update();
-        cellsViewModel.Update();
-        numbersViewModel.Update();
-        improveNumberRecognitionViewModel.Update();
-        // Update the viewmodels here
-        SelectedViewModel = ViewModels.FirstOrDefault();
+
+        switch (type)
+        {
+            case UpdateType.All:
+                // Do the entire import + recognition
+                await Task.Run(() => puzzle = importer.Import(path + SelectedImageFilename, parameters));
+                // Update all individual vms with new puzzle
+                logViewModel.Update();
+                gridViewModel.Update();
+                cellsViewModel.Update();
+                numbersViewModel.Update();
+                improveNumberRecognitionViewModel.Update();
+                // Update the viewmodels here
+                SelectedViewModel = ViewModels.FirstOrDefault();
+                break;
+            case UpdateType.Cells:
+                // Do the entire import + recognition
+                await Task.Run(() => importer.ExtractCells(puzzle, cellsViewModel.SelectedParameters));
+                // Update relevant individual vms with new puzzle
+                cellsViewModel.Update();
+                break;
+        }
 
         stop_watch.Stop();
         TimeElapsed = $"Elapsed: {stop_watch.ElapsedMilliseconds:f2}ms";

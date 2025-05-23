@@ -12,11 +12,11 @@ public partial class ImproveNumberRecognitionViewModel(MainViewModel main) : Obs
     private ObservableCollection<Number> numbers = [];
 
     [ObservableProperty]
-    private Number selectedNumber = null!;
+    private Number? selectedNumber = null;
 
     public void Update()
     {
         Numbers = new ObservableCollection<Number>(main.puzzle.Numbers.Where(n => n.ContainsNumber));
-        SelectedNumber = Numbers.First();
+        SelectedNumber = Numbers.FirstOrDefault();
     }
 }

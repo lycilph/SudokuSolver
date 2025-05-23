@@ -15,5 +15,5 @@ public class Number(Cell cell)
     public bool RecognitionFailure { get; set; } = false;
     public bool ContainsNumber { get; set; } = false;
 
-    public NumberRecognitionParameters ParametersUsed { get; set; } = new();
+    public NumberRecognitionParameters ParametersUsed { get; set; } = null!;
 }

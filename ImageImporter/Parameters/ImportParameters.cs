@@ -9,7 +9,7 @@ public class ImportParameters
     public ImportParameters()
     {
         GridParameters = new GridExtractionParameters(0, 3000);
-        CellsParameters = [new(5, 1), new(5, 3), new(2, 3)];
+        CellsParameters = [new(5, 1), new(5, 3), new(2, 3), new(10, 3)];
         NumberParameters = [new(5, 1, 1, 0), new(5, 1, 1, 1), new(5, 2, 1, 1), new(2, 3, 1, 1), new(3, 1, 1, 1), new(1, 5, 1, 1), new(5, 5, 1, 2)];
     }
 }
