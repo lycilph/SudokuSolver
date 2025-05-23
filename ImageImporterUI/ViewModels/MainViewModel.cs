@@ -93,8 +93,14 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<string>
                 // Update the viewmodels here
                 SelectedViewModel = ViewModels.FirstOrDefault();
                 break;
+            case UpdateType.Grid:
+                // Do only the grig extraction
+                await Task.Run(() => importer.ExtractGrid(puzzle, parameters.GridParameters));
+                // Update relevant individual vms with new puzzle
+                gridViewModel.Update();
+                break;
             case UpdateType.Cells:
-                // Do the entire import + recognition
+                // Do only the cells extraction
                 await Task.Run(() => importer.ExtractCells(puzzle, cellsViewModel.SelectedParameters));
                 // Update relevant individual vms with new puzzle
                 cellsViewModel.Update();
@@ -104,6 +110,12 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<string>
         stop_watch.Stop();
         TimeElapsed = $"Elapsed: {stop_watch.ElapsedMilliseconds:f2}ms";
         IsBusy = false;
+    }
+
+    [RelayCommand]
+    private void UpdateAll()
+    {
+        _ = Update(UpdateType.All);
     }
 
     [RelayCommand]
