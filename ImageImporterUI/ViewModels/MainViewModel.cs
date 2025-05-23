@@ -15,7 +15,7 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<string>
 {
     public static string path = "C:\\Users\\Morten Lang\\source\\repos\\SudokuSolver\\Data\\Importer\\";
 
-    public enum UpdateType { All, Grid, Cells, Numbers };
+    public enum UpdateType { All, Grid, Cells };
 
     private readonly LogViewModel logViewModel;
     private readonly GridViewModel gridViewModel;
@@ -94,7 +94,7 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<string>
                 SelectedViewModel = ViewModels.FirstOrDefault();
                 break;
             case UpdateType.Grid:
-                // Do only the grig extraction
+                // Do only the grid extraction
                 await Task.Run(() => importer.ExtractGrid(puzzle, parameters.GridParameters));
                 // Update relevant individual vms with new puzzle
                 gridViewModel.Update();

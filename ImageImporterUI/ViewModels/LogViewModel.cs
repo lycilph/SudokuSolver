@@ -41,7 +41,6 @@ public partial class LogViewModel(MainViewModel main) : ObservableObject
         var differences_count = differences.Count(c => c == '|');
 
         // Statistics
-        sb.AppendLine($"Processing image took: {main.TimeElapsed}");
         sb.AppendLine($"Imported puzzle: {imported_puzzle}");
         sb.AppendLine($"  Actual puzzle: {actual_puzzle}");
         sb.AppendLine($"    differences: {differences} (count {differences_count})");
