@@ -4,6 +4,7 @@ using System.IO;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Emgu.CV;
 using ImageImporter;
 using ImageImporter.Models;
 using ImageImporter.Parameters;
@@ -84,6 +85,18 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<string>
             case UpdateType.All:
                 // Do the entire import + recognition
                 await Task.Run(() => puzzle = importer.Import(path + SelectedImageFilename, parameters));
+
+                //foreach (var cell in puzzle.Cells)
+                //{
+                //    var filename = path + "Cells\\" + $"cell{cell.Id}.jpg";
+                //    CvInvoke.Imwrite(filename, cell.Image);
+                //}
+                //foreach (var num in puzzle.Numbers)
+                //{
+                //    var filename = path + "Cells\\" + $"cell_processed{num.Cell.Id}.jpg";
+                //    CvInvoke.Imwrite(filename, num.ImageProcessed);
+                //}
+
                 // Update all individual vms with new puzzle
                 logViewModel.Update();
                 gridViewModel.Update();
