@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System.Diagnostics;
+using System.Drawing;
 using Emgu.CV;
 using Emgu.CV.OCR;
 using Emgu.CV.Structure;
@@ -400,6 +401,114 @@ public class Importer
         }
 
         puzzle.AppendDebugLog("");
+    }
+
+    public void OptimizeNumberRecognition(Cell cell)
+    {
+        // Basic preprocessing of the image
+        var img = cell.Image.Convert<Gray, byte>();
+        img._GammaCorrect(0.8);
+        img = img.SmoothGaussian(7);
+        var area = (double)cell.Image.Area();
+
+        var result = 0f;
+        var best_result = 0f;
+        var parameters = new NumberRecognitionParameters(0,0,0,0);
+        for (int threshold = 2; threshold <= 5; threshold++)
+        {
+            for (int operation = 0; operation <= 2; operation++)
+            {
+                if (operation == 0)
+                {
+                    result = Calculate(img, area, threshold, 0, 0, 0);
+
+                    if (result > best_result)
+                    {
+                        best_result = result;
+                        parameters.Set(threshold, 0, 0, 0);
+                        Debug.WriteLine($"New best {best_result} - {parameters}");
+                    }
+                }
+                else
+                {
+                    for (int kernel_size = 1; kernel_size <= 5; kernel_size++)
+                    {
+                        for (int iterations = 1; iterations <= 5; iterations++)
+                        {
+                            result = Calculate(img, area, threshold, kernel_size, iterations, operation);
+
+                            if (result > best_result)
+                            {
+                                best_result = result;
+                                parameters.Set(threshold, kernel_size, iterations, operation);
+                                Debug.WriteLine($"New best {best_result} - {parameters}");
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        Debug.WriteLine($"Done {best_result} - {parameters}");
+    }
+
+    private float Calculate(Image<Gray,byte> gray, double cell_area, int threshold, int kernel_size, int iterations, int operation)
+    {
+        var img = gray.Clone();
+        img = img.ThresholdAdaptive(new Gray(255), CvEnum.AdaptiveThresholdType.GaussianC, CvEnum.ThresholdType.BinaryInv, 55, new Gray(threshold));
+
+        // Filter out small elements
+        VectorOfVectorOfPoint contours = new();
+        CvInvoke.FindContours(img, contours, null, CvEnum.RetrType.Tree, CvEnum.ChainApproxMethod.ChainApproxSimple);
+        for (int i = 0; i < contours.Size; i++)
+        {
+            var area = CvInvoke.ContourArea(contours[i]);
+            if (area < 200)
+                CvInvoke.DrawContours(img, contours, i, new MCvScalar(0, 0, 0), -1);
+        }
+
+        // Do extra processing based on the operations parameter
+        if (operation > 0)
+        {
+            var kernel = CvInvoke.GetStructuringElement(CvEnum.ElementShape.Ellipse, new Size(kernel_size, kernel_size), new Point(-1, -1));
+
+            switch (operation)
+            {
+                case 1:
+                    CvInvoke.MorphologyEx(img, img, CvEnum.MorphOp.Erode, kernel, new Point(-1, -1), iterations, CvEnum.BorderType.Default, new MCvScalar(0, 0, 0));
+                    break;
+                case 2:
+                    CvInvoke.MorphologyEx(img, img, CvEnum.MorphOp.Close, kernel, new Point(-1, -1), iterations, CvEnum.BorderType.Default, new MCvScalar(0, 0, 0));
+                    break;
+            }
+        }
+
+        var filled_percent = img.CountNonzero()[0] / cell_area * 100.0;
+        if (filled_percent > 2.0) // To try do OCR if fill is over 2 percent
+        {
+            // Apparently a border makes the OCR work better (https://stackoverflow.com/questions/52823336/why-do-i-get-such-poor-results-from-tesseract-for-simple-single-character-recogn)
+            CvInvoke.Rectangle(img, new Rectangle(0, 0, img.Width, img.Height), new MCvScalar(255, 255, 255), 5);
+
+            // Resize and Invert to improve recognition
+            img = img.Resize(5, CvEnum.Inter.Cubic);
+            //img = img.Not();
+
+            tesseract.SetImage(img);
+            tesseract.Recognize();
+
+            var text = tesseract.GetUTF8Text().TrimEnd();
+            var failure = string.IsNullOrWhiteSpace(text);
+            float confidence = 0f;
+
+            if (!string.IsNullOrWhiteSpace(text))
+                confidence = tesseract.GetWords().First().Confident;
+
+            if (text.Length > 1)
+                failure = true;
+
+            return confidence;
+        }
+        else
+            return 0;
     }
 
     private static Point GetClosestPoint(Point p, VectorOfPoint points)

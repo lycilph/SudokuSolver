@@ -7,5 +7,13 @@ public class NumberRecognitionParameters(int threshold, int kernel_size, int ite
     public int Iterations = iterations;
     public int Operation = operation;
 
+    public void Set(int t, int k, int i, int o)
+    {
+        Threshold = t;
+        KernelSize = k;
+        Iterations = i;
+        Operation = o;
+    }
+
     public override string ToString() => $"Parameters: Threshold={Threshold}, Kernel Size={KernelSize}, Iterations={Iterations}, Operation={Operation}";
 }

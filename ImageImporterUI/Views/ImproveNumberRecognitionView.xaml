@@ -65,7 +65,12 @@
                     Command="{Binding AddCommand}"/>
 
             <Button DockPanel.Dock="Right"
+                    Content="Optimize"
+                    Command="{Binding OptimizeCommand}"/>
+
+            <Button DockPanel.Dock="Right"
                     Content="Run"
+                    Margin="0 0 10 0"
                     Command="{Binding RunCommand}"/>
             
             <TextBox DockPanel.Dock="Right"

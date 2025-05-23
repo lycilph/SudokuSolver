@@ -90,4 +90,13 @@ public partial class ImproveNumberRecognitionViewModel(MainViewModel main) : Obs
         Numbers[index] = num;
         SelectedNumber = num;
     }
+
+    [RelayCommand]
+    private void Optimize()
+    {
+        if (SelectedNumber == null)
+            return;
+
+        main.importer.OptimizeNumberRecognition(SelectedNumber.Cell);
+    }
 }
