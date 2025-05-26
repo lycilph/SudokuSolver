@@ -12,10 +12,10 @@ public static class ImageImporter
         string puzzle = string.Empty;
 
         // This should dispose of the grid after using it
-        using (var grid = ExtractGrid(input, config))
+        using (var grid_image = ExtractGrid(input, config))
         {
-            var regions = RecognizeNumbers(grid);
-            puzzle = MapNumbersToCells(regions, grid.Size());
+            var regions = RecognizeNumbers(grid_image, config);
+            puzzle = MapNumbersToCells(regions, grid_image.Size());
         }
 
         return puzzle;
@@ -98,7 +98,7 @@ public static class ImageImporter
         return Math.Sqrt((p1.X - p2.X) * (p1.X - p2.X) + (p1.Y - p2.Y) * (p1.Y - p2.Y));
     }
 
-    private static PaddleOcrResultRegion[] RecognizeNumbers(Mat input)
+    private static PaddleOcrResultRegion[] RecognizeNumbers(Mat input, ImportConfiguration config)
     {
         using (var ocr = new PaddleOcrAll(LocalFullModels.EnglishV4, PaddleDevice.Mkldnn())
         {
@@ -106,9 +106,20 @@ public static class ImageImporter
             Enable180Classification = false,
         })
         {
-            ocr.Detector.BoxThreshold = 0.2f;
-
             PaddleOcrResult result = ocr.Run(input);
+
+            if (config.Debug)
+            {
+                using (var t = new ResourcesTracker())
+                {
+                    Mat dest = t.T(PaddleOcrDetector.Visualize(input, result.Regions.Select(x => x.Rect).ToArray(), Scalar.Red, thickness: 2));
+                    Mat resized = t.NewMat();
+                    Cv2.Resize(dest, resized, new Size(800, 800));
+                    t.T(new Window("output", resized));
+                    Cv2.WaitKey(0);
+                }
+            }
+
             return result.Regions;
         }
     }

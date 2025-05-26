@@ -49,7 +49,7 @@ public partial class MainViewModel : ObservableObject
         OnPropertyChanged(nameof(Image));
         OnPropertyChanged(nameof(ProcessedImage));
 
-        Debug.WriteLine(ImageImporter.Import(Image, ImportConfiguration.Default()));
+        Debug.WriteLine(ImageImporter.Import(Image, ImportConfiguration.DebugConfig()));
     }
 
     partial void OnImageChanging(Mat value)

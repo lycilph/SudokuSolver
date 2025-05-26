@@ -12,10 +12,10 @@ public static class ImageImporter
         string puzzle = string.Empty;
 
         // This should dispose of the grid after using it
-        using (var grid = ExtractGrid(input, config))
+        using (var grid_image = ExtractGrid(input, config))
         {
-            var regions = RecognizeNumbers(grid);
-            puzzle = ExtractCells(regions, grid.Size());
+            var regions = RecognizeNumbers(grid_image, config);
+            puzzle = MapNumbersToCells(regions, grid_image.Size());
         }
 
         return puzzle;
@@ -98,7 +98,7 @@ public static class ImageImporter
         return Math.Sqrt((p1.X - p2.X) * (p1.X - p2.X) + (p1.Y - p2.Y) * (p1.Y - p2.Y));
     }
 
-    private static PaddleOcrResultRegion[] RecognizeNumbers(Mat input)
+    private static PaddleOcrResultRegion[] RecognizeNumbers(Mat input, ImportConfiguration config)
     {
         using (var ocr = new PaddleOcrAll(LocalFullModels.EnglishV4, PaddleDevice.Mkldnn())
         {
@@ -107,11 +107,24 @@ public static class ImageImporter
         })
         {
             PaddleOcrResult result = ocr.Run(input);
+
+            if (config.Debug)
+            {
+                using (var t = new ResourcesTracker())
+                {
+                    Mat dest = t.T(PaddleOcrDetector.Visualize(input, result.Regions.Select(x => x.Rect).ToArray(), Scalar.Red, thickness: 2));
+                    Mat resized = t.NewMat();
+                    Cv2.Resize(dest, resized, new Size(800, 800));
+                    t.T(new Window("output", resized));
+                    Cv2.WaitKey(0);
+                }
+            }
+
             return result.Regions;
         }
     }
 
-    private static string ExtractCells(PaddleOcrResultRegion[] regions, Size grid_size)
+    private static string MapNumbersToCells(PaddleOcrResultRegion[] regions, Size grid_size)
     {
         var width = grid_size.Width / 9f;
         var height = grid_size.Height / 9f;
@@ -125,7 +138,7 @@ public static class ImageImporter
             int y = i / 9;
             int x = i % 9;
 
-            cells.Add(new Cell() { Id = i, Center = new Point2f(x * width + width_offset, y * height * height_offset) });
+            cells.Add(new Cell() { Id = i, Center = new Point2f(x * width + width_offset, y * height + height_offset) });
         }
 
         foreach (var region in regions)
