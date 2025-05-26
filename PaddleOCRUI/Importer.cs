@@ -95,7 +95,7 @@ public class Importer
 
             // Find the bounding rectangle around the largest contour
             var bound = Cv2.BoundingRect(contours[max_area_index]);
-            Cv2.Rectangle(input, bound, new Scalar(255, 0, 0), 3);
+            //Cv2.Rectangle(input, bound, new Scalar(255, 0, 0), 3);
             var bound_pts = new List<Point>
             {
                 new(bound.X, bound.Y),
@@ -107,13 +107,13 @@ public class Importer
             // Approximate contour
             var bound_approx = Cv2.ApproxPolyDP(contours[max_area_index], 10, true);
             Debug.WriteLine($"Approximating grid with a {bound_approx.Length}-polygon");
-            foreach (var pt in bound_approx)
-                Cv2.Circle(input, pt, 10, new Scalar(0, 255, 0), -1);
+            //foreach (var pt in bound_approx)
+            //    Cv2.Circle(input, pt, 10, new Scalar(0, 255, 0), -1);
 
             // Find closest points on approximated largest contour
             var grid_pts = bound_pts.Select(p => GetClosestPoint(p, bound_approx)).ToList();
-            foreach (var pt in grid_pts)
-                Cv2.Circle(input, pt, 10, new Scalar(0, 0, 255), -1);
+            //foreach (var pt in grid_pts)
+            //    Cv2.Circle(input, pt, 10, new Scalar(0, 0, 255), -1);
 
             // Get perspective transform
             var size = 3000;
@@ -123,7 +123,7 @@ public class Importer
             var perspective = Cv2.GetPerspectiveTransform(src, dst);
 
             // Warp perspective
-            Cv2.WarpPerspective(gray, output, perspective, new Size(size, size), InterpolationFlags.Cubic);
+            Cv2.WarpPerspective(input, output, perspective, new Size(size, size), InterpolationFlags.Cubic);
 
             //Cv2.ImWrite("output.jpg", output);
         }

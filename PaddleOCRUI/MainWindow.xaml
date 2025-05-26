@@ -19,10 +19,21 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <ListBox Grid.Column="0"
-                 ItemsSource="{Binding ImageFilenames}"
-                 SelectedItem="{Binding SelectedImageFilename}"/>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
 
+            <Button Grid.Row="0"
+                    Content="Capture"
+                    Command="{Binding CaptureCommand}"/>
+
+            <ListBox Grid.Row="1"
+                     ItemsSource="{Binding ImageFilenames}"
+                     SelectedItem="{Binding SelectedImageFilename}"/>
+        </Grid>
+        
         <Image Grid.Column="1"
                Source="{Binding Image, Converter={StaticResource image_to_bitmap_converter}}"/>
 

@@ -1,0 +1,55 @@
+﻿<Window x:Class="PaddleOCRUI.CaptureImageWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PaddleOCRUI"
+        mc:Ignorable="d"
+        Title="CaptureImageWindow" Height="450" Width="800"
+        WindowStartupLocation="CenterScreen"
+        local:WindowUtils.WindowLifetimeEvents="True"
+        d:DataContext="{d:DesignInstance Type=local:CaptureImageViewModel}">
+    <Window.Resources>
+        <local:ImageToBitmapConverter x:Key="image_to_bitmap_converter"/>
+    </Window.Resources>
+    
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+
+        <ComboBox Grid.Row="0"
+              Grid.Column="0"
+              ItemsSource="{Binding Cameras}"
+              SelectedItem="{Binding SelectedCamera}"
+              HorizontalAlignment="Left"
+              Padding="10 0"/>
+
+        <Image Grid.Row="1"
+           Grid.Column="0"
+           Margin="0 10 0 0"
+           VerticalAlignment="Bottom"
+           Source="{Binding CameraImage, Converter={StaticResource image_to_bitmap_converter}}"/>
+
+        <!--<Button Grid.Row="2"
+            Grid.Column="0"
+            HorizontalAlignment="Center"
+            Margin="0 10 0 0"
+            Content="Capture"
+            Command="{Binding CaptureCommand}"/>-->
+
+        <!--<Image Grid.Row="1"
+           Grid.Column="1"
+           Margin="10 10 0 0"
+           MinWidth="200"
+           VerticalAlignment="Bottom"
+           Source="{Binding ImportImage, Converter={StaticResource image_to_bitmap_converter}}"/>-->
+    </Grid>
+</Window>
