@@ -1,4 +1,4 @@
-﻿namespace PaddleOCRUI.Core;
+﻿namespace Core.Import;
 
 public readonly struct ImportConfiguration(int threshold, int block_size, int grid_output_size)
 {

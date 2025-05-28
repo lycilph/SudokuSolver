@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using OpenCvSharp;
 
-namespace PaddleOCRUI.Core;
+namespace Core.Import;
 
 [DebuggerDisplay("Cell {Id} ({Center.X},{Center.Y}) [{Text}]")]
 public class Cell

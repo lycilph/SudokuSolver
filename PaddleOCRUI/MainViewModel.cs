@@ -4,7 +4,7 @@ using System.Text;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using OpenCvSharp;
-using PaddleOCRUI.Core;
+using Core.Import;
 
 namespace PaddleOCRUI;
 
@@ -17,7 +17,7 @@ public partial class MainViewModel : ObservableObject
     private readonly ImportConfiguration config = ImportConfiguration.Default();
 
     [ObservableProperty]
-    private ObservableCollection<string> imageFilenames;
+    private ObservableCollection<string> imageFilenames = [];
 
     [ObservableProperty]
     private string selectedImageFilename = string.Empty;
@@ -139,11 +139,18 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     private void Capture()
     {
+        var vm = new CaptureImageViewModel(path);
         var win = new CaptureImageWindow
         { 
             Owner = App.Current.MainWindow,
-            DataContext = new CaptureImageViewModel(path)
+            DataContext = vm
         };
-        win.ShowDialog();
+        var result = win.ShowDialog();
+
+        if (result == true)
+        {
+            ImageFilenames.Add(vm.Filename);
+            SelectedImageFilename = vm.Filename;
+        }
     }
 }
