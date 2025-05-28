@@ -130,9 +130,15 @@
                                 ToolTip="Clear"
                                 Focusable="False"/>
 
+                        <Button Content="{icon:Lucide Kind=Camera, Height=24, Width=24}"
+                                Command="{Binding ImageImportCommand}"
+                                Margin="0 20 0 0"
+                                ToolTip="Image Import"
+                                Focusable="False"/>
+
                         <Button Content="{icon:Lucide Kind=ArrowDownToLine, Height=24, Width=24}"
                                 Command="{Binding ImportCommand}"
-                                Margin="0 20 0 0"
+                                Margin="0 5 0 0"
                                 ToolTip="Import"
                                 Focusable="False"/>
 

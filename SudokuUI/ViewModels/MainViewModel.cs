@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Core.Commands;
 using Core.Engine;
+using Core.Import;
 using MahApps.Metro.Controls.Dialogs;
 using NLog;
 using SudokuUI.Dialogs;
@@ -20,7 +21,6 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<MainWindowL
 
     private readonly PuzzleService puzzle_service;
     private readonly SolverService solver_service;
-    private readonly SettingsService settings_service;
     private readonly SelectionService selection_service;
     private readonly DebugService debug_service;
 
@@ -56,7 +56,6 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<MainWindowL
 
     public MainViewModel(PuzzleService puzzle_service,
                          SolverService solver_service,
-                         SettingsService settings_service,
                          SelectionService selection_service,
                          DebugService debug_service,
                          UndoRedoService undo_service,
@@ -69,7 +68,6 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<MainWindowL
     {
         this.puzzle_service = puzzle_service;
         this.solver_service = solver_service;
-        this.settings_service = settings_service;
         this.selection_service = selection_service;
         this.debug_service = debug_service;
 
@@ -232,6 +230,16 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<MainWindowL
     private void ClearPuzzle()
     {
         puzzle_service.Clear();
+    }
+
+    [RelayCommand]
+    private async Task ImageImport()
+    {
+        using (var scope = OverlayVM.GetWaitingSpinnerScope(true))
+        {
+            await scope.OpenAnimationTask;
+            await Task.Run(() => { var importer = new PuzzleImporter(); });
+        }
     }
 
     [RelayCommand]

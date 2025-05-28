@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using Core.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using NLog;
 using SudokuUI.Services;

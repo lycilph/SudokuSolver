@@ -1,7 +1,5 @@
-﻿using System.IO;
-using Core.Import;
+﻿using Core.Import;
 using OpenCvSharp;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace UnitTests.Import;
 
