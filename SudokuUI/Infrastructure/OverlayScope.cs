@@ -10,10 +10,10 @@ public class OverlayScope : IDisposable
     public Task OpenAnimationTask { get; private set; }
 
     // Constructor takes the overlay instance and calls Show
-    public OverlayScope(OverlayViewModel overlay, bool show_spinner)
+    public OverlayScope(OverlayViewModel overlay, bool show_spinner, string message)
     {
         this.overlay = overlay ?? throw new ArgumentNullException(nameof(overlay));
-        OpenAnimationTask = this.overlay.Show(show_spinner); // Call the Show method when the object is created
+        OpenAnimationTask = this.overlay.Show(show_spinner, message); // Call the Show method when the object is created
     }
 
     // Dispose method to call Hide

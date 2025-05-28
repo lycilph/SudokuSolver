@@ -20,6 +20,9 @@ public partial class OverlayViewModel : ObservableObject
     private bool showSpinner = false;
 
     [ObservableProperty]
+    private string message = string.Empty;
+
+    [ObservableProperty]
     private double overlayOpacity = 0.5;
 
     [ObservableProperty]
@@ -51,13 +54,14 @@ public partial class OverlayViewModel : ObservableObject
     public void OnOpenAnimationCompleted() => open_animation_completion_source.SetResult();
     public void OnCloseAnimationCompleted() => close_animation_completion_source.SetResult();
 
-    public Task Show(bool show_spinner = false)
+    public Task Show(bool show_spinner = false, string message = "")
     {
         open_animation_completion_source = new();
         close_animation_completion_source = new();
 
         IsOpen = true;
         ShowSpinner = show_spinner;
+        Message = message;
 
         return open_animation_completion_source.Task;
     }
@@ -80,7 +84,7 @@ public partial class OverlayViewModel : ObservableObject
     public bool CanHide() => !ShowSpinner && !VictoryVM.IsActive;
     public bool CanToggleSettings() => !ShowSpinner && !NewGameVM.IsActive && !VictoryVM.IsActive && !HintsVM.IsActive;
 
-    public OverlayScope GetWaitingSpinnerScope(bool show_spinner = false) => new(this, show_spinner);
+    public OverlayScope GetWaitingSpinnerScope(bool show_spinner = false, string message = "") => new(this, show_spinner, message);
 
     public void AddVictoryStatistics(Statistics stats) => VictoryVM.AddStatistics(stats);
 

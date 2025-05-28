@@ -7,6 +7,7 @@ using Core.Import;
 using MahApps.Metro.Controls.Dialogs;
 using NLog;
 using SudokuUI.Dialogs;
+using SudokuUI.Dialogs.ImageImport;
 using SudokuUI.Infrastructure;
 using SudokuUI.Messages;
 using SudokuUI.Services;
@@ -235,10 +236,14 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<MainWindowL
     [RelayCommand]
     private async Task ImageImport()
     {
-        using (var scope = OverlayVM.GetWaitingSpinnerScope(true))
+        using (var scope = OverlayVM.GetWaitingSpinnerScope(true, "Loading OCR Model"))
         {
             await scope.OpenAnimationTask;
             await Task.Run(() => { var importer = new PuzzleImporter(); });
+
+            var vm = new ImageImportDialogViewModel();
+            var view = new ImageImportDialogView { DataContext = vm };
+            var result = await ShowDialogAsync(vm, view, "Image Import");
         }
     }
 

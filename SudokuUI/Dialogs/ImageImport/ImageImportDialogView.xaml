@@ -4,16 +4,21 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:dia="clr-namespace:SudokuUI.Dialogs.ImageImport"
+             xmlns:icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance Type=dia:ImageImportDialogViewModel, IsDesignTimeCreatable=False}">
     <StackPanel Orientation="Vertical">
-        <Label Content="Select" />
-
         <StackPanel Orientation="Horizontal"
-                    HorizontalAlignment="Center">
-            <Button Content="Image" Margin="10 0"/>
-            <Button Content="Camera" Margin="10 0"/>
+                    HorizontalAlignment="Center"
+                    Margin="0 25 0 10">
+            <Button Content="{icon:Lucide Kind=Image, Height=72, Width=72}"
+                    ToolTip="Import an image"
+                    Margin="10 0"/>
+            
+            <Button Content="{icon:Lucide Kind=Camera, Height=72, Width=72}"
+                    ToolTip="Capture an image from a webcam"
+                    Margin="10 0"/>
         </StackPanel>
 
         <Button HorizontalAlignment="Right"

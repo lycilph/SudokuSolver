@@ -49,12 +49,18 @@
         <Rectangle Fill="Gray"
                    Opacity="{Binding OverlayOpacity}"/>
 
-        <mah:ProgressRing IsActive="{Binding ShowSpinner}"
-                          Foreground="{DynamicResource MahApps.Brushes.Accent}"
-                          Width="100"
-                          Height="100"
-                          HorizontalAlignment="Center"
-                          VerticalAlignment="Center"/>
+        <StackPanel VerticalAlignment="Center">
+            <mah:ProgressRing IsActive="{Binding ShowSpinner}"
+                              Foreground="{DynamicResource MahApps.Brushes.Accent}"
+                              Width="100"
+                              Height="100"
+                              HorizontalAlignment="Center"/>
+
+            <TextBlock Text="{Binding Message}"
+                       HorizontalAlignment="Center"
+                       FontSize="24"
+                       Margin="0 20 0 0"/>
+        </StackPanel>
 
         <ContentControl Content="{Binding NewGameVM}"
                         Visibility="{Binding NewGameVM.IsActive, Converter={StaticResource bool_to_visibilty_converter}}"/>
