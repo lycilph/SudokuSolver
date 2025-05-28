@@ -1,6 +1,4 @@
-﻿using ImageImporter;
-using ImageImporter.Parameters;
-
+﻿
 namespace Sandbox;
 
 internal class Program

@@ -108,17 +108,17 @@ public static class ImageImporter
         {
             PaddleOcrResult result = ocr.Run(input);
 
-            if (config.Debug)
-            {
-                using (var t = new ResourcesTracker())
-                {
-                    Mat dest = t.T(PaddleOcrDetector.Visualize(input, result.Regions.Select(x => x.Rect).ToArray(), Scalar.Red, thickness: 2));
-                    Mat resized = t.NewMat();
-                    Cv2.Resize(dest, resized, new Size(800, 800));
-                    t.T(new Window("output", resized));
-                    Cv2.WaitKey(0);
-                }
-            }
+            //if (config.Debug)
+            //{
+            //    using (var t = new ResourcesTracker())
+            //    {
+            //        Mat dest = t.T(PaddleOcrDetector.Visualize(input, result.Regions.Select(x => x.Rect).ToArray(), Scalar.Red, thickness: 2));
+            //        Mat resized = t.NewMat();
+            //        Cv2.Resize(dest, resized, new Size(800, 800));
+            //        t.T(new Window("output", resized));
+            //        Cv2.WaitKey(0);
+            //    }
+            //}
 
             return result.Regions;
         }

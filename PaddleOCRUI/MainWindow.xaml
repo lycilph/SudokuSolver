@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="800" Width="1200"
         WindowStartupLocation="CenterScreen"
+        ThemeMode="Light"
         d:DataContext="{d:DesignInstance Type=local:MainViewModel}">
     <Window.Resources>
         <local:ImageToBitmapConverter x:Key="image_to_bitmap_converter"/>

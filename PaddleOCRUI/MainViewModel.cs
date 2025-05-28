@@ -8,12 +8,14 @@ using System.IO;
 
 namespace PaddleOCRUI;
 
+// https://www.thomasclaudiushuber.com/2025/02/21/wpf-in-net-9-0-windows-11-theming/
+
 public partial class MainViewModel : ObservableObject
 {
     public static string path = "C:\\Users\\Morten Lang\\source\\repos\\SudokuSolver\\Data\\Importer\\";
     //private static string path = @"C:\Users\morte\Projects\SudokuSolver\Data\Importer\";
 
-    private readonly Importer importer = new();
+    //private readonly Importer importer = new();
 
     [ObservableProperty]
     private ObservableCollection<string> imageFilenames;
@@ -43,8 +45,8 @@ public partial class MainViewModel : ObservableObject
 
         Image = new Mat(Path.Combine(path, SelectedImageFilename));
 
-        ProcessedImage = importer.Import(Image);
-        importer.Recognize(ProcessedImage);
+        //ProcessedImage = importer.Import(Image);
+        //importer.Recognize(ProcessedImage);
 
         OnPropertyChanged(nameof(Image));
         OnPropertyChanged(nameof(ProcessedImage));
