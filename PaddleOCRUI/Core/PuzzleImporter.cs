@@ -5,23 +5,34 @@ using Sdcb.PaddleOCR.Models.Local;
 
 namespace PaddleOCRUI.Core;
 
-public static class ImageImporter
+public class PuzzleImporter
 {
-    public static string Import(Mat input, ImportConfiguration config)
+    private PaddleOcrAll ocr;
+
+    public PuzzleImporter()
+    {
+        ocr = new PaddleOcrAll(LocalFullModels.EnglishV4, PaddleDevice.Mkldnn())
+        {
+            AllowRotateDetection = false,
+            Enable180Classification = false,
+        };
+    }
+
+    public string Import(Mat input, ImportConfiguration config)
     {
         string puzzle = string.Empty;
 
-        // This should dispose of the grid after using it
+        // This should dispose of the grid_image after using it
         using (var grid_image = ExtractGrid(input, config))
         {
-            var regions = RecognizeNumbers(grid_image, config);
+            var regions = RecognizeNumbers(grid_image);
             puzzle = MapNumbersToCells(regions, grid_image.Size());
         }
 
         return puzzle;
     }
 
-    private static Mat ExtractGrid(Mat input, ImportConfiguration config)
+    public Mat ExtractGrid(Mat input, ImportConfiguration config)
     {
         Mat output = new();
 
@@ -70,7 +81,7 @@ public static class ImageImporter
             var perspective = Cv2.GetPerspectiveTransform(src, dst);
 
             // Warp perspective
-            Cv2.WarpPerspective(gray, output, perspective, new Size(size, size), InterpolationFlags.Cubic);
+            Cv2.WarpPerspective(input, output, perspective, new Size(size, size), InterpolationFlags.Cubic);
         }
 
         return output;
@@ -98,33 +109,18 @@ public static class ImageImporter
         return Math.Sqrt((p1.X - p2.X) * (p1.X - p2.X) + (p1.Y - p2.Y) * (p1.Y - p2.Y));
     }
 
-    private static PaddleOcrResultRegion[] RecognizeNumbers(Mat input, ImportConfiguration config)
+    public Mat VisualizeDetection(Mat input, PaddleOcrResultRegion[] regions)
     {
-        using (var ocr = new PaddleOcrAll(LocalFullModels.EnglishV4, PaddleDevice.Mkldnn())
-        {
-            AllowRotateDetection = false,
-            Enable180Classification = false,
-        })
-        {
-            PaddleOcrResult result = ocr.Run(input);
-
-            //if (config.Debug)
-            //{
-            //    using (var t = new ResourcesTracker())
-            //    {
-            //        Mat dest = t.T(PaddleOcrDetector.Visualize(input, result.Regions.Select(x => x.Rect).ToArray(), Scalar.Red, thickness: 2));
-            //        Mat resized = t.NewMat();
-            //        Cv2.Resize(dest, resized, new Size(800, 800));
-            //        t.T(new Window("output", resized));
-            //        Cv2.WaitKey(0);
-            //    }
-            //}
-
-            return result.Regions;
-        }
+        return PaddleOcrDetector.Visualize(input, regions.Select(x => x.Rect).ToArray(), Scalar.Red, thickness: 5);
     }
 
-    private static string MapNumbersToCells(PaddleOcrResultRegion[] regions, Size grid_size)
+    public PaddleOcrResultRegion[] RecognizeNumbers(Mat input)
+    {
+        PaddleOcrResult result = ocr.Run(input);
+        return result.Regions;
+    }
+
+    public string MapNumbersToCells(PaddleOcrResultRegion[] regions, Size grid_size)
     {
         var width = grid_size.Width / 9f;
         var height = grid_size.Height / 9f;

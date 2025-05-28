@@ -15,7 +15,8 @@ public partial class MainViewModel : ObservableObject
     public static string path = "C:\\Users\\Morten Lang\\source\\repos\\SudokuSolver\\Data\\Importer\\";
     //private static string path = @"C:\Users\morte\Projects\SudokuSolver\Data\Importer\";
 
-    //private readonly Importer importer = new();
+    private readonly PuzzleImporter importer = new();
+    private readonly ImportConfiguration config = ImportConfiguration.Default();
 
     [ObservableProperty]
     private ObservableCollection<string> imageFilenames;
@@ -45,13 +46,16 @@ public partial class MainViewModel : ObservableObject
 
         Image = new Mat(Path.Combine(path, SelectedImageFilename));
 
-        //ProcessedImage = importer.Import(Image);
-        //importer.Recognize(ProcessedImage);
+        using (var grid = importer.ExtractGrid(Image, config))
+        {
+            var regions = importer.RecognizeNumbers(grid);
+            ProcessedImage = importer.VisualizeDetection(grid, regions);
+
+            Debug.WriteLine($"Imported puzzle: {importer.MapNumbersToCells(regions, grid.Size())}");
+        }
 
         OnPropertyChanged(nameof(Image));
         OnPropertyChanged(nameof(ProcessedImage));
-
-        Debug.WriteLine(ImageImporter.Import(Image, ImportConfiguration.DebugConfig()));
     }
 
     partial void OnImageChanging(Mat value)
