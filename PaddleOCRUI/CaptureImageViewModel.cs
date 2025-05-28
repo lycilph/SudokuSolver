@@ -2,14 +2,16 @@
 using System.Windows;
 using System.Windows.Interop;
 using CommunityToolkit.Mvvm.ComponentModel;
+using DirectShowLib;
 using OpenCvSharp;
 
 namespace PaddleOCRUI;
 
 public partial class CaptureImageViewModel : ObservableObject, IViewAware
 {
+    private DsDevice[] direct_show_cameras;
     private VideoCapture? video_capture = null;
-    
+
     public event EventHandler<bool>? OnRequestClose;
 
     [ObservableProperty]
@@ -21,13 +23,12 @@ public partial class CaptureImageViewModel : ObservableObject, IViewAware
     [ObservableProperty]
     private Mat cameraImage = null!;
 
-    //[ObservableProperty]
-    //private Image<Rgb, byte> importImage = null!;
+    [ObservableProperty]
+    private Mat importImage = null!;
 
     public CaptureImageViewModel()
     {
-
-
+        direct_show_cameras = DsDevice.GetDevicesOfCat(FilterCategory.VideoInputDevice);
         using (var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_PnPEntity WHERE (PNPClass = 'Image' OR PNPClass = 'Camera')"))
         {
             foreach (var device in searcher.Get())
@@ -35,6 +36,16 @@ public partial class CaptureImageViewModel : ObservableObject, IViewAware
                 Cameras.Add(device["Caption"].ToString() ?? "No name");
             }
         }
+    }
+    
+    private int GetCameraIndexForName(string name)
+    {
+        for (int i = 0; i < direct_show_cameras.Length; i++)
+        {
+            if (direct_show_cameras[i].Name.Contains(name, StringComparison.CurrentCultureIgnoreCase))
+                return i;
+        }
+        return -1;
     }
 
     partial void OnSelectedCameraChanged(string value)
@@ -44,7 +55,7 @@ public partial class CaptureImageViewModel : ObservableObject, IViewAware
 
         try
         {
-            var index = cameras.FindIndex(c => c == SelectedCamera);
+            var index = GetCameraIndexForName(SelectedCamera);
             video_capture = new VideoCapture(index, VideoCaptureAPIs.DSHOW);
         }
         catch (NullReferenceException ex)
@@ -61,7 +72,7 @@ public partial class CaptureImageViewModel : ObservableObject, IViewAware
         if (video_capture == null)
             return;
 
-        CameraImage = video_capture.RetrieveMat().Clone();
+        CameraImage = video_capture.RetrieveMat().Flip(FlipMode.Y).Clone();
     }
 
     public void WindowContentRendered()
@@ -76,13 +87,17 @@ public partial class CaptureImageViewModel : ObservableObject, IViewAware
 
         video_capture?.Release();
 
-        if (CameraImage != null)
-            CameraImage.Dispose();
+        CameraImage?.Dispose();
+        ImportImage?.Dispose();
     }
 
     partial void OnCameraImageChanging(Mat value)
     {
-        if (CameraImage != null)
-            CameraImage.Dispose();
+        CameraImage?.Dispose();
+    }
+
+    partial void OnImportImageChanging(Mat value)
+    {
+        ImportImage?.Dispose();
     }
 }

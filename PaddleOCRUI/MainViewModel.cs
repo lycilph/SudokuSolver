@@ -1,14 +1,12 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using System.IO;
+using System.Text;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using OpenCvSharp;
 using PaddleOCRUI.Core;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.IO;
 
 namespace PaddleOCRUI;
-
-// https://www.thomasclaudiushuber.com/2025/02/21/wpf-in-net-9-0-windows-11-theming/
 
 public partial class MainViewModel : ObservableObject
 {
@@ -29,6 +27,9 @@ public partial class MainViewModel : ObservableObject
 
     [ObservableProperty]
     private Mat processedImage = null!;
+
+    [ObservableProperty]
+    private string log = string.Empty;
 
     public MainViewModel()
     {
@@ -51,23 +52,48 @@ public partial class MainViewModel : ObservableObject
             var regions = importer.RecognizeNumbers(grid);
             ProcessedImage = importer.VisualizeDetection(grid, regions);
 
-            Debug.WriteLine($"Imported puzzle: {importer.MapNumbersToCells(regions, grid.Size())}");
+            var imported_puzzle = importer.MapNumbersToCells(regions, grid.Size());
+            UpdateLog(imported_puzzle);
         }
+    }
+    
+    private string GetDifferences(string imported_puzzle, string actual_puzzle)
+    {
+        var sb = new StringBuilder();
+        for (int i = 0; i < imported_puzzle.Length; i++)
+            sb.Append(imported_puzzle[i] == actual_puzzle[i] ? "." : "|");
+        return sb.ToString();
+    }
 
-        OnPropertyChanged(nameof(Image));
-        OnPropertyChanged(nameof(ProcessedImage));
+    private void UpdateLog(string imported_puzzle)
+    {
+        var filename = Path.Combine(path, Path.ChangeExtension(SelectedImageFilename, "txt"));
+        if (File.Exists(filename))
+        {
+            var actual_puzzle = File.ReadAllText(filename);
+            var differences = string.IsNullOrWhiteSpace(actual_puzzle) ? "no actual puzzle found" : GetDifferences(imported_puzzle, actual_puzzle);
+            var differences_count = differences.Count(c => c == '|');
+
+            var sb = new StringBuilder();
+            sb.AppendLine($"Processing {SelectedImageFilename}");
+
+            // Statistics
+            sb.AppendLine($"Imported puzzle: {imported_puzzle}");
+            sb.AppendLine($"  Actual puzzle: {actual_puzzle}");
+            sb.AppendLine($"    differences: {differences} (count {differences_count})");
+
+            Log = sb.ToString();
+        }
     }
 
     partial void OnImageChanging(Mat value)
     {
-        if (image != null)
-            image.Dispose();
+        Image?.Dispose();
     }
 
     partial void OnProcessedImageChanging(Mat value)
     {
-        if (ProcessedImage != null)
-            ProcessedImage.Dispose();
+        ProcessedImage?.Dispose();
     }
 
     [RelayCommand]
