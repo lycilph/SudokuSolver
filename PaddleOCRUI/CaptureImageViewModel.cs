@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Interop;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using DirectShowLib;
 using OpenCvSharp;
 
@@ -9,6 +10,8 @@ namespace PaddleOCRUI;
 
 public partial class CaptureImageViewModel : ObservableObject, IViewAware
 {
+    private string path;
+
     private DsDevice[] direct_show_cameras;
     private VideoCapture? video_capture = null;
 
@@ -26,8 +29,14 @@ public partial class CaptureImageViewModel : ObservableObject, IViewAware
     [ObservableProperty]
     private Mat importImage = null!;
 
-    public CaptureImageViewModel()
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(ImportCommand))]
+    private string filename = string.Empty;
+
+    public CaptureImageViewModel(string path)
     {
+        this.path = path;
+
         direct_show_cameras = DsDevice.GetDevicesOfCat(FilterCategory.VideoInputDevice);
         using (var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_PnPEntity WHERE (PNPClass = 'Image' OR PNPClass = 'Camera')"))
         {
@@ -37,7 +46,7 @@ public partial class CaptureImageViewModel : ObservableObject, IViewAware
             }
         }
     }
-    
+
     private int GetCameraIndexForName(string name)
     {
         for (int i = 0; i < direct_show_cameras.Length; i++)
@@ -100,4 +109,24 @@ public partial class CaptureImageViewModel : ObservableObject, IViewAware
     {
         ImportImage?.Dispose();
     }
+
+    [RelayCommand]
+    private void Capture()
+    {
+        ImportImage = CameraImage.Clone();
+        Filename =
+            $"WebcamCapture_{DateTime.Now}.jpg"
+            .Replace("-", "")
+            .Replace(":", "")
+            .Replace(" ", "_");
+    }
+
+    [RelayCommand(CanExecute = nameof(CanImport))]
+    private void Import()
+    {
+        Cv2.ImWrite(path + Filename, ImportImage);
+        OnRequestClose?.Invoke(this, true);
+    }
+
+    private bool CanImport() => !string.IsNullOrWhiteSpace(Filename);
 }

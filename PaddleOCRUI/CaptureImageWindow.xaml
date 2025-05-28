@@ -8,11 +8,8 @@
         Title="CaptureImageWindow" Height="450" Width="800"
         WindowStartupLocation="CenterScreen"
         local:WindowUtils.WindowLifetimeEvents="True"
-        d:DataContext="{d:DesignInstance Type=local:CaptureImageViewModel}">
-    <Window.Resources>
-        <local:ImageToBitmapConverter x:Key="image_to_bitmap_converter"/>
-    </Window.Resources>
-    
+        d:DataContext="{d:DesignInstance Type=local:CaptureImageViewModel, IsDesignTimeCreatable=False}">
+   
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -26,30 +23,43 @@
         </Grid.ColumnDefinitions>
 
         <ComboBox Grid.Row="0"
-              Grid.Column="0"
-              ItemsSource="{Binding Cameras}"
-              SelectedItem="{Binding SelectedCamera}"
-              HorizontalAlignment="Left"
-              Padding="10 0"/>
+                  Grid.Column="0"
+                  ItemsSource="{Binding Cameras}"
+                  SelectedItem="{Binding SelectedCamera}"
+                  HorizontalAlignment="Left"
+                  Padding="10 0"/>
+
+        <TextBlock Grid.Row="0"
+                   Grid.Column="1"
+                   HorizontalAlignment="Right"
+                   VerticalAlignment="Center"
+                   Text="{Binding Filename, FallbackValue=NA}"/>
 
         <Image Grid.Row="1"
-           Grid.Column="0"
-           Margin="0 10 0 0"
-           VerticalAlignment="Bottom"
-           Source="{Binding CameraImage, Converter={StaticResource image_to_bitmap_converter}}"/>
+               Grid.Column="0"
+               Margin="0 10 0 0"
+               VerticalAlignment="Bottom"
+               Source="{Binding CameraImage, Converter={StaticResource image_to_bitmap_converter}}"/>
 
-        <!--<Button Grid.Row="2"
-            Grid.Column="0"
-            HorizontalAlignment="Center"
-            Margin="0 10 0 0"
-            Content="Capture"
-            Command="{Binding CaptureCommand}"/>-->
+        <Button Grid.Row="2"
+                Grid.Column="0"
+                HorizontalAlignment="Center"
+                Margin="0 10 0 0"
+                Content="Capture"
+                Command="{Binding CaptureCommand}"/>
 
-        <!--<Image Grid.Row="1"
-           Grid.Column="1"
-           Margin="10 10 0 0"
-           MinWidth="200"
-           VerticalAlignment="Bottom"
-           Source="{Binding ImportImage, Converter={StaticResource image_to_bitmap_converter}}"/>-->
+        <Image Grid.Row="1"
+               Grid.Column="1"
+               Margin="10 10 0 0"
+               MinWidth="200"
+               VerticalAlignment="Bottom"
+               Source="{Binding ImportImage, Converter={StaticResource image_to_bitmap_converter}}"/>
+
+        <Button Grid.Row="2"
+                Grid.Column="1"
+                HorizontalAlignment="Center"
+                Margin="0 10 0 0"
+                Content="Import"
+                Command="{Binding ImportCommand}"/>
     </Grid>
 </Window>

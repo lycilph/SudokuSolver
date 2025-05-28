@@ -7,6 +7,11 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/PresentationFramework.Fluent;component/Themes/Fluent.xaml" />
+
+                <ResourceDictionary>
+                    <BooleanToVisibilityConverter x:Key="bool_to_visibility_converter"/>
+                    <local:ImageToBitmapConverter x:Key="image_to_bitmap_converter"/>
+                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
