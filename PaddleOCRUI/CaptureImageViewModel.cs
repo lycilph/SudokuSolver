@@ -118,6 +118,7 @@ public partial class CaptureImageViewModel : ObservableObject, IViewAware
             $"WebcamCapture_{DateTime.Now}.jpg"
             .Replace("-", "")
             .Replace(":", "")
+            .Replace("/", "-")
             .Replace(" ", "_");
     }
 

@@ -34,6 +34,7 @@ public partial class App : Application
         services.AddSingleton<HighlightService>();
         services.AddSingleton<SolverService>();
         services.AddSingleton<DebugService>();
+        services.AddSingleton<ImageImportService>();
 
         // These view models are singletons because they are used by multiple view models
         services.AddSingleton<GridViewModel>();

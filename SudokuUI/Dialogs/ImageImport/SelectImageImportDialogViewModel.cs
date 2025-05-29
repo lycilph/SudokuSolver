@@ -3,33 +3,18 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace SudokuUI.Dialogs.ImageImport;
 
-public partial class ImageImportDialogViewModel : ObservableObject, IDialogViewModel<string?>
+public partial class SelectImageImportDialogViewModel : ObservableObject, IDialogViewModel<string?>
 {
     private readonly TaskCompletionSource<string?> task_completion_source;
-
-    public const string SelectImage = "SelectImage";
-    public const string CaptureImage = "CaptureImage";
 
     [ObservableProperty]
     private string puzzle = string.Empty;
 
     public Task<string?> DialogResult => task_completion_source.Task;
 
-    public ImageImportDialogViewModel()
+    public SelectImageImportDialogViewModel()
     {
         task_completion_source = new TaskCompletionSource<string?>();
-    }
-
-    [RelayCommand]
-    private void Select()
-    {
-        task_completion_source.SetResult(SelectImage);
-    }
-
-    [RelayCommand]
-    private void Capture()
-    {
-        task_completion_source.SetResult(CaptureImage);
     }
 
     [RelayCommand]

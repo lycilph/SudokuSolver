@@ -13,10 +13,12 @@
                     HorizontalAlignment="Center"
                     Margin="0 25 0 10">
             <Button Content="{icon:Lucide Kind=Image, Height=72, Width=72}"
+                    Command="{Binding SelectCommand}"
                     ToolTip="Import an image"
                     Margin="10 0"/>
             
             <Button Content="{icon:Lucide Kind=Camera, Height=72, Width=72}"
+                    Command="{Binding CaptureCommand}"
                     ToolTip="Capture an image from a webcam"
                     Margin="10 0"/>
         </StackPanel>

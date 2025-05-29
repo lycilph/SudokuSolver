@@ -7,7 +7,6 @@ using Core.Import;
 using MahApps.Metro.Controls.Dialogs;
 using NLog;
 using SudokuUI.Dialogs;
-using SudokuUI.Dialogs.ImageImport;
 using SudokuUI.Infrastructure;
 using SudokuUI.Messages;
 using SudokuUI.Services;
@@ -24,6 +23,7 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<MainWindowL
     private readonly SolverService solver_service;
     private readonly SelectionService selection_service;
     private readonly DebugService debug_service;
+    private readonly ImageImportService image_import_service;
 
     [ObservableProperty]
     private GridViewModel gridVM;
@@ -61,6 +61,7 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<MainWindowL
                          DebugService debug_service,
                          UndoRedoService undo_service,
                          HighlightService highlight_service,
+                         ImageImportService image_import_service,
                          GridViewModel gridVM,
                          DigitSelectionViewModel digitSelectionVM,
                          NotificationViewModel notificationVM,
@@ -71,6 +72,7 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<MainWindowL
         this.solver_service = solver_service;
         this.selection_service = selection_service;
         this.debug_service = debug_service;
+        this.image_import_service = image_import_service;
 
         GridVM = gridVM;
         DigitSelectionVM = digitSelectionVM;
@@ -239,11 +241,13 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<MainWindowL
         using (var scope = OverlayVM.GetWaitingSpinnerScope(true, "Loading OCR Model"))
         {
             await scope.OpenAnimationTask;
-            await Task.Run(() => { var importer = new PuzzleImporter(); });
+            await image_import_service.Initialize();
+        }
 
-            var vm = new ImageImportDialogViewModel();
-            var view = new ImageImportDialogView { DataContext = vm };
-            var result = await ShowDialogAsync(vm, view, "Image Import");
+        string? result = string.Empty;
+        foreach (var step in image_import_service.Show())
+        {
+            result = await ShowDialogAsync(step.ViewModel, step.View, step.Title);
         }
     }
 
