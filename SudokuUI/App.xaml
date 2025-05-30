@@ -20,6 +20,8 @@
 
             <BooleanToVisibilityConverter x:Key="bool_to_visibilty_converter"/>
             <conv:InvertBoolConverter x:Key="invert_bool_converter"/>
+            <conv:ImageToBitmapConverter x:Key="image_to_bitmap_converter"/>
+            <conv:CellValueToStringConverter x:Key="cell_value_to_string_converter"/>
 
             <DataTemplate DataType="{x:Type vm:GridViewModel}">
                 <v:GridView/>

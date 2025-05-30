@@ -1,12 +1,13 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using ControlzEx.Standard;
 using Core.Commands;
 using Core.Engine;
-using Core.Import;
 using MahApps.Metro.Controls.Dialogs;
 using NLog;
 using SudokuUI.Dialogs;
+using SudokuUI.Dialogs.ImageImport;
 using SudokuUI.Infrastructure;
 using SudokuUI.Messages;
 using SudokuUI.Services;
@@ -244,10 +245,24 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<MainWindowL
             await image_import_service.Initialize();
         }
 
-        string? result = string.Empty;
+        ImportStepOutput output = ImportStepOutput.Cancel();
         foreach (var step in image_import_service.Show())
         {
-            result = await ShowDialogAsync(step.ViewModel, step.View, step.Title);
+            output = await ShowDialogAsync(step.ViewModel, step.View, step.Title);
+            
+            if (output.Result == ImportStepOutput.StepResult.Next)
+            {
+                using (var scope = OverlayVM.GetWaitingSpinnerScope(true, "Processing Image"))
+                {
+                    await scope.OpenAnimationTask;
+                    await image_import_service.ProcessImage(output.Image);
+                }
+            }
+        }
+
+        if (output.Result == ImportStepOutput.StepResult.Done && !string.IsNullOrWhiteSpace(output.PuzzleSource))
+        {
+            puzzle_service.Import(output.PuzzleSource);
         }
     }
 

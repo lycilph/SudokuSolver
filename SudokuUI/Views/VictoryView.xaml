@@ -11,7 +11,6 @@
              d:DataContext="{d:DesignInstance Type=vm:VictoryViewModel, IsDesignTimeCreatable=False}">
     <UserControl.Resources>
         <CubicEase x:Key="EaseOutFunction" EasingMode="EaseOut"/>
-        <conv:CellValueToStringConverter x:Key="cell_value_to_string_converter"/>
     </UserControl.Resources>
 
     <Border Margin="75 30"

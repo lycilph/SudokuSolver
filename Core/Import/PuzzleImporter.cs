@@ -111,7 +111,7 @@ public class PuzzleImporter
 
     public Mat VisualizeDetection(Mat input, PaddleOcrResultRegion[] regions)
     {
-        return PaddleOcrDetector.Visualize(input, regions.Select(x => x.Rect).ToArray(), Scalar.Red, thickness: 5);
+        return PaddleOcrDetector.Visualize(input, regions.Select(x => x.Rect).ToArray(), Scalar.Red, thickness: 10);
     }
 
     public PaddleOcrResultRegion[] RecognizeNumbers(Mat input)

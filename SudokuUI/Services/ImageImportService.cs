@@ -1,5 +1,6 @@
 ﻿using Core.Import;
 using NLog;
+using OpenCvSharp;
 using SudokuUI.Dialogs.ImageImport;
 
 namespace SudokuUI.Services;
@@ -9,14 +10,10 @@ public class ImageImportService
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
     private PuzzleImporter? importer;
+    private ImportConfiguration config;
 
-    // Fields
-    // grid image
-    // final puzzle?
-
-    // Methods
-    // Initialize
-    // Cleanup
+    public Mat ProcessedImage { get; private set; } = null!;
+    public string PuzzleSource { get; private set; } = string.Empty;
 
     public Task Initialize()
     {
@@ -24,7 +21,7 @@ public class ImageImportService
 
         if (importer is not null)
         {
-            logger.Warn("Image Importer is already initialized. Skipping initialization.");
+            logger.Warn("Image Importer is already initialized. Skipping initialization");
             return Task.CompletedTask;
         }
 
@@ -32,13 +29,46 @@ public class ImageImportService
         {
             // Initialize the PuzzleImporter instance
             importer = new PuzzleImporter();
+            config = ImportConfiguration.Default();
             logger.Info("Puzzle Importer initialized successfully.");
+        });
+    }
+
+    public Task ProcessImage(Mat input)
+    {
+        if (importer is null)
+        {
+            logger.Error("Image Importer is not initialized. Please call Initialize() first");
+            return Task.CompletedTask;
+        }
+
+        return Task.Run(() =>
+        {
+            // Process the input image using the importer
+            using (var grid = importer.ExtractGrid(input, config))
+            {
+                var regions = importer.RecognizeNumbers(grid);
+                ProcessedImage = importer.VisualizeDetection(grid, regions);
+
+                if (regions.Length > 10)
+                {
+                    PuzzleSource = importer.MapNumbersToCells(regions, grid.Size());
+                    logger.Info($"Puzzle: {PuzzleSource}");
+                }
+                else
+                    logger.Info("It doesn't seem like the image is a sudoku puzzle...");
+            }
+            logger.Info("Image processed successfully");
         });
     }
 
     public IEnumerable<ImageImportStep> Show()
     {
-        string? import_method = null;
+        if (importer is null)
+        {
+            logger.Error("Image Importer is not initialized. Please call Initialize() first.");
+            yield break; // Exit if the importer is not initialized
+        }
 
         // Logic to show the image import dialogs
         logger.Info("Image import Started");
@@ -47,29 +77,42 @@ public class ImageImportService
         var vm = new ImageImportDialogViewModel();
         var view = new ImageImportDialogView { DataContext = vm };
         yield return new ImageImportStep(vm, view, "Image Import");
-        
-        import_method = vm.DialogResult.Result;
-        if (import_method is null)
+
+        var output = vm.DialogResult.Result;
+        if (output.Result == ImportStepOutput.StepResult.Cancelled)
         {
             logger.Info("Image import cancelled by user.");
-            yield break; // User cancelled the dialog
+            yield break;
         }
 
         // Dependending on the selected option, either process the image file or capture from camera
-        logger.Info($"Import method selected: {import_method}");
-        if (import_method == ImageImportDialogViewModel.SelectImage)
+        logger.Info($"Import method selected: {output}");
+        if (output.Result == ImportStepOutput.StepResult.SelectImage)
         {
-            var select_vm = new SelectImageImportDialogViewModel();
+            var select_vm = new SelectImageImportDialogViewModel(output.Filename);
             var select_view = new SelectImageImportDialogView { DataContext = select_vm };
             yield return new ImageImportStep(select_vm, select_view, "Select Image");
+
+            output = vm.DialogResult.Result;
         }
-        else
+        //else
+        //{
+        //    var capture_vm = new CaptureImageImportDialogViewModel();
+        //    var capture_view = new CaptureImageImportDialogView { DataContext = capture_vm };
+        //    yield return new ImageImportStep(capture_vm, capture_view, "Capture Image");
+
+        //    result = capture_vm.DialogResult.Result;
+        //}
+
+        if (output.Result == ImportStepOutput.StepResult.Cancelled)
         {
-            logger.Info("Capturing image from camera is not implemented yet.");
-            yield break; // User cancelled the dialog
+            logger.Info("Image import cancelled by user.");
+            yield break;
         }
 
         // Verify the processed image and the extracted Sudoku grid
-        // VerifyImageImportDialogViewModel
+        var verify_vm = new VerifyImageImportDialogViewModel(ProcessedImage, PuzzleSource);
+        var verify_view = new VerifyImageImportDialogView { DataContext = verify_vm };
+        yield return new ImageImportStep(verify_vm, verify_view, "Verify Image");
     }
 }
