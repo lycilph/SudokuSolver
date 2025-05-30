@@ -87,22 +87,14 @@ public class ImageImportService
 
         // Dependending on the selected option, either process the image file or capture from camera
         logger.Info($"Import method selected: {output}");
-        if (output.Result == ImportStepOutput.StepResult.SelectImage)
+        if (output.Result == ImportStepOutput.StepResult.CaptureImage)
         {
-            var select_vm = new SelectImageImportDialogViewModel(output.Filename);
-            var select_view = new SelectImageImportDialogView { DataContext = select_vm };
-            yield return new ImageImportStep(select_vm, select_view, "Select Image");
+            var capture_vm = new CaptureImageImportDialogViewModel();
+            var capture_view = new CaptureImageImportDialogView { DataContext = capture_vm };
+            yield return new ImageImportStep(capture_vm, capture_view, "Capture Image");
 
-            output = vm.DialogResult.Result;
+            output = capture_vm.DialogResult.Result;
         }
-        //else
-        //{
-        //    var capture_vm = new CaptureImageImportDialogViewModel();
-        //    var capture_view = new CaptureImageImportDialogView { DataContext = capture_vm };
-        //    yield return new ImageImportStep(capture_vm, capture_view, "Capture Image");
-
-        //    result = capture_vm.DialogResult.Result;
-        //}
 
         if (output.Result == ImportStepOutput.StepResult.Cancelled)
         {

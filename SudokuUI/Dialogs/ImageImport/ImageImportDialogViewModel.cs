@@ -32,7 +32,8 @@ public partial class ImageImportDialogViewModel : ObservableObject, IDialogViewM
         if (result == true)
         {
             logger.Info($"Selected image file: {dialog.FileName}");
-            task_completion_source.SetResult(ImportStepOutput.SelectImage(dialog.FileName));
+            var image = Cv2.ImRead(dialog.FileName, ImreadModes.Color);
+            task_completion_source.SetResult(ImportStepOutput.Next(image));
         }
     }
 

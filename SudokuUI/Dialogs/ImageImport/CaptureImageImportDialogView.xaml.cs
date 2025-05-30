@@ -7,5 +7,13 @@ public partial class CaptureImageImportDialogView : UserControl
     public CaptureImageImportDialogView()
     {
         InitializeComponent();
+
+        LayoutUpdated += (s, e) =>
+        {
+            if (DataContext is CaptureImageImportDialogViewModel vm)
+            {
+                vm.Initialize();
+            }
+        };
     }
 }
