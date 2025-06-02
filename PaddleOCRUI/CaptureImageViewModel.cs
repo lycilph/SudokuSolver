@@ -81,7 +81,7 @@ public partial class CaptureImageViewModel : ObservableObject, IViewAware
         if (video_capture == null)
             return;
 
-        CameraImage = video_capture.RetrieveMat().Flip(FlipMode.Y).Clone();
+        CameraImage = video_capture.RetrieveMat().Clone();
     }
 
     public void WindowContentRendered()

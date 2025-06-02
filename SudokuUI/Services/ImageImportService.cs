@@ -34,7 +34,7 @@ public class ImageImportService
         });
     }
 
-    public Task ProcessImage(Mat input)
+    public Task ProcessImage(Mat input, bool dispose_image = true)
     {
         if (importer is null)
         {
@@ -48,6 +48,8 @@ public class ImageImportService
             using (var grid = importer.ExtractGrid(input, config))
             {
                 var regions = importer.RecognizeNumbers(grid);
+
+                ProcessedImage?.Dispose(); // Dispose old image (if not null)
                 ProcessedImage = importer.VisualizeDetection(grid, regions);
 
                 if (regions.Length > 10)
@@ -58,8 +60,17 @@ public class ImageImportService
                 else
                     logger.Info("It doesn't seem like the image is a sudoku puzzle...");
             }
+
+            if (dispose_image)
+                input.Dispose();
             logger.Info("Image processed successfully");
         });
+    }
+
+    public void Cleanup()
+    {
+        ProcessedImage?.Dispose();
+        PuzzleSource = string.Empty;
     }
 
     public IEnumerable<ImageImportStep> Show()

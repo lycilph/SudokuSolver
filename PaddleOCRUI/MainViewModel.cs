@@ -10,8 +10,8 @@ namespace PaddleOCRUI;
 
 public partial class MainViewModel : ObservableObject
 {
-    //public static string path = "C:\\Users\\Morten Lang\\source\\repos\\SudokuSolver\\Data\\Importer\\";
-    private static string path = @"C:\Users\morte\Projects\SudokuSolver\Data\Importer\";
+    private static string path = @"C:\Users\Morten Lang\source\repos\SudokuSolver\Data\Importer\";
+    //private static string path = @"C:\Users\morte\Projects\SudokuSolver\Data\Importer\";
 
     private PuzzleImporter? importer;// = new();
     private readonly ImportConfiguration config = ImportConfiguration.Default();

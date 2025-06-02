@@ -264,6 +264,8 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<MainWindowL
         {
             puzzle_service.Import(output.PuzzleSource);
         }
+
+        image_import_service.Cleanup();
     }
 
     [RelayCommand]
