@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using SpawnDev.BlazorJS;
 
 namespace SudokuBlazorUI;
 
@@ -12,7 +13,11 @@ public class Program
         builder.RootComponents.Add<HeadOutlet>("head::after");
 
         builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+        
+        // Add SpawnDev.BlazorJS.BlazorJSRuntime
+        builder.Services.AddBlazorJSRuntime();
 
-        await builder.Build().RunAsync();
+        // build and Init using BlazorJSRunAsync (instead of RunAsync)
+        await builder.Build().BlazorJSRunAsync();
     }
 }

@@ -1,0 +1,87 @@
+﻿@page "/image"
+@using OpenCvSharp
+@using SpawnDev.BlazorJS
+@using SpawnDev.BlazorJS.JSObjects
+@using System.Runtime.InteropServices
+@inject BlazorJSRuntime JS
+
+<PageTitle>Image</PageTitle>
+
+<h1>Image</h1>
+
+<p>This component demonstrates loading an image.</p>
+
+<InputFile OnChange="HandleLoadImage" />
+
+@if (!string.IsNullOrEmpty(imageDataUrl))
+{
+    <img src="@imageDataUrl" alt="Uploaded Image" style="max-width: 400px;" />
+}
+
+<p/>
+
+<button class="btn btn-primary" @onclick="ShowMatImage">Click me</button>
+
+<div>
+    <canvas @ref="srcCanvas" width="256" height="256" style="border:1px solid gray;">
+        Your browser does not support the HTML5 canvas tag.
+    </canvas>
+    <canvas @ref="dstCanvas" width="256" height="256" style="border:1px solid gray;">
+        Your browser does not support the HTML5 canvas tag.
+    </canvas>
+</div>
+
+@code {
+    private string? imageDataUrl;
+    private Mat? srcMat;
+    private ElementReference srcCanvas;
+    private ElementReference dstCanvas;
+    private CanvasClient? srcCanvasClient;
+    private CanvasClient? dstCanvasClient;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+
+        srcCanvasClient ??= new CanvasClient(JS, srcCanvas);
+        dstCanvasClient ??= new CanvasClient(JS, dstCanvas);
+    }
+
+    private async Task HandleLoadImage(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file != null)
+        {
+            using var stream = file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024); // 10 MB limit
+            var buffer = new byte[file.Size];
+            await stream.ReadAsync(buffer);
+            var base64 = Convert.ToBase64String(buffer);
+            imageDataUrl = $"data:{file.ContentType};base64,{base64}";
+
+            srcMat = await GetImageAsMat(imageDataUrl);
+            Console.WriteLine($"Image loaded with size: {srcMat.Size()}, type: {srcMat.Type()}, empty: {srcMat.Empty()}");
+        }
+    }
+    
+    private void ShowMatImage()
+    {
+        if (srcCanvasClient != null && srcMat != null)
+            srcCanvasClient.DrawMat(srcMat);
+    }
+
+    async Task<Mat> GetImageAsMat(string url, string? crossOrigin = "anonymous")
+    {
+        using var image = await HTMLImageElement.CreateFromImageAsync(url, crossOrigin);
+        using var canvas = new HTMLCanvasElement();
+        using var context = canvas.Get2DContext();
+        canvas.Width = image.Width;
+        canvas.Height = image.Height;
+        context.DrawImage(image, 0, 0);
+        using var imageData = context.GetImageData(0, 0, image.Width, image.Height);
+        using var uint8ClampedArray = imageData.Data;
+        var rgbaBytes = uint8ClampedArray.ReadBytes();
+        var mat = new Mat(new Size(image.Width, image.Height), MatType.CV_8UC4);
+        Marshal.Copy(rgbaBytes, 0, mat.DataStart, rgbaBytes.Length);
+        return mat;
+    }
+}
