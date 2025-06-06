@@ -62,11 +62,93 @@
             Console.WriteLine($"Image loaded with size: {srcMat.Size()}, type: {srcMat.Type()}, empty: {srcMat.Empty()}");
         }
     }
-    
+
     private void ShowMatImage()
     {
-        if (srcCanvasClient != null && srcMat != null)
+        if (srcCanvasClient != null && dstCanvasClient != null && srcMat != null)
+        {
             srcCanvasClient.DrawMat(srcMat);
+
+            using var grid = ExtractGrid(srcMat);
+            dstCanvasClient.DrawMat(grid);
+        }
+    }
+
+    public Mat ExtractGrid(Mat input)
+    {
+        Mat output = new();
+
+        using (var t = new ResourcesTracker())
+        {
+            var gray = t.NewMat();
+            Cv2.CvtColor(input, gray, ColorConversionCodes.RGB2GRAY);
+
+            var threshold = t.NewMat();
+            Cv2.AdaptiveThreshold(gray, threshold, 255, AdaptiveThresholdTypes.GaussianC, ThresholdTypes.BinaryInv, 55, 5);
+
+            // Find the largest contour in the image
+            Cv2.FindContours(threshold, out Point[][] contours, out HierarchyIndex[] hierarchies, RetrievalModes.External, ContourApproximationModes.ApproxSimple);
+            var max_area = 0.0;
+            var max_area_index = -1;
+            var input_image_area = input.Size().Width * input.Size().Height;
+            for (int i = 0; i < contours.Length; i++)
+            {
+                var area = Cv2.ContourArea(contours[i]);
+                if (area > max_area)
+                {
+                    max_area = area;
+                    max_area_index = i;
+                }
+            }
+
+            // Find the bounding rectangle around the largest contour
+            var bound = Cv2.BoundingRect(contours[max_area_index]);
+            var bound_pts = new List<Point>
+            {
+                new(bound.X, bound.Y),
+                new(bound.X + bound.Width, bound.Y),
+                new(bound.X + bound.Width, bound.Y + bound.Height),
+                new(bound.X, bound.Y + bound.Height)
+            };
+
+            // Approximate contour
+            var bound_approx = Cv2.ApproxPolyDP(contours[max_area_index], 10, true);
+            // Find closest points on approximated largest contour
+            var grid_pts = bound_pts.Select(p => GetClosestPoint(p, bound_approx)).ToList();
+
+            // Get perspective transform
+            var size = 3000;
+            var src = new Point2f[] { grid_pts[0], grid_pts[1], grid_pts[2], grid_pts[3] };
+            var dst = new Point2f[] { new(0, 0), new(size, 0), new(size, size), new(0, size) };
+            var perspective = Cv2.GetPerspectiveTransform(src, dst);
+
+            // Warp perspective
+            Cv2.WarpPerspective(input, output, perspective, new Size(size, size), InterpolationFlags.Cubic);
+        }
+
+        return output;
+    }
+
+    private static Point GetClosestPoint(Point p, Point[] points)
+    {
+        var min_dist = double.MaxValue;
+        Point min_pt = p;
+        for (var i = 0; i < points.Length; i++)
+        {
+            var dist = Dist(p, points[i]);
+            if (dist < min_dist)
+            {
+                min_dist = dist;
+                min_pt = points[i];
+            }
+        }
+
+        return min_pt;
+    }
+
+    private static double Dist(Point p1, Point p2)
+    {
+        return Math.Sqrt((p1.X - p2.X) * (p1.X - p2.X) + (p1.Y - p2.Y) * (p1.Y - p2.Y));
     }
 
     async Task<Mat> GetImageAsMat(string url, string? crossOrigin = "anonymous")
