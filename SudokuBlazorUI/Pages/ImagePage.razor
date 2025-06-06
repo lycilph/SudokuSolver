@@ -1,0 +1,61 @@
+﻿@page "/imagepage"
+
+<PageTitle>Image Page</PageTitle>
+
+<h1>Image Upload and Display</h1>
+
+<p>Test of loading an image and displaying it here</p>
+
+<InputFile OnChange="HandleFileSelected" accept="image/*" />
+
+@if (!string.IsNullOrEmpty(imageDataUrl))
+{
+    <div style="margin-top: 20px;">
+        <img src="@imageDataUrl" style="max-width: 500px; max-height: 500px;" alt="Uploaded image" />
+    </div>
+}
+
+@code
+{
+    private string imageDataUrl = string.Empty;
+    private const int MaxFileSize = 5 * 1024 * 1024; // 5MB
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+
+        if (file != null)
+        {
+            // Check file size
+            if (file.Size > MaxFileSize)
+            {
+                // Handle file too large error
+                return;
+            }
+
+            // Check if it's an image
+            if (!file.ContentType.StartsWith("image/"))
+            {
+                // Handle invalid file type error
+                return;
+            }
+
+            try
+            {
+                // Read the file as a stream
+                using var stream = file.OpenReadStream(MaxFileSize);
+                using var memoryStream = new MemoryStream();
+                await stream.CopyToAsync(memoryStream);
+
+                // Convert to base64 data URL
+                var base64 = Convert.ToBase64String(memoryStream.ToArray());
+                imageDataUrl = $"data:{file.ContentType};base64,{base64}";
+            }
+            catch (Exception ex)
+            {
+                // Handle error
+                Console.WriteLine($"Error loading image: {ex.Message}");
+            }
+        }
+    }
+}

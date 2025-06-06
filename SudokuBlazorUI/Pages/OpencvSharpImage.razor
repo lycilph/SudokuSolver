@@ -1,0 +1,91 @@
+﻿@page "/opencvsharpimagepage"
+@using OpenCvSharp
+@inject IJSRuntime jsRuntime;
+
+<PageTitle>OpenCVSharp Image Page</PageTitle>
+
+<h1>Image Upload and Display</h1>
+
+<p>Test of loading an image and displaying it here</p>
+
+<canvas @ref="srcCanvas" width="256" height="256" style="border:1px solid gray;">
+    Your browser does not support the HTML5 canvas tag.
+</canvas>
+<canvas @ref="dstCanvas" width="256" height="256" style="border:1px solid gray;">
+    Your browser does not support the HTML5 canvas tag.
+</canvas>
+
+<InputFile OnChange="HandleFileSelected" accept="image/*" />
+
+@code
+{
+    // private Mat? srcMat;
+    private ElementReference srcCanvas;
+    private ElementReference dstCanvas;
+    private CanvasClient? srcCanvasClient;
+    private CanvasClient? dstCanvasClient;
+    private string imageDataUrl = string.Empty;
+    private const int MaxFileSize = 5 * 1024 * 1024; // 5MB
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+
+        srcCanvasClient ??= new CanvasClient(jsRuntime, srcCanvas);
+        dstCanvasClient ??= new CanvasClient(jsRuntime, dstCanvas);
+    }
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+
+        if (file != null)
+        {
+            // Check file size
+            if (file.Size > MaxFileSize)
+            {
+                // Handle file too large error
+                return;
+            }
+
+            // Check if it's an image
+            if (!file.ContentType.StartsWith("image/"))
+            {
+                // Handle invalid file type error
+                return;
+            }
+
+            // Read file to byte array first
+            using var stream = file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024); // 10MB limit
+            using var memoryStream = new MemoryStream();
+            await stream.CopyToAsync(memoryStream);
+            byte[] fileBytes = memoryStream.ToArray();
+
+            // Pass byte array to JavaScript
+            var imageData = await jsRuntime.InvokeAsync<ImageData>("getImageDataFromBytes", fileBytes);
+
+            if (imageData == null || imageData.Data == null)
+            {
+                throw new InvalidOperationException("Failed to decode image");
+            }
+
+            // Create Mat from pixel data (RGBA format from canvas)
+            var mat = new Mat(imageData.Height, imageData.Width, MatType.CV_8UC4);
+            mat.SetArray(imageData.Data);
+
+            // Convert RGBA to BGR if needed for OpenCV
+            Mat bgrMat = new Mat();
+            Cv2.CvtColor(mat, bgrMat, ColorConversionCodes.RGBA2BGR);
+
+            mat.Dispose();
+        }
+    }
+
+
+    public class ImageData
+    {
+        public int Width { get; set; }
+        public int Height { get; set; }
+        public byte[] Data { get; set; } = [];
+    }
+}
