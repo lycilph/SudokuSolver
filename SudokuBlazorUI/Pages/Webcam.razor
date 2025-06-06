@@ -1,0 +1,59 @@
+﻿@page "/webcam"
+@using SpawnDev.BlazorJS
+@inject BlazorJSRuntime JS
+
+<PageTitle>Webcam</PageTitle>
+
+<h1>Webcam</h1>
+
+<p>This component demonstrates capturing an image from a webcam.</p>
+
+<video id="videoFeed" width="320" height="240" />
+
+<canvas style="border:1px solid gray;" id="currentFrame" width="320" height="240" />
+
+<br />
+
+<button class="btn btn-primary mb-3" @onclick="CaptureFrame" disabled="@IsDisabled">Capture Frame</button>
+
+<br />
+
+@if (!string.IsNullOrEmpty(frameUri))
+{
+    <img src="@frameUri" />
+}
+
+@code {
+    // https://wellsb.com/csharp/aspnet/blazor-webcam-capture
+
+    private string? frameUri;
+    protected bool IsDisabled { get; set; } = true;
+
+    // protected override void OnInitialized()
+    // {
+    //     JS.CallVoid("startVideo", "videoFeed");
+    // }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await JS.CallVoidAsync("startVideo", "videoFeed");
+        IsDisabled = false;
+    }
+
+    private void CaptureFrame()
+    {
+        JS.CallVoid("getFrame", "videoFeed", "currentFrame", DotNetObjectReference.Create(this));
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public void ProcessImage(string imageString)
+    {
+        //byte[] imageData = Convert.FromBase64String(imageString);
+        frameUri = imageString;
+        StateHasChanged();
+
+        //Do image processing here
+        Console.WriteLine($"Got here with an image {imageString.Length}");
+    }
+}
